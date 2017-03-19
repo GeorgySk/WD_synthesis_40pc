@@ -24,6 +24,10 @@ DB_tracks=$cooling_tables/DB/model_B
 ONe_tracks=$cooling_tables/ONe/model_C
 observational_LF=$observational_data/luminosity_functions
 
+'rm' $output_data/chisquare_test.out
+touch $output_data/chisquare_test.out
+'rm' $output_data/chi_sq_test_maxregion.out
+touch $output_data/chi_sq_test_maxregion.out
 
 currentNumberOfExecution=1
 currentIndexForOutput=$initialIndexForOutputs
@@ -152,65 +156,32 @@ do
    #Observational Luminosity Function
    ln -s $observational_LF/Althaus_40pc.out fort.71
    
-   #SEEDS
+   #Random seeds
    ln -s $temporary_files/seeds_line.in fort.72
 
+
+
    #Outputs
-   ln -s $Results/fl-althaus/coloresfull.out fort.73
-   ln -s $Results/fl-althaus/tburstdata.out  fort.81
-   ln -s ./extrapolcolores.out fort.1007
-   ln -s ./errors.out fort.1008
-   ln -s $Results/fl_prueba.out fort.155
-   ln -s ./bootstrap/R-althaus/boot_rowell_thin_$currentNumberOfExecution.out fort.156
-   ln -s /home/georgy/Documents/simulation_results/brt/new_file.out fort.1156
-   ln -s ./parametersMC.out  fort.157
+   #TODO: check inputs. looks like there is garbage here
+   ln -s $output_data/colorsfull.out fort.73
+   #TODO:check the name because it doesn't look appropriate
+   ln -s $output_data/tburstdata.out  fort.81
+   ln -s $output_data/extrapolcolores.out fort.1007
+   ln -s $output_data/average_velocities.out fort.815
+   ln -s $output_data/fl_prueba.out fort.155
+   ln -s $output_data/boot_rowell_thin_$currentNumberOfExecution.out fort.156
+   ln -s $output_data/velocities.out fort.1156
+   ln -s $output_data/parametersMC.out  fort.157
    #Velocities
-   ln -s $Results/fl_velocidades.out  fort.158
-   ln -s $Results/fl_velocidades_u.out  fort.400
-   ln -s $Results/fl_velocidades_v.out  fort.401
-   ln -s $Results/fl_velocidades_w.out  fort.402
-   ln -s $Results/fl_velocidadesf.out  fort.159
-   ln -s $Results/fl_velocidades_uf.out  fort.403
-   ln -s $Results/fl_velocidades_vf.out  fort.404
-   ln -s $Results/fl_velocidades_wf.out  fort.405
+   ln -s $output_data/fl_velocidades.out  fort.158
+   ln -s $output_data/fl_velocidades_u.out  fort.400
+   ln -s $output_data/fl_velocidades_v.out  fort.401
+   ln -s $output_data/fl_velocidades_w.out  fort.402
+   ln -s $output_data/mboldis_complete.out fort.160
+   ln -s $output_data/flmass$currentNumberOfExecution.out fort.161
+   ln -s $output_data/mass_dis.out fort.162
+   ln -s $output_data/mimf.out fort.667
 
-   ln -s $Results/fl-althaus/mboldis_complete.out fort.160
-   ln -s $Results/flmass$currentNumberOfExecution.out fort.161
-   ln -s $Results/mass_dis.out fort.162
-   ln -s $Results/fl-althaus/mass_tms.out fort.666
-   ln -s $Results/mimf.out fort.667
-   ln -s $Results/ttg.out fort.181
-
-   #TODO read more about it
-   #BASTI files
-   ln -s $BASTI/timeline.trk fort.200
-   ln -s $BASTI/z0001.basti fort.201
-   ln -s $BASTI/z0003.basti fort.202
-   ln -s $BASTI/z0006.basti fort.203
-   ln -s $BASTI/z0010.basti fort.204
-   ln -s $BASTI/z0020.basti fort.205
-   ln -s $BASTI/z0040.basti fort.206
-   ln -s $BASTI/z0080.basti fort.207
-   ln -s $BASTI/z0100.basti fort.208
-   ln -s $BASTI/z0198.basti fort.209
-   ln -s $BASTI/z0300.basti fort.210
-   ln -s $BASTI/z0400.basti fort.211
-   ln -s $BASTI/metal.trk fort.212
-
-   #TODO read more about it
-   #Variable G files
-   ln -s $G_Variable/052_1d11_g1020.trk          fort.300
-   ln -s $G_Variable/060_1d11_g1020.trk          fort.301
-   ln -s $G_Variable/100_1d11_g1020.trk          fort.302
-   ln -s $G_Variable/052_1d11_g1050.trk          fort.303
-   ln -s $G_Variable/060_1d11_g1050.trk          fort.304
-   ln -s $G_Variable/100_1d11_g1050.trk          fort.305
-   ln -s $G_Variable/052_1d11_g1100.trk          fort.306
-   ln -s $G_Variable/060_1d11_g1100.trk          fort.307
-   ln -s $G_Variable/100_1d11_g1100.trk          fort.308
-
-
-   #TODO What do the next 2 lines mean?
    time ./disk40.e 
    rm fort.*
 

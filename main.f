@@ -4565,7 +4565,8 @@ C     choosing region of maximum for calculating chi^2
       write(6,*) 'prob=',prob
       write (6,*) '----------------------------------'
 
-      OPEN (UNIT=20, STATUS='OLD',ACCESS = 'APPEND',file='chidos.out')
+      OPEN (UNIT=20, STATUS='OLD',ACCESS = 'APPEND',
+     &     file='./output_data/chisquare_test.out')
       write (20,222) fractionOfDB,galacticDiskAge,parameterIMF,
      &               parameterIFMR,timeOfBurst,df,chsq,prob
       CLOSE (22)
