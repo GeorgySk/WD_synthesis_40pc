@@ -43,7 +43,7 @@ do
    echo "Current execution: " $currentNumberOfExecution "from total of" $totalNumberOfExecutions
    echo "Simulation Nº" $currentIndexForOutput
 
-   gfortran disk40.f -o disk40.e
+   gfortran main.f -o main.e
 
    
    #Parameters of the simulations 
@@ -182,7 +182,7 @@ do
    ln -s $output_data/mass_dis.out fort.162
    ln -s $output_data/mimf.out fort.667
 
-   time ./disk40.e 
+   time ./main.e 
    rm fort.*
 
    currentNumberOfExecution=`expr $currentNumberOfExecution + 1`
