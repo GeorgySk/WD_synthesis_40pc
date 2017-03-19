@@ -189,4 +189,4 @@ do
    currentIndexForOutput=`expr $currentIndexForOutput + 1`
 done
 
-rm ./disk40.e
+rm ./main.e

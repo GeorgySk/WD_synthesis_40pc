@@ -4593,7 +4593,7 @@ C     choosing region of maximum for calculating chi^2
       write (6,*) '----------------------------------'
 C     output for chi² of maximum-region vs galactic disk age - test
       OPEN (UNIT=30, STATUS='OLD',ACCESS = 'APPEND',
-     &     file='chi_sq_test_maxregion.out')
+     &     file='./output_data/chi_sq_test_maxregion.out')
       write (30,333) galacticDiskAge,chsq,prob
       CLOSE (30)
 
