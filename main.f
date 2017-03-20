@@ -48,6 +48,11 @@ C----------------------------------------------------------------------
       parameter (parameterOfSFR=25.0)
       parameter (scaleLength=3.5)
 
+C     adding FileInfo type which carries all the info about
+C     files of cooling and color tables: fort.xx links, numbers of rows
+C     and columns, metallicities
+      include 'code/external_types.f'
+
 C     nrow - number of rows in DA color and cooling tables
 C     nrowb - number of rows in DB cooling tables
 C     nrowb2 - number of rows in DB color tables
@@ -58,7 +63,7 @@ C     nrowb2 - number of rows in DB color tables
 
 C     TODO: move all this to hash-table/map/dictionary/array or smth
 C     flags - determine what metallicity
-      integer flag_1,flag_2,flag_3,
+      integer flag_1,flag_2,flag_3
 C     these are links to files of DA cooling tables
       integer initialCoolSeqIndex_1,
      &        initialCoolSeqIndex_2,initialCoolSeqIndex_3,
@@ -87,8 +92,11 @@ C     same as ntrkda and numberOfRows but for DB
      &        vectorOfPointsNumberOfSeq_2(9),
      &        vectorOfPointsNumberOfSeq_3(9),
      &        numberOfPointsInSequence(7)
+
       integer i,ISEED1,ISEED2,iseed,numberOfStarsInSample
       double precision randomNumber,fractionOfDB
+
+C     TODO: create classes and take them away from commons
       double precision coolingTimes_1(7,nrow),coolingTimes_2(10,nrow),
      &                 coolingTimes_3(8,nrow)
       double precision coolingTimes_4(8,nrow)
@@ -106,8 +114,6 @@ C     same as ntrkda and numberOfRows but for DB
       double precision luminosity_4(8,nrow),
      &                 effectiveTemperature_4(8,nrow),
      &                 gravitationalAcceleration_4(8,nrow)
-C     QUESTION: what is the meaning of the next values? 
-C     TODO: rename them 
       double precision tprewdda1(7),tprewdda2(10),tprewdda3(8)
       double precision tprewdda4(8)
       double precision luminosity(10,nrow),color_U(10,nrow),
@@ -134,6 +140,7 @@ C     TODO: rename them
      &                 colorDB_B(7,nrowb2)
       double precision colorDB_V(7,nrowb2),colorDB_R(7,nrowb2),
      &                 colorDB_I(7,nrowb2)
+
 C     QUESTION: what is gamma?    
       double precision parameterIFMR,variationOfGravConst,gamma
 
@@ -210,6 +217,8 @@ C     TODO: give better names to common groups
       common /vargra/ variationOfGravConst,gamma
       common /param/ fractionOfDB,galacticDiskAge,parameterIMF,
      &               parameterIFMR,timeOfBurst
+
+      include 'code/tables_linking.f'
       
 C     ---  Initialization of parameters of Rux ---
       flag_1=1
