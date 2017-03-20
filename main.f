@@ -11,8 +11,13 @@ C the IMF, is assigned with a birth time according to the SFR. Finally
 C the maximum volume method is used to calculate the density function of 
 C white dwarfs.
 C----------------------------------------------------------------------
-      program monte
+C     adding FileInfo type which carries all the info about
+C     files of cooling and color tables: fort.xx links, numbers of rows
+C     and columns, metallicities
+      include 'code/external_types.f'
 
+      program monte
+      use external_types
        
       implicit double precision (a-h,m,o-z)
    
@@ -47,11 +52,6 @@ C----------------------------------------------------------------------
       parameter (radiusOfSector=0.050)
       parameter (parameterOfSFR=25.0)
       parameter (scaleLength=3.5)
-
-C     adding FileInfo type which carries all the info about
-C     files of cooling and color tables: fort.xx links, numbers of rows
-C     and columns, metallicities
-      include 'code/external_types.f'
 
 C     nrow - number of rows in DA color and cooling tables
 C     nrowb - number of rows in DB cooling tables

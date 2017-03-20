@@ -21,6 +21,7 @@ C       teff: effective temperature [K]
 C       logg: logarithm of the superficial gravity
 C       c1,c2,c3,c4,c5: UBVRI colors 
 C=======================================================================
+      use external_types
       implicit double precision (a-h,m,o-z)
       
 C     ---   Parameters   ---

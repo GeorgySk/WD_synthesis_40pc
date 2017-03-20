@@ -1,3 +1,5 @@
+      MODULE external_types
+
       TYPE FileInfo
         CHARACTER(len=7) :: tableType
         CHARACTER(len=3) :: WDtype
@@ -8,3 +10,5 @@
         INTEGER :: ncol
         INTEGER :: nrow
       ENDTYPE FileInfo
+
+      END MODULE external_types
