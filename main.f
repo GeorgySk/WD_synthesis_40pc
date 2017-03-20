@@ -377,9 +377,9 @@ C     TODO: rename the function 'incoolone'
       write(6,*) '   1.4 Reading the colors table of Rene(DAs) and Berge
      &ron(DBs)'
 C     TODO: rename these functions      
-      call color(numberOfMassesWithColors,ntrkda,massOfWD,luminosity,
+      call color(table(77)%ncol,ntrkda,massOfWD,luminosity,
      &     color_U,color_B,color_R,color_V,color_I)      
-      call colordb(numberOfSequences,numberOfPointsInSequence,
+      call colordb(table(70)%ncol,numberOfPointsInSequence,
      &     massSequence,luminosityDB,colorDB_U,colorDB_B,colorDB_V,
      &     colorDB_R,colorDB_I)
 
