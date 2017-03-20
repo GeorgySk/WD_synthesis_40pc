@@ -334,19 +334,19 @@ C     TODO: rename the function 'incoolda'
 C     NOTE: ALl this can be place in one more compact block
 C     Calling the function 'incoolda' for 4 metalicities that we have
       call incoolda(table(1)%flag,table(1)%initLink,numberOfRows_1,
-     &     numberOfMassesWithCoolSeq_1,massOfWD_1,
+     &     table(1)%ncol,massOfWD_1,
      &     coolingTimes_1,tprewdda1,luminosity_1,effectiveTemperature_1,
      &     gravitationalAcceleration_1)
       call incoolda(table(8)%flag,table(8)%initLink,numberOfRows_2,
-     &     numberOfMassesWithCoolSeq_2,massOfWD_2,coolingTimes_2,
+     &     table(8)%ncol,massOfWD_2,coolingTimes_2,
      &     tprewdda2,luminosity_2,effectiveTemperature_2,
      &     gravitationalAcceleration_2)
       call incoolda(table(18)%flag,table(18)%initLink,numberOfRows_3,
-     &     numberOfMassesWithCoolSeq_3,massOfWD_3,coolingTimes_3,
+     &     table(18)%ncol,massOfWD_3,coolingTimes_3,
      &     tprewdda3,luminosity_3,effectiveTemperature_3,
      &     gravitationalAcceleration_3)
       call incoolda(table(26)%flag,table(26)%initLink,numberOfRows_4,
-     &     numberOfMassesWithCoolSeq_4,massOfWD_4,coolingTimes_4,
+     &     table(26)%ncol,massOfWD_4,coolingTimes_4,
      &     tprewdda4,luminosity_4,effectiveTemperature_4,
      &     gravitationalAcceleration_4)
       
@@ -354,17 +354,17 @@ C     Calling the function 'incoolda' for 4 metalicities that we have
 
 C     TODO: rename the function 'incooldb'
       call incooldb(table(34)%flag,table(34)%initLink,
-     &     numberOfSequencesInGroup_1,vectorOfPointsNumberOfSeq_1,
+     &     table(34)%ncol,vectorOfPointsNumberOfSeq_1,
      &     vectorOfMasses_1,matrixOfCoolingTimes_1,
      &     vectorOfPreviousTimes_1,matrixOfLuminosities_1,
      &     matrixOfEffectiveTemperatures_1,matrixOfLog_g_1)
       call incooldb(table(41)%flag,table(41)%initLink,
-     &     numberOfSequencesInGroup_2,vectorOfPointsNumberOfSeq_2,
+     &     table(41)%ncol,vectorOfPointsNumberOfSeq_2,
      &     vectorOfMasses_2,matrixOfCoolingTimes_2,
      &     vectorOfPreviousTimes_2,matrixOfLuminosities_2,
      &     matrixOfEffectiveTemperatures_2,matrixOfLog_g_2)
       call incooldb(table(50)%flag,table(50)%initLink,
-     &     numberOfSequencesInGroup_3,vectorOfPointsNumberOfSeq_3,
+     &     table(50)%ncol,vectorOfPointsNumberOfSeq_3,
      &     vectorOfMasses_3,matrixOfCoolingTimes_3,
      &     vectorOfPreviousTimes_3,matrixOfLuminosities_3,
      &     matrixOfEffectiveTemperatures_3,matrixOfLog_g_3)
