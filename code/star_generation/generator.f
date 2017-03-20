@@ -15,9 +15,7 @@ C-----------------------------------------------------------------------
 C           Input parameters:
 C           QUESTION: what does it mean?
 C           iseed=entero generador de ran       
-C           parameterOfSFR: parametro of the SFR
-C           hDistribution_zi,hDistribution_t y hDistribution_zf: 
-C                 h=zi*exp(-t/tauh)+zf          
+C           parameterOfSFR: parametro of the SFR        
 C           areaOfSector: area of the considered sector in Kpc²
 C-----------------------------------------------------------------------
 C           Output parameters:

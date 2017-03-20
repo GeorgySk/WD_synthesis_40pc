@@ -2,8 +2,8 @@ C----------------------------------------------------------------------
 C The program monte.f simulates the population of white dwarfs in the 
 C solar environment. It distributes randomly n points following a 
 C uniform distribution in the galactic plane and an exponential 
-C distribution in the perpendicular plane. Add a velocity distribution 
-C at each point. From the cooling tables interpolates brightness and 
+C distribution in the perpendicular plane. It adds velocity distribution 
+C at each point. From the cooling tables it interpolates brightness and 
 C cooling times. Version B: In this version, the SFR function, within 
 C each interval in which the time of the galaxy is divided, determines 
 C the mass of stars to share. Each mass that is generated, following 
@@ -12,90 +12,77 @@ C the maximum volume method is used to calculate the density function of
 C white dwarfs.
 C----------------------------------------------------------------------
       program monte
-C
-C=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-C   5         15        25        35        45        55        65
-C---*->--+----*----+----*----+----*----+----*----+----*----+----*----+->
-C     7  10        20        30        40        50        60        70
-C=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+
        
       implicit double precision (a-h,m,o-z)
    
-C     --- Declaration of the variables  ---
-C     QUESTION: what does the next 2 lines mean?      
+C     'external' statement specifies that 'ran' function is no longer
+C     intrinsic and must be defined in program
       external ran
       real ran
 
-C     NOTE: variables cant be personal
-C     --- Parameters by S.Torres  ---
-C----------------------------------------------------------------------
-
-C     numberOfStars: number of stars
 C     minimumSectorRadius - min radius of the sector of considered stars
 C     maximumSectorRadius - max radius of the sector of considered stars
 C     angleCoveringSector - angle in degrees, which covers the sector
+C     radiusOfSector: radius (kpc) of the sector centered at Sun
 C     TODO give better names or create class (if possible)    
 C     zDistribution_zo(zo),heightPattern(h) - parameters of distribution 
 C            of z; zo*exp(-z/h)
-C     galacticDiskAge: galactic disk age; (Gyr)
-C     NOTE zi,zf,tauh are never used + give better names or create class    
-C     hDistribution_zi(zi),hDistribution_zf(zf),hDistribution_t(tauh): 
-C           parameters of distribution of heightPattern(h)
-C           h=zi*exp(-t/tauh)+zf
-C         parameterOfSFR (taus): parameter of the SFR; Y=exp(-t/taus)
+C     galacticDiskAge (Gyr)
+C     parameterOfSFR (taus): parameter of the SFR; Y=exp(-t/taus)
 C     solarGalactocentricDistance: distance from Sun to Galaxy center;
-C     radiusOfSector: radius (kpc) of the sector centered at Sun
 C----------------------------------------------------------------------
       integer numberOfStars
-      double precision galacticDiskAge,hDistribution_zi,hDistribution_t,
-     &                 hDistribution_zf,parameterOfSFR,
+      double precision galacticDiskAge,parameterOfSFR,
      &                 solarGalactocentricDistance,minimumSectorRadius,
      &                 maximumSectorRadius,angleCoveringSector,
      &                 parameterIMF
       double precision radiusOfSector,scaleLength,areaOfSector,pi
       
       parameter (numberOfStars=6000000)
-      parameter (hDistribution_zi=242.5,hDistribution_t=0.7,
-     &          hDistribution_zf=0.500) 
-      parameter (parameterOfSFR=25.0)
       parameter (solarGalactocentricDistance=8.5)
       parameter (minimumSectorRadius=8.45)
       parameter (maximumSectorRadius=8.55)
       parameter (angleCoveringSector=0.674)
       parameter (radiusOfSector=0.050)
+      parameter (parameterOfSFR=25.0)
       parameter (scaleLength=3.5)
 
-C     ---  Parameters of Rux ---
-C     QUESTION: what are nrow, nrowb, nrowb2?
-C     TODO: rename these variables
+C     nrow - number of rows in DA color and cooling tables
+C     nrowb - number of rows in DB cooling tables
+C     nrowb2 - number of rows in DB color tables
       integer nrow,nrowb,nrowb2
       parameter (nrow=650)
       parameter (nrowb=400)
       parameter (nrowb2=60)
 
-C     ---  Declaration of variables of Rux ---
-C     QUESTION: is it necessary to keep the flags?
-C     NOTE: there is no need to keep these indexes (they are used to 
-C           open files)
-      integer flag_1,flag_2,flag_3,initialCoolSeqIndex_1,
+C     TODO: move all this to hash-table/map/dictionary/array or smth
+C     flags - determine what metallicity
+      integer flag_1,flag_2,flag_3,
+C     these are links to files of DA cooling tables
+      integer initialCoolSeqIndex_1,
      &        initialCoolSeqIndex_2,initialCoolSeqIndex_3,
      &        initialCoolSeqIndex_4
-C     TODO: give better names to these variables + understand meaning 
-      integer numberOfMassesWithColors,numberOfMassesWithCoolSeq_1,
+C     numbers of columns in DA cooling tables
+      integer numberOfMassesWithCoolSeq_1,
      &        numberOfMassesWithCoolSeq_2,numberOfMassesWithCoolSeq_3,
-     &        numberOfMassesWithCoolSeq_4,numberOfSequencesInGroup_1,
-     &        numberOfSequencesInGroup_2,numberOfSequencesInGroup_3,
-     &        numberOfSequences
-C     TODO: get rid of these variables
+     &        numberOfMassesWithCoolSeq_4
+C     number of columns in DA color table
+      integer numberOfMassesWithColors
+C     these are links to files of DB cooling tables
       integer firstFileOfTheGroup_1,firstFileOfTheGroup_2,
      &        firstFileOfTheGroup_3
-C     QUESTION: what is ntrkda?
-C     numberOfRows_1/2/3/4 - number of rows according to reference 
-C                            time vector
-C     QUESTION: what is reference time vector?
+C     number of columns in DB cooling tables
+      integer numberOfSequencesInGroup_1,
+     &        numberOfSequencesInGroup_2,numberOfSequencesInGroup_3
+C     number of columns in DB color table
+      integer numberOfSequences
+
+C     QUESTION: what are these variables?
+C     ntrkda - color DA; numberOfRows - isn't number of rows -DA cooling
       integer ntrkda(10),numberOfRows_1(7),numberOfRows_2(10),
      &        numberOfRows_3(8),numberOfRows_4(8)
-C     TODO: rename all these + figure out indexes meanings
+C     same as ntrkda and numberOfRows but for DB
       integer vectorOfPointsNumberOfSeq_1(7),
      &        vectorOfPointsNumberOfSeq_2(9),
      &        vectorOfPointsNumberOfSeq_3(9),
@@ -247,7 +234,7 @@ C     ---  Initialization of parameters of Rux ---
 
 C     TODO: if input is from file then these parameters will be zeroes
 C     ---  Screen output of used parameters  ---
-       
+C     NOTE: wrong logic, some of these variables are overwritten later
       write(6,*) '=========================================='
       write(6,*) ' '
       write(6,*) '            Programa monte.f'
@@ -256,9 +243,6 @@ C     ---  Screen output of used parameters  ---
       write(6,*) '            Used parameters:'
       write(6,*) 'numberOfStars=',numberOfStars
       write(6,*) 'SFR: parameterOfSFR=',parameterOfSFR,'Gyr'
-      write(6,*) 'IMF: hDistribution_zi=',hDistribution_zi,
-     &           'Kpc; hDistribution_t=',hDistribution_t,
-     &           'Gyr; hDistribution_zf=',hDistribution_zf,'kpc'
       write(6,*) 'galacticDiskAge=',galacticDiskAge,'Gyr'
       write(6,*) 'minimumSectorRadius=',minimumSectorRadius,
      &           'kpc; maximumSectorRadius=',maximumSectorRadius,'kpc'

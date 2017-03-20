@@ -17,7 +17,7 @@ C=======================================================================
       
       integer numberOfStars,ntwd,njumps,n,i,NOK,NBAD
       double precision galacticDiskAge,wosun,hmin,eps,fcgys,tf,xcar,ycar
-      double precision wo,zDistribution_zo,ecini,tb,tinc,htry,ti,ecinf
+      double precision wo,zo,ecini,tb,tinc,htry,ti,ecinf
       double precision epotf,epoti,f
 
 C     ---   Parameters  ---
@@ -61,18 +61,18 @@ C     ---   Integrating trajectories   ---
         xcar=xpla(i)
         ycar=ypla(i)
         wo=ww(i)+8.0
-        zDistribution_zo=coordinate_Zcylindr(i)*(3.086d+16)
+        zo=coordinate_Zcylindr(i)*(3.086d+16)
         ecini=0.5*wo*wo
-        call epot(zDistribution_zo,epoti)
+        call epot(zo,epoti)
         tb=starBirthTime(i)
         tinc=(galacticDiskAge-tb)/dfloat(njumps)
 C       ---  The time in seconds  ---
         htry=tinc*fcgys
 C       ---  Initial conditions  ---
-        y(1)=zDistribution_zo
+        y(1)=zo
         y(2)=wo
         dydx(1)=wo
-        call fuerza(zDistribution_zo,f)
+        call fuerza(zo,f)
         dydx(2)=f
         ti=tb*fcgys 
 C       ---  Calling to the Runge-Kutta integrator ---
