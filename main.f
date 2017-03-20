@@ -217,9 +217,9 @@ C     TODO: give better names to common groups
       common /vargra/ variationOfGravConst,gamma
       common /param/ fractionOfDB,galacticDiskAge,parameterIMF,
      &               parameterIFMR,timeOfBurst
-
-      include 'code/tables_linking.f'
       
+      include 'code/tables_linking.f'
+
 C     ---  Initialization of parameters of Rux ---
       flag_1=1
       flag_2=2
@@ -322,7 +322,7 @@ C     QUESTION: isn't there a better way to get Pi?
 C     QUESTION: what about square function?
       areaOfSector=pi*radiusOfSector*radiusOfSector
 
-
+      
 
 C     ---   Reading the cooling tables  ---
 
@@ -333,19 +333,19 @@ C     ---   Reading the cooling tables  ---
 C     TODO: rename the function 'incoolda'     
 C     NOTE: ALl this can be place in one more compact block
 C     Calling the function 'incoolda' for 4 metalicities that we have
-      call incoolda(flag_1,initialCoolSeqIndex_1,numberOfRows_1,
+      call incoolda(table(1)%flag,table(1)%initLink,numberOfRows_1,
      &     numberOfMassesWithCoolSeq_1,massOfWD_1,
      &     coolingTimes_1,tprewdda1,luminosity_1,effectiveTemperature_1,
      &     gravitationalAcceleration_1)
-      call incoolda(flag_2,initialCoolSeqIndex_2,numberOfRows_2,
+      call incoolda(table(8)%flag,table(8)%initLink,numberOfRows_2,
      &     numberOfMassesWithCoolSeq_2,massOfWD_2,coolingTimes_2,
      &     tprewdda2,luminosity_2,effectiveTemperature_2,
      &     gravitationalAcceleration_2)
-      call incoolda(flag_3,initialCoolSeqIndex_3,numberOfRows_3,
+      call incoolda(table(18)%flag,table(18)%initLink,numberOfRows_3,
      &     numberOfMassesWithCoolSeq_3,massOfWD_3,coolingTimes_3,
      &     tprewdda3,luminosity_3,effectiveTemperature_3,
      &     gravitationalAcceleration_3)
-      call incoolda(flag_3,initialCoolSeqIndex_4,numberOfRows_4,
+      call incoolda(table(26)%flag,table(26)%initLink,numberOfRows_4,
      &     numberOfMassesWithCoolSeq_4,massOfWD_4,coolingTimes_4,
      &     tprewdda4,luminosity_4,effectiveTemperature_4,
      &     gravitationalAcceleration_4)
@@ -353,17 +353,17 @@ C     Calling the function 'incoolda' for 4 metalicities that we have
       write(6,*) '   1.2 Tracks of CO non-DA (DB) WD'
 
 C     TODO: rename the function 'incooldb'
-      call incooldb(flag_1,firstFileOfTheGroup_1,
+      call incooldb(table(34)%flag,table(34)%initLink,
      &     numberOfSequencesInGroup_1,vectorOfPointsNumberOfSeq_1,
      &     vectorOfMasses_1,matrixOfCoolingTimes_1,
      &     vectorOfPreviousTimes_1,matrixOfLuminosities_1,
      &     matrixOfEffectiveTemperatures_1,matrixOfLog_g_1)
-      call incooldb(flag_2,firstFileOfTheGroup_2,
+      call incooldb(table(41)%flag,table(41)%initLink,
      &     numberOfSequencesInGroup_2,vectorOfPointsNumberOfSeq_2,
      &     vectorOfMasses_2,matrixOfCoolingTimes_2,
      &     vectorOfPreviousTimes_2,matrixOfLuminosities_2,
      &     matrixOfEffectiveTemperatures_2,matrixOfLog_g_2)
-      call incooldb(flag_3,firstFileOfTheGroup_3,
+      call incooldb(table(50)%flag,table(50)%initLink,
      &     numberOfSequencesInGroup_3,vectorOfPointsNumberOfSeq_3,
      &     vectorOfMasses_3,matrixOfCoolingTimes_3,
      &     vectorOfPreviousTimes_3,matrixOfLuminosities_3,
