@@ -202,8 +202,9 @@ C     Interpolación para Z
       
 C     interpolation of colors, here there is no metalicity
       call intermag(mass,lum,numberOfMassesWithColors,table(77)%ntrk,
-     &     massOfWD,
-     &     luminosity,color_U,color_B,color_V,color_R,color_I,c1,c2,c3,
+     &     table(77)%mass,
+     &     table(77)%luminosity,color_U,color_B,color_V,color_R,color_I,
+     &     c1,c2,c3,
      &     c4,c5)
 
       return
