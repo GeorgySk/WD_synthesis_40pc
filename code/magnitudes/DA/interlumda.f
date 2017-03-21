@@ -109,7 +109,7 @@ C     Interpolación para Z
         call interp(model,modlog,tcool,mass,table(1)%ncol,
      &       table(1)%ntrk,table(1)%coolingTime,table(1)%prevTime,
      &       table(1)%mass,
-     &       effectiveTemperature_1,teff1)
+     &       table(1)%effTemp,teff1)
         modlog=0
         call interp(model,modlog,tcool,mass,table(1)%ncol,
      &       table(1)%ntrk,table(1)%coolingTime,table(1)%prevTime,
@@ -122,7 +122,7 @@ C     Interpolación para Z
         modlog=1
         call interp(model,modlog,tcool,mass,
      &       table(8)%ncol,table(8)%ntrk,table(8)%coolingTime,
-     &       table(8)%prevTime,table(8)%mass,effectiveTemperature_2,
+     &       table(8)%prevTime,table(8)%mass,table(8)%effTemp,
      &       teff2)
         modlog=0
         call interp(model,modlog,tcool,mass,
@@ -139,7 +139,7 @@ C     Interpolación para Z
         modlog=1
         call interp(model,modlog,tcool,mass,
      &       table(8)%ncol,table(8)%ntrk,table(8)%coolingTime,
-     &       table(8)%prevTime,table(8)%mass,effectiveTemperature_2,
+     &       table(8)%prevTime,table(8)%mass,table(8)%effTemp,
      &       teff1)
         modlog=0
         call interp(model,modlog,tcool,mass,
@@ -154,7 +154,7 @@ C     Interpolación para Z
         modlog=1
         call interp(model,modlog,tcool,mass,
      &       table(18)%ncol,table(18)%ntrk,table(18)%coolingTime,
-     &       table(18)%prevTime,table(18)%mass,effectiveTemperature_3,
+     &       table(18)%prevTime,table(18)%mass,table(18)%effTemp,
      &       teff2)
         modlog=0
         call interp(model,modlog,tcool,mass,
@@ -172,7 +172,7 @@ C     Interpolación para Z
         modlog=1
         call interp(model,modlog,tcool,mass,
      &       table(18)%ncol,table(18)%ntrk,table(18)%coolingTime,
-     &       table(18)%prevTime,table(18)%mass,effectiveTemperature_3,
+     &       table(18)%prevTime,table(18)%mass,table(18)%effTemp,
      &       teff1)
         modlog=0
         call interp(model,modlog,tcool,mass,
@@ -187,7 +187,7 @@ C     Interpolación para Z
         modlog=1
         call interp(model,modlog,tcool,mass,
      &       table(26)%ncol,table(26)%ntrk,table(26)%coolingTime,
-     &       table(26)%prevTime,table(26)%mass,effectiveTemperature_4,
+     &       table(26)%prevTime,table(26)%mass,table(26)%effTemp,
      &       teff2)
         modlog=0
         call interp(model,modlog,tcool,mass,
