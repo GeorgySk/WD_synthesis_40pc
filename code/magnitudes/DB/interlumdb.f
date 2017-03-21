@@ -110,7 +110,7 @@ C     interpolating for Z
         call interp(model,modlog,tcool,mass,
      &       numberOfSequencesInGroup_1,table(34)%ntrk,
      &       table(34)%coolingTime,table(34)%prevTime,
-     &       table(34)%mass,matrixOfLuminosities_1,lum1)
+     &       table(34)%mass,table(34)%luminosity,lum1)
         modlog=1
         call interp(model,modlog,tcool,mass,
      &       numberOfSequencesInGroup_1,table(34)%ntrk,
@@ -126,7 +126,7 @@ C     interpolating for Z
         call interp(model,modlog,tcool,mass,
      &       numberOfSequencesInGroup_2,table(41)%ntrk,
      &       table(41)%coolingTime,table(41)%prevTime,
-     &       table(41)%mass,matrixOfLuminosities_2,lum2)
+     &       table(41)%mass,table(41)%luminosity,lum2)
         modlog=1
         call interp(model,modlog,tcool,mass,
      &       numberOfSequencesInGroup_2,table(41)%ntrk,
@@ -144,7 +144,7 @@ C     interpolating for Z
         call interp(model,modlog,tcool,mass,
      &       numberOfSequencesInGroup_2,table(41)%ntrk,
      &       table(41)%coolingTime,table(41)%prevTime,
-     &       table(41)%mass,matrixOfLuminosities_2,lum1)
+     &       table(41)%mass,table(41)%luminosity,lum1)
         modlog=1
         call interp(model,modlog,tcool,mass,
      &       numberOfSequencesInGroup_2,table(41)%ntrk,
@@ -159,7 +159,7 @@ C     interpolating for Z
         call interp(model,modlog,tcool,mass,numberOfSequencesInGroup_3,
      &       table(50)%ntrk,table(50)%coolingTime,
      &       table(50)%prevTime,table(50)%mass,
-     &       matrixOfLuminosities_3,lum2)
+     &       table(50)%luminosity,lum2)
         modlog=1
         call interp(model,modlog,tcool,mass,numberOfSequencesInGroup_3,
      &       table(50)%ntrk,table(50)%coolingTime,
