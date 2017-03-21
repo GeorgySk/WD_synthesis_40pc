@@ -16,6 +16,8 @@ C       should be mass(ncol)..
         DOUBLE PRECISION :: mass(10)
 C       should be coolingTime(ncol,nrow)..   
         DOUBLE PRECISION :: coolingTime(10,650)
+C       should be prevTime(ncol)..        
+        DOUBLE PRECISION :: prevTime(10)
       ENDTYPE FileInfo
 
       END MODULE external_types
