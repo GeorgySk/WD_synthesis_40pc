@@ -144,6 +144,7 @@ C     TODO: create classes and take them away from commons
 C     QUESTION: what is gamma?    
       double precision parameterIFMR,variationOfGravConst,gamma
 
+C     TODO: make only 11 instances for each type not for each file      
       TYPE(FileInfo),DIMENSION(86) :: table
 
 C     --- Dimensions of variables of S.Torres  ---
@@ -336,19 +337,19 @@ C     TODO: rename the function 'incoolda'
 C     NOTE: ALl this can be place in one more compact block
 C     Calling the function 'incoolda' for 4 metalicities that we have
       call incoolda(table(1)%flag,table(1)%initLink,table(1)%ntrk,
-     &     table(1)%ncol,massOfWD_1,
+     &     table(1)%ncol,table(1)%mass,
      &     coolingTimes_1,tprewdda1,luminosity_1,effectiveTemperature_1,
      &     gravitationalAcceleration_1)
       call incoolda(table(8)%flag,table(8)%initLink,table(8)%ntrk,
-     &     table(8)%ncol,massOfWD_2,coolingTimes_2,
+     &     table(8)%ncol,table(8)%mass,coolingTimes_2,
      &     tprewdda2,luminosity_2,effectiveTemperature_2,
      &     gravitationalAcceleration_2)
       call incoolda(table(18)%flag,table(18)%initLink,table(18)%ntrk,
-     &     table(18)%ncol,massOfWD_3,coolingTimes_3,
+     &     table(18)%ncol,table(18)%mass,coolingTimes_3,
      &     tprewdda3,luminosity_3,effectiveTemperature_3,
      &     gravitationalAcceleration_3)
       call incoolda(table(26)%flag,table(26)%initLink,table(26)%ntrk,
-     &     table(26)%ncol,massOfWD_4,coolingTimes_4,
+     &     table(26)%ncol,table(26)%mass,coolingTimes_4,
      &     tprewdda4,luminosity_4,effectiveTemperature_4,
      &     gravitationalAcceleration_4)
       
