@@ -144,7 +144,7 @@ C     TODO: create classes and take them away from commons
 C     QUESTION: what is gamma?    
       double precision parameterIFMR,variationOfGravConst,gamma
 
-      
+      TYPE(FileInfo),DIMENSION(86) :: table
 
 C     --- Dimensions of variables of S.Torres  ---
 C--------------------------------------------------------------------
@@ -217,6 +217,8 @@ C     TODO: give better names to common groups
       common /vargra/ variationOfGravConst,gamma
       common /param/ fractionOfDB,galacticDiskAge,parameterIMF,
      &               parameterIFMR,timeOfBurst
+
+      common /tables/ table
       
       include 'code/tables_linking.f'
 

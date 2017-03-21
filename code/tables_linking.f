@@ -1,5 +1,3 @@
-      TYPE(FileInfo),DIMENSION(86) :: table
-
       do 1 i=1,7
         table(i)%initLink=10
         table(i)%link=10+i

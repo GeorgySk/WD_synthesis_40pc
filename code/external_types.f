@@ -1,6 +1,7 @@
       MODULE external_types
 
       TYPE FileInfo
+        SEQUENCE
         CHARACTER(len=7) :: tableType
         CHARACTER(len=3) :: WDtype
         INTEGER :: flag
