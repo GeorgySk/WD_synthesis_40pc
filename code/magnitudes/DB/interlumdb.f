@@ -115,7 +115,7 @@ C     interpolating for Z
         call interp(model,modlog,tcool,mass,
      &       numberOfSequencesInGroup_1,table(34)%ntrk,
      &       table(34)%coolingTime,table(34)%prevTime,
-     &       table(34)%mass,matrixOfEffectiveTemperatures_1,teff1)
+     &       table(34)%mass,table(34)%effTemp,teff1)
         modlog=0
         call interp(model,modlog,tcool,mass,
      &       numberOfSequencesInGroup_1,table(34)%ntrk,
@@ -131,7 +131,7 @@ C     interpolating for Z
         call interp(model,modlog,tcool,mass,
      &       numberOfSequencesInGroup_2,table(41)%ntrk,
      &       table(41)%coolingTime,table(41)%prevTime,
-     &       table(41)%mass,matrixOfEffectiveTemperatures_2,teff2)
+     &       table(41)%mass,table(41)%effTemp,teff2)
         modlog=0
         call interp(model,modlog,tcool,mass,
      &       numberOfSequencesInGroup_2,table(41)%ntrk,
@@ -149,7 +149,7 @@ C     interpolating for Z
         call interp(model,modlog,tcool,mass,
      &       numberOfSequencesInGroup_2,table(41)%ntrk,
      &       table(41)%coolingTime,table(41)%prevTime,
-     &       table(41)%mass,matrixOfEffectiveTemperatures_2,teff1)
+     &       table(41)%mass,table(41)%effTemp,teff1)
         modlog=0
         call interp(model,modlog,tcool,mass,
      &       numberOfSequencesInGroup_2,table(41)%ntrk,
@@ -164,7 +164,7 @@ C     interpolating for Z
         call interp(model,modlog,tcool,mass,numberOfSequencesInGroup_3,
      &       table(50)%ntrk,table(50)%coolingTime,
      &       table(50)%prevTime,table(50)%mass,
-     &       matrixOfEffectiveTemperatures_3,teff2)
+     &       table(50)%effTemp,teff2)
         modlog=0
         call interp(model,modlog,tcool,mass,numberOfSequencesInGroup_3,
      &       table(50)%ntrk,table(50)%coolingTime,
