@@ -120,7 +120,7 @@ C     interpolating for Z
         call interp(model,modlog,tcool,mass,
      &       numberOfSequencesInGroup_1,table(34)%ntrk,
      &       table(34)%coolingTime,table(34)%prevTime,
-     &       table(34)%mass,matrixOfLog_g_1,logg1)
+     &       table(34)%mass,table(34)%gravAcc,logg1)
 
         Z2=zet2
         call interp(model,modlog,tcool,mass,
@@ -136,7 +136,7 @@ C     interpolating for Z
         call interp(model,modlog,tcool,mass,
      &       numberOfSequencesInGroup_2,table(41)%ntrk,
      &       table(41)%coolingTime,table(41)%prevTime,
-     &       table(41)%mass,matrixOfLog_g_2,logg2)
+     &       table(41)%mass,table(41)%gravAcc,logg2)
       end if
       
       if(Z.ge.zet2.AND.Z.lt.zet3) then
@@ -154,7 +154,7 @@ C     interpolating for Z
         call interp(model,modlog,tcool,mass,
      &       numberOfSequencesInGroup_2,table(41)%ntrk,
      &       table(41)%coolingTime,table(41)%prevTime,
-     &       table(41)%mass,matrixOfLog_g_2,logg1)
+     &       table(41)%mass,table(41)%gravAcc,logg1)
       Z2=zet3
         call interp(model,modlog,tcool,mass,numberOfSequencesInGroup_3,
      &       table(50)%ntrk,table(50)%coolingTime,
@@ -168,7 +168,7 @@ C     interpolating for Z
         modlog=0
         call interp(model,modlog,tcool,mass,numberOfSequencesInGroup_3,
      &       table(50)%ntrk,table(50)%coolingTime,
-     &       table(50)%prevTime,table(50)%mass,matrixOfLog_g_3,
+     &       table(50)%prevTime,table(50)%mass,table(50)%gravAcc,
      &       logg2)
       end if
       

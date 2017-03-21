@@ -362,17 +362,17 @@ C     TODO: rename the function 'incooldb'
      &     table(34)%ncol,table(34)%ntrk,
      &     table(34)%mass,table(34)%coolingTime,
      &     table(34)%prevTime,table(34)%luminosity,
-     &     table(34)%effTemp,matrixOfLog_g_1)
+     &     table(34)%effTemp,table(34)%gravAcc)
       call incooldb(table(41)%flag,table(41)%initLink,
      &     table(41)%ncol,table(41)%ntrk,
      &     table(41)%mass,table(41)%coolingTime,
      &     table(41)%prevTime,table(41)%luminosity,
-     &     table(41)%effTemp,matrixOfLog_g_2)
+     &     table(41)%effTemp,table(41)%gravAcc)
       call incooldb(table(50)%flag,table(50)%initLink,
      &     table(50)%ncol,table(50)%ntrk,
      &     table(50)%mass,table(50)%coolingTime,
      &     table(50)%prevTime,table(50)%luminosity,
-     &     table(50)%effTemp,matrixOfLog_g_3)
+     &     table(50)%effTemp,table(50)%gravAcc)
 
       write(6,*) '   1.3 Tracks of ONe DA WD'
 
