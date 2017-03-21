@@ -110,33 +110,33 @@ C     interpolating for Z
         call interp(model,modlog,tcool,mass,
      &       numberOfSequencesInGroup_1,table(34)%ntrk,
      &       matrixOfCoolingTimes_1,vectorOfPreviousTimes_1,
-     &       vectorOfMasses_1,matrixOfLuminosities_1,lum1)
+     &       table(34)%mass,matrixOfLuminosities_1,lum1)
         modlog=1
         call interp(model,modlog,tcool,mass,
      &       numberOfSequencesInGroup_1,table(34)%ntrk,
      &       matrixOfCoolingTimes_1,vectorOfPreviousTimes_1,
-     &       vectorOfMasses_1,matrixOfEffectiveTemperatures_1,teff1)
+     &       table(34)%mass,matrixOfEffectiveTemperatures_1,teff1)
         modlog=0
         call interp(model,modlog,tcool,mass,
      &       numberOfSequencesInGroup_1,table(34)%ntrk,
      &       matrixOfCoolingTimes_1,vectorOfPreviousTimes_1,
-     &       vectorOfMasses_1,matrixOfLog_g_1,logg1)
+     &       table(34)%mass,matrixOfLog_g_1,logg1)
 
         Z2=zet2
         call interp(model,modlog,tcool,mass,
      &       numberOfSequencesInGroup_2,table(41)%ntrk,
      &       matrixOfCoolingTimes_2,vectorOfPreviousTimes_2,
-     &       vectorOfMasses_2,matrixOfLuminosities_2,lum2)
+     &       table(41)%mass,matrixOfLuminosities_2,lum2)
         modlog=1
         call interp(model,modlog,tcool,mass,
      &       numberOfSequencesInGroup_2,table(41)%ntrk,
      &       matrixOfCoolingTimes_2,vectorOfPreviousTimes_2,
-     &       vectorOfMasses_2,matrixOfEffectiveTemperatures_2,teff2)
+     &       table(41)%mass,matrixOfEffectiveTemperatures_2,teff2)
         modlog=0
         call interp(model,modlog,tcool,mass,
      &       numberOfSequencesInGroup_2,table(41)%ntrk,
      &       matrixOfCoolingTimes_2,vectorOfPreviousTimes_2,
-     &       vectorOfMasses_2,matrixOfLog_g_2,logg2)
+     &       table(41)%mass,matrixOfLog_g_2,logg2)
       end if
       
       if(Z.ge.zet2.AND.Z.lt.zet3) then
@@ -144,31 +144,31 @@ C     interpolating for Z
         call interp(model,modlog,tcool,mass,
      &       numberOfSequencesInGroup_2,table(41)%ntrk,
      &       matrixOfCoolingTimes_2,vectorOfPreviousTimes_2,
-     &       vectorOfMasses_2,matrixOfLuminosities_2,lum1)
+     &       table(41)%mass,matrixOfLuminosities_2,lum1)
         modlog=1
         call interp(model,modlog,tcool,mass,
      &       numberOfSequencesInGroup_2,table(41)%ntrk,
      &       matrixOfCoolingTimes_2,vectorOfPreviousTimes_2,
-     &       vectorOfMasses_2,matrixOfEffectiveTemperatures_2,teff1)
+     &       table(41)%mass,matrixOfEffectiveTemperatures_2,teff1)
         modlog=0
         call interp(model,modlog,tcool,mass,
      &       numberOfSequencesInGroup_2,table(41)%ntrk,
      &       matrixOfCoolingTimes_2,vectorOfPreviousTimes_2,
-     &       vectorOfMasses_2,matrixOfLog_g_2,logg1)
+     &       table(41)%mass,matrixOfLog_g_2,logg1)
       Z2=zet3
         call interp(model,modlog,tcool,mass,numberOfSequencesInGroup_3,
      &       table(50)%ntrk,matrixOfCoolingTimes_3,
-     &       vectorOfPreviousTimes_3,vectorOfMasses_3,
+     &       vectorOfPreviousTimes_3,table(50)%mass,
      &       matrixOfLuminosities_3,lum2)
         modlog=1
         call interp(model,modlog,tcool,mass,numberOfSequencesInGroup_3,
      &       table(50)%ntrk,matrixOfCoolingTimes_3,
-     &       vectorOfPreviousTimes_3,vectorOfMasses_3,
+     &       vectorOfPreviousTimes_3,table(50)%mass,
      &       matrixOfEffectiveTemperatures_3,teff2)
         modlog=0
         call interp(model,modlog,tcool,mass,numberOfSequencesInGroup_3,
      &       table(50)%ntrk,matrixOfCoolingTimes_3,
-     &       vectorOfPreviousTimes_3,vectorOfMasses_3,matrixOfLog_g_3,
+     &       vectorOfPreviousTimes_3,table(50)%mass,matrixOfLog_g_3,
      &       logg2)
       end if
       
