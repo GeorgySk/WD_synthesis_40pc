@@ -201,7 +201,8 @@ C     Interpolación para Z
       logg=logg1+(logg2-logg1)*(Z-Z1)/(Z2-Z1)
       
 C     interpolation of colors, here there is no metalicity
-      call intermag(mass,lum,numberOfMassesWithColors,ntrkda,massOfWD,
+      call intermag(mass,lum,numberOfMassesWithColors,table(77)%ntrk,
+     &     massOfWD,
      &     luminosity,color_U,color_B,color_V,color_R,color_I,c1,c2,c3,
      &     c4,c5)
 
