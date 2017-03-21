@@ -21,7 +21,9 @@ C       should be prevTime(ncol)..
 C       should be luminosity(ncol,nrow)..   
         DOUBLE PRECISION :: luminosity(10,650)
 C       should be effTemp(ncol,nrow)..   
-        DOUBLE PRECISION :: effTemp(10,650)        
+        DOUBLE PRECISION :: effTemp(10,650)
+C       should be gravAcc(ncol,nrow)..   
+        DOUBLE PRECISION :: gravAcc(10,650)
       ENDTYPE FileInfo
 
       END MODULE external_types

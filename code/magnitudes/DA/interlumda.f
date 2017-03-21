@@ -114,7 +114,7 @@ C     Interpolación para Z
         call interp(model,modlog,tcool,mass,table(1)%ncol,
      &       table(1)%ntrk,table(1)%coolingTime,table(1)%prevTime,
      &       table(1)%mass,
-     &       gravitationalAcceleration_1,logg1)
+     &       table(1)%gravAcc,logg1)
         Z2=zet2
         call interp(model,modlog,tcool,mass,
      &       table(8)%ncol,table(8)%ntrk,table(8)%coolingTime,
@@ -128,7 +128,7 @@ C     Interpolación para Z
         call interp(model,modlog,tcool,mass,
      &       table(8)%ncol,table(8)%ntrk,table(8)%coolingTime,
      &       table(8)%prevTime,table(8)%mass,
-     &       gravitationalAcceleration_2,logg2)
+     &       table(8)%gravAcc,logg2)
       end if
       
       if(Z.ge.zet2.AND.Z.lt.zet3) then
@@ -145,7 +145,7 @@ C     Interpolación para Z
         call interp(model,modlog,tcool,mass,
      &       table(8)%ncol,table(8)%ntrk,table(8)%coolingTime,
      &       table(8)%prevTime,table(8)%mass,
-     &       gravitationalAcceleration_2,logg1)
+     &       table(8)%gravAcc,logg1)
         Z2=zet3
         call interp(model,modlog,tcool,mass,
      &       table(18)%ncol,table(18)%ntrk,table(18)%coolingTime,
@@ -160,7 +160,7 @@ C     Interpolación para Z
         call interp(model,modlog,tcool,mass,
      &       table(18)%ncol,table(18)%ntrk,table(18)%coolingTime,
      &       table(18)%prevTime,table(18)%mass,
-     &       gravitationalAcceleration_3,logg2)
+     &       table(18)%gravAcc,logg2)
       end if
       
       if(Z.ge.zet3.AND.Z.le.zet4) then
@@ -178,7 +178,7 @@ C     Interpolación para Z
         call interp(model,modlog,tcool,mass,
      &       table(18)%ncol,table(18)%ntrk,table(18)%coolingTime,
      &       table(18)%prevTime,table(18)%mass,
-     &       gravitationalAcceleration_3,logg1)
+     &       table(18)%gravAcc,logg1)
         Z2=zet4
         call interp(model,modlog,tcool,mass,
      &       table(26)%ncol,table(26)%ntrk,table(26)%coolingTime,
@@ -193,7 +193,7 @@ C     Interpolación para Z
         call interp(model,modlog,tcool,mass,
      &       table(26)%ncol,table(26)%ntrk,table(26)%coolingTime,
      &       table(26)%prevTime,table(26)%mass,
-     &       gravitationalAcceleration_4,logg2)
+     &       table(26)%gravAcc,logg2)
       end if
       
       lum=lum1+(lum2-lum1)*(Z-Z1)/(Z2-Z1)
