@@ -53,93 +53,8 @@ C----------------------------------------------------------------------
       parameter (parameterOfSFR=25.0)
       parameter (scaleLength=3.5)
 
-C     nrow - number of rows in DA color and cooling tables
-C     nrowb - number of rows in DB cooling tables
-C     nrowb2 - number of rows in DB color tables
-      integer nrow,nrowb,nrowb2
-      parameter (nrow=650)
-      parameter (nrowb=400)
-      parameter (nrowb2=60)
-
-C     TODO: move all this to hash-table/map/dictionary/array or smth
-C     flags - determine what metallicity
-      integer flag_1,flag_2,flag_3
-C     these are links to files of DA cooling tables
-      integer initialCoolSeqIndex_1,
-     &        initialCoolSeqIndex_2,initialCoolSeqIndex_3,
-     &        initialCoolSeqIndex_4
-C     numbers of columns in DA cooling tables
-      integer numberOfMassesWithCoolSeq_1,
-     &        numberOfMassesWithCoolSeq_2,numberOfMassesWithCoolSeq_3,
-     &        numberOfMassesWithCoolSeq_4
-C     number of columns in DA color table
-      integer numberOfMassesWithColors
-C     these are links to files of DB cooling tables
-      integer firstFileOfTheGroup_1,firstFileOfTheGroup_2,
-     &        firstFileOfTheGroup_3
-C     number of columns in DB cooling tables
-      integer numberOfSequencesInGroup_1,
-     &        numberOfSequencesInGroup_2,numberOfSequencesInGroup_3
-C     number of columns in DB color table
-      integer numberOfSequences
-
-C     QUESTION: what are these variables?
-C     ntrkda - color DA; numberOfRows - isn't number of rows -DA cooling
-      integer ntrkda(10),numberOfRows_1(7),numberOfRows_2(10),
-     &        numberOfRows_3(8),numberOfRows_4(8)
-C     same as ntrkda and numberOfRows but for DB
-      integer vectorOfPointsNumberOfSeq_1(7),
-     &        vectorOfPointsNumberOfSeq_2(9),
-     &        vectorOfPointsNumberOfSeq_3(9),
-     &        numberOfPointsInSequence(7)
-
       integer i,ISEED1,ISEED2,iseed,numberOfStarsInSample
       double precision randomNumber,fractionOfDB
-
-C     TODO: create classes and take them away from commons
-      double precision coolingTimes_1(7,nrow),coolingTimes_2(10,nrow),
-     &                 coolingTimes_3(8,nrow)
-      double precision coolingTimes_4(8,nrow)
-      double precision massOfWD(10),massOfWD_1(7),massOfWD_2(10),
-     &                 massOfWD_3(8),massOfWD_4(8)
-      double precision luminosity_1(7,nrow),
-     &                 effectiveTemperature_1(7,nrow),
-     &                 gravitationalAcceleration_1(7,nrow)
-      double precision luminosity_2(10,nrow),
-     &                 effectiveTemperature_2(10,nrow),
-     &                 gravitationalAcceleration_2(10,nrow)
-      double precision luminosity_3(8,nrow),
-     &                 effectiveTemperature_3(8,nrow),
-     &                 gravitationalAcceleration_3(8,nrow)
-      double precision luminosity_4(8,nrow),
-     &                 effectiveTemperature_4(8,nrow),
-     &                 gravitationalAcceleration_4(8,nrow)
-      double precision tprewdda1(7),tprewdda2(10),tprewdda3(8)
-      double precision tprewdda4(8)
-      double precision luminosity(10,nrow),color_U(10,nrow),
-     &                 color_B(10,nrow),color_V(10,nrow)
-      double precision color_R(10,nrow),color_I(10,nrow)
-      double precision vectorOfMasses_1(7),vectorOfMasses_2(9),
-     &                 vectorOfMasses_3(9),massSequence(7)
-      double precision matrixOfCoolingTimes_1(7,nrowb),
-     &                 matrixOfLuminosities_1(7,nrowb)
-      double precision matrixOfEffectiveTemperatures_1(7,nrowb),
-     &                 matrixOfLog_g_1(7,nrowb)
-      double precision matrixOfCoolingTimes_2(9,nrowb),
-     &                 matrixOfLuminosities_2(9,nrowb)
-      double precision matrixOfEffectiveTemperatures_2(9,nrowb),
-     &                 matrixOfLog_g_2(9,nrowb)
-      double precision matrixOfCoolingTimes_3(9,nrowb),
-     &                 matrixOfLuminosities_3(9,nrowb)
-      double precision matrixOfEffectiveTemperatures_3(9,nrowb),
-     &                 matrixOfLog_g_3(9,nrowb)
-      double precision vectorOfPreviousTimes_1(7),
-     &                 vectorOfPreviousTimes_2(9),
-     &                 vectorOfPreviousTimes_3(9)
-      double precision luminosityDB(7,nrowb2),colorDB_U(7,nrowb2),
-     &                 colorDB_B(7,nrowb2)
-      double precision colorDB_V(7,nrowb2),colorDB_R(7,nrowb2),
-     &                 colorDB_I(7,nrowb2)
 
 C     QUESTION: what is gamma?    
       double precision parameterIFMR,variationOfGravConst,gamma
@@ -167,82 +82,12 @@ C     ---  Commons S.Torres   ---
        
       common /RSEED/ ISEED1,ISEED2
       
-C     ---  Commons Rux ---
-C     QUESTION: what is the maximum limit of symbols for groups names?
-C     TODO: give better names to common groups
-      common /nums/ numberOfMassesWithColors,
-     &              numberOfMassesWithCoolSeq_1,
-     &              numberOfMassesWithCoolSeq_2,
-     &              numberOfMassesWithCoolSeq_3,
-     &              numberOfMassesWithCoolSeq_4
-      common /nums2/ ntrkda,numberOfRows_1,numberOfRows_2,
-     &               numberOfRows_3,numberOfRows_4
-      common /masses/ massOfWD,massOfWD_1,massOfWD_2,massOfWD_3,
-     &                massOfWD_4
-      common /datrks1/ coolingTimes_1,luminosity_1,
-     &                 effectiveTemperature_1,
-     &                 gravitationalAcceleration_1
-      common /datrks2/ coolingTimes_2,luminosity_2,
-     &                 effectiveTemperature_2,
-     &                 gravitationalAcceleration_2
-      common /datrks3/ coolingTimes_3,luminosity_3,
-     &                 effectiveTemperature_3,
-     &                 gravitationalAcceleration_3
-      common /datrks4/ coolingTimes_4,luminosity_4,
-     &                 effectiveTemperature_4,
-     &                 gravitationalAcceleration_4
-      common /datprewd/ tprewdda1,tprewdda2,tprewdda3,tprewdda4
-      common /dbnums/ numberOfSequences,numberOfSequencesInGroup_1,
-     &                numberOfSequencesInGroup_2,
-     &                numberOfSequencesInGroup_3
-      common /dbnums2/ vectorOfPointsNumberOfSeq_1,
-     &                 vectorOfPointsNumberOfSeq_2,
-     &                 vectorOfPointsNumberOfSeq_3,
-     &                 numberOfPointsInSequence
-      common /massesdb/ massSequence,vectorOfMasses_1,vectorOfMasses_2,
-     &                  vectorOfMasses_3
-      common /dbtrks1/ matrixOfLuminosities_1,
-     &                 matrixOfEffectiveTemperatures_1,matrixOfLog_g_1,
-     &                 matrixOfCoolingTimes_1
-      common /dbtrks2/ matrixOfLuminosities_2,
-     &                 matrixOfEffectiveTemperatures_2,matrixOfLog_g_2,
-     &                 matrixOfCoolingTimes_2
-      common /dbtrks3/ matrixOfLuminosities_3,
-     &                 matrixOfEffectiveTemperatures_3,matrixOfLog_g_3,
-     &                 matrixOfCoolingTimes_3
-      common /dbtprewd/ vectorOfPreviousTimes_1,vectorOfPreviousTimes_2,
-     &                  vectorOfPreviousTimes_3
-      common /colors/ luminosity,color_U,color_B,color_V,color_R,color_I
-      common /dbcolors/ luminosityDB,colorDB_U,colorDB_B,colorDB_V,
-     &                  colorDB_R,colorDB_I
       common /vargra/ variationOfGravConst,gamma
       common /param/ fractionOfDB,galacticDiskAge,parameterIMF,
      &               parameterIFMR,timeOfBurst
-
       common /tables/ table
       
       include 'code/tables_linking.f'
-
-C     ---  Initialization of parameters of Rux ---
-      flag_1=1
-      flag_2=2
-      flag_3=3
-      initialCoolSeqIndex_1=10
-      initialCoolSeqIndex_2=20
-      initialCoolSeqIndex_3=30
-      initialCoolSeqIndex_4=40
-      firstFileOfTheGroup_1=90
-      firstFileOfTheGroup_2=100
-      firstFileOfTheGroup_3=110
-      numberOfMassesWithColors=10
-      numberOfMassesWithCoolSeq_1=7
-      numberOfMassesWithCoolSeq_2=10
-      numberOfMassesWithCoolSeq_3=8
-      numberOfMassesWithCoolSeq_4=8
-      numberOfSequencesInGroup_1=7
-      numberOfSequencesInGroup_2=9
-      numberOfSequencesInGroup_3=9
-      numberOfSequences=7
 
 C     TODO: if input is from file then these parameters will be zeroes
 C     ---  Screen output of used parameters  ---
