@@ -179,8 +179,9 @@ C     interpolation 3D in function of Z
       
 C     colors interpolation, here there is no metallicity
       call intermag(mass,lum,numberOfSequences,
-     &     numberOfPointsInSequence,massSequence,luminosityDB,colorDB_U,
-     &     colorDB_B,colorDB_V,colorDB_R,colorDB_I,c1,c2,c3,c4,c5)
+     &     table(70)%ntrk,table(70)%mass,table(70)%luminosity,
+     &     table(70)%color_U,table(70)%color_B,table(70)%color_V,
+     &     table(70)%color_R,table(70)%color_I,c1,c2,c3,c4,c5)
 
       return
       end

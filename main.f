@@ -386,9 +386,10 @@ C     TODO: rename these functions
      &     table(77)%luminosity,
      &     table(77)%color_U,table(77)%color_B,table(77)%color_R,
      &     table(77)%color_V,table(77)%color_I)      
-      call colordb(table(70)%ncol,numberOfPointsInSequence,
-     &     massSequence,luminosityDB,colorDB_U,colorDB_B,colorDB_V,
-     &     colorDB_R,colorDB_I)
+      call colordb(table(70)%ncol,table(70)%ntrk,
+     &     table(70)%mass,table(70)%luminosity,table(70)%color_U,
+     &     table(70)%color_B,table(70)%color_V,table(70)%color_R,
+     &     table(70)%color_I)
 
       write (6,*) '   1.5 Reading the tables of CO DA with G variable'
 C     TODO: rename this function      
