@@ -360,17 +360,17 @@ C     Calling the function 'incoolda' for 4 metalicities that we have
 C     TODO: rename the function 'incooldb'
       call incooldb(table(34)%flag,table(34)%initLink,
      &     table(34)%ncol,table(34)%ntrk,
-     &     table(34)%mass,matrixOfCoolingTimes_1,
+     &     table(34)%mass,table(34)%coolingTime,
      &     vectorOfPreviousTimes_1,matrixOfLuminosities_1,
      &     matrixOfEffectiveTemperatures_1,matrixOfLog_g_1)
       call incooldb(table(41)%flag,table(41)%initLink,
      &     table(41)%ncol,table(41)%ntrk,
-     &     table(41)%mass,matrixOfCoolingTimes_2,
+     &     table(41)%mass,table(41)%coolingTime,
      &     vectorOfPreviousTimes_2,matrixOfLuminosities_2,
      &     matrixOfEffectiveTemperatures_2,matrixOfLog_g_2)
       call incooldb(table(50)%flag,table(50)%initLink,
      &     table(50)%ncol,table(50)%ntrk,
-     &     table(50)%mass,matrixOfCoolingTimes_3,
+     &     table(50)%mass,table(50)%coolingTime,
      &     vectorOfPreviousTimes_3,matrixOfLuminosities_3,
      &     matrixOfEffectiveTemperatures_3,matrixOfLog_g_3)
 
