@@ -104,7 +104,7 @@ C     Interpolación para Z
         call interp(model,modlog,tcool,mass,table(1)%ncol,
      &       table(1)%ntrk,table(1)%coolingTime,table(1)%prevTime,
      &       table(1)%mass,
-     &       luminosity_1,lum1)
+     &       table(1)%luminosity,lum1)
         modlog=1
         call interp(model,modlog,tcool,mass,table(1)%ncol,
      &       table(1)%ntrk,table(1)%coolingTime,table(1)%prevTime,
@@ -118,7 +118,7 @@ C     Interpolación para Z
         Z2=zet2
         call interp(model,modlog,tcool,mass,
      &       table(8)%ncol,table(8)%ntrk,table(8)%coolingTime,
-     &       table(8)%prevTime,table(8)%mass,luminosity_2,lum2)
+     &       table(8)%prevTime,table(8)%mass,table(8)%luminosity,lum2)
         modlog=1
         call interp(model,modlog,tcool,mass,
      &       table(8)%ncol,table(8)%ntrk,table(8)%coolingTime,
@@ -135,7 +135,7 @@ C     Interpolación para Z
         Z1=zet2
         call interp(model,modlog,tcool,mass,
      &       table(8)%ncol,table(8)%ntrk,table(8)%coolingTime,
-     &       table(8)%prevTime,table(8)%mass,luminosity_2,lum1)
+     &       table(8)%prevTime,table(8)%mass,table(8)%luminosity,lum1)
         modlog=1
         call interp(model,modlog,tcool,mass,
      &       table(8)%ncol,table(8)%ntrk,table(8)%coolingTime,
@@ -149,7 +149,8 @@ C     Interpolación para Z
         Z2=zet3
         call interp(model,modlog,tcool,mass,
      &       table(18)%ncol,table(18)%ntrk,table(18)%coolingTime,
-     &       table(18)%prevTime,table(18)%mass,luminosity_3,lum2)
+     &       table(18)%prevTime,table(18)%mass,table(18)%luminosity,
+     &       lum2)
         modlog=1
         call interp(model,modlog,tcool,mass,
      &       table(18)%ncol,table(18)%ntrk,table(18)%coolingTime,
@@ -166,7 +167,8 @@ C     Interpolación para Z
         Z1=zet3
         call interp(model,modlog,tcool,mass,
      &       table(18)%ncol,table(18)%ntrk,table(18)%coolingTime,
-     &       table(18)%prevTime,table(18)%mass,luminosity_3,lum1)
+     &       table(18)%prevTime,table(18)%mass,table(18)%luminosity,
+     &       lum1)
         modlog=1
         call interp(model,modlog,tcool,mass,
      &       table(18)%ncol,table(18)%ntrk,table(18)%coolingTime,
@@ -180,7 +182,8 @@ C     Interpolación para Z
         Z2=zet4
         call interp(model,modlog,tcool,mass,
      &       table(26)%ncol,table(26)%ntrk,table(26)%coolingTime,
-     &       table(26)%prevTime,table(26)%mass,luminosity_4,lum2)
+     &       table(26)%prevTime,table(26)%mass,table(26)%luminosity,
+     &       lum2)
         modlog=1
         call interp(model,modlog,tcool,mass,
      &       table(26)%ncol,table(26)%ntrk,table(26)%coolingTime,
