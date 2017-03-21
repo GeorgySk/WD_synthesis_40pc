@@ -24,6 +24,16 @@ C       should be effTemp(ncol,nrow)..
         DOUBLE PRECISION :: effTemp(10,650)
 C       should be gravAcc(ncol,nrow)..   
         DOUBLE PRECISION :: gravAcc(10,650)
+C       should be color_U(ncol,nrow)..   
+        DOUBLE PRECISION :: color_U(10,650)
+C       should be color_B(ncol,nrow)..   
+        DOUBLE PRECISION :: color_B(10,650)
+C       should be color_V(ncol,nrow)..   
+        DOUBLE PRECISION :: color_V(10,650)
+C       should be color_R(ncol,nrow)..   
+        DOUBLE PRECISION :: color_R(10,650)
+C       should be color_I(ncol,nrow)..   
+        DOUBLE PRECISION :: color_I(10,650)
       ENDTYPE FileInfo
 
       END MODULE external_types

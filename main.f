@@ -384,7 +384,8 @@ C     TODO: rename the function 'incoolone'
 C     TODO: rename these functions      
       call color(table(77)%ncol,table(77)%ntrk,table(77)%mass,
      &     table(77)%luminosity,
-     &     color_U,color_B,color_R,color_V,color_I)      
+     &     table(77)%color_U,table(77)%color_B,table(77)%color_R,
+     &     table(77)%color_V,table(77)%color_I)      
       call colordb(table(70)%ncol,numberOfPointsInSequence,
      &     massSequence,luminosityDB,colorDB_U,colorDB_B,colorDB_V,
      &     colorDB_R,colorDB_I)
