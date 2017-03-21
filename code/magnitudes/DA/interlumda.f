@@ -102,81 +102,81 @@ C     Interpolación para Z
       if(Z.ge.zet1.AND.Z.lt.zet2) then
         Z1=zet1
         call interp(model,modlog,tcool,mass,table(1)%ncol,
-     &       table(1)%ntrk,coolingTimes_1,tprewdda1,table(1)%mass,
+     &       table(1)%ntrk,table(1)%coolingTime,tprewdda1,table(1)%mass,
      &       luminosity_1,lum1)
         modlog=1
         call interp(model,modlog,tcool,mass,table(1)%ncol,
-     &       table(1)%ntrk,coolingTimes_1,tprewdda1,table(1)%mass,
+     &       table(1)%ntrk,table(1)%coolingTime,tprewdda1,table(1)%mass,
      &       effectiveTemperature_1,teff1)
         modlog=0
         call interp(model,modlog,tcool,mass,table(1)%ncol,
-     &       table(1)%ntrk,coolingTimes_1,tprewdda1,table(1)%mass,
+     &       table(1)%ntrk,table(1)%coolingTime,tprewdda1,table(1)%mass,
      &       gravitationalAcceleration_1,logg1)
         Z2=zet2
         call interp(model,modlog,tcool,mass,
-     &       table(8)%ncol,table(8)%ntrk,coolingTimes_2,
+     &       table(8)%ncol,table(8)%ntrk,table(8)%coolingTime,
      &       tprewdda2,table(8)%mass,luminosity_2,lum2)
         modlog=1
         call interp(model,modlog,tcool,mass,
-     &       table(8)%ncol,table(8)%ntrk,coolingTimes_2,
+     &       table(8)%ncol,table(8)%ntrk,table(8)%coolingTime,
      &       tprewdda2,table(8)%mass,effectiveTemperature_2,teff2)
         modlog=0
         call interp(model,modlog,tcool,mass,
-     &       table(8)%ncol,table(8)%ntrk,coolingTimes_2,
+     &       table(8)%ncol,table(8)%ntrk,table(8)%coolingTime,
      &       tprewdda2,table(8)%mass,gravitationalAcceleration_2,logg2)
       end if
       
       if(Z.ge.zet2.AND.Z.lt.zet3) then
         Z1=zet2
         call interp(model,modlog,tcool,mass,
-     &       table(8)%ncol,table(8)%ntrk,coolingTimes_2,
+     &       table(8)%ncol,table(8)%ntrk,table(8)%coolingTime,
      &       tprewdda2,table(8)%mass,luminosity_2,lum1)
         modlog=1
         call interp(model,modlog,tcool,mass,
-     &       table(8)%ncol,table(8)%ntrk,coolingTimes_2,
+     &       table(8)%ncol,table(8)%ntrk,table(8)%coolingTime,
      &       tprewdda2,table(8)%mass,effectiveTemperature_2,teff1)
         modlog=0
         call interp(model,modlog,tcool,mass,
-     &       table(8)%ncol,table(8)%ntrk,coolingTimes_2,
+     &       table(8)%ncol,table(8)%ntrk,table(8)%coolingTime,
      &       tprewdda2,table(8)%mass,gravitationalAcceleration_2,logg1)
         Z2=zet3
         call interp(model,modlog,tcool,mass,
-     &       table(18)%ncol,table(18)%ntrk,coolingTimes_3,
+     &       table(18)%ncol,table(18)%ntrk,table(18)%coolingTime,
      &       tprewdda3,table(18)%mass,luminosity_3,lum2)
         modlog=1
         call interp(model,modlog,tcool,mass,
-     &       table(18)%ncol,table(18)%ntrk,coolingTimes_3,
+     &       table(18)%ncol,table(18)%ntrk,table(18)%coolingTime,
      &       tprewdda3,table(18)%mass,effectiveTemperature_3,teff2)
         modlog=0
         call interp(model,modlog,tcool,mass,
-     &       table(18)%ncol,table(18)%ntrk,coolingTimes_3,
+     &       table(18)%ncol,table(18)%ntrk,table(18)%coolingTime,
      &       tprewdda3,table(18)%mass,gravitationalAcceleration_3,logg2)
       end if
       
       if(Z.ge.zet3.AND.Z.le.zet4) then
         Z1=zet3
         call interp(model,modlog,tcool,mass,
-     &       table(18)%ncol,table(18)%ntrk,coolingTimes_3,
+     &       table(18)%ncol,table(18)%ntrk,table(18)%coolingTime,
      &       tprewdda3,table(18)%mass,luminosity_3,lum1)
         modlog=1
         call interp(model,modlog,tcool,mass,
-     &       table(18)%ncol,table(18)%ntrk,coolingTimes_3,
+     &       table(18)%ncol,table(18)%ntrk,table(18)%coolingTime,
      &       tprewdda3,table(18)%mass,effectiveTemperature_3,teff1)
         modlog=0
         call interp(model,modlog,tcool,mass,
-     &       table(18)%ncol,table(18)%ntrk,coolingTimes_3,
+     &       table(18)%ncol,table(18)%ntrk,table(18)%coolingTime,
      &       tprewdda3,table(18)%mass,gravitationalAcceleration_3,logg1)
         Z2=zet4
         call interp(model,modlog,tcool,mass,
-     &       table(26)%ncol,table(26)%ntrk,coolingTimes_4,
+     &       table(26)%ncol,table(26)%ntrk,table(26)%coolingTime,
      &       tprewdda4,table(26)%mass,luminosity_4,lum2)
         modlog=1
         call interp(model,modlog,tcool,mass,
-     &       table(26)%ncol,table(26)%ntrk,coolingTimes_4,
+     &       table(26)%ncol,table(26)%ntrk,table(26)%coolingTime,
      &       tprewdda4,table(26)%mass,effectiveTemperature_4,teff2)
         modlog=0
         call interp(model,modlog,tcool,mass,
-     &       table(26)%ncol,table(26)%ntrk,coolingTimes_4,
+     &       table(26)%ncol,table(26)%ntrk,table(26)%coolingTime,
      &       tprewdda4,table(26)%mass,gravitationalAcceleration_4,logg2)
       end if
       

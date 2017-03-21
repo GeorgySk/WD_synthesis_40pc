@@ -14,6 +14,8 @@ C       should be ntrk(ncol) but compiler gets angry. 10 is max of ncol
         INTEGER :: ntrk(10)
 C       should be mass(ncol)..        
         DOUBLE PRECISION :: mass(10)
+C       should be coolingTime(ncol,nrow)..   
+        DOUBLE PRECISION :: coolingTime(10,650)
       ENDTYPE FileInfo
 
       END MODULE external_types

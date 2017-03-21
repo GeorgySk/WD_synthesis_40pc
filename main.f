@@ -338,18 +338,18 @@ C     NOTE: ALl this can be place in one more compact block
 C     Calling the function 'incoolda' for 4 metalicities that we have
       call incoolda(table(1)%flag,table(1)%initLink,table(1)%ntrk,
      &     table(1)%ncol,table(1)%mass,
-     &     coolingTimes_1,tprewdda1,luminosity_1,effectiveTemperature_1,
-     &     gravitationalAcceleration_1)
+     &     table(1)%coolingTime,tprewdda1,luminosity_1,
+     &     effectiveTemperature_1,gravitationalAcceleration_1)
       call incoolda(table(8)%flag,table(8)%initLink,table(8)%ntrk,
-     &     table(8)%ncol,table(8)%mass,coolingTimes_2,
+     &     table(8)%ncol,table(8)%mass,table(8)%coolingTime,
      &     tprewdda2,luminosity_2,effectiveTemperature_2,
      &     gravitationalAcceleration_2)
       call incoolda(table(18)%flag,table(18)%initLink,table(18)%ntrk,
-     &     table(18)%ncol,table(18)%mass,coolingTimes_3,
+     &     table(18)%ncol,table(18)%mass,table(18)%coolingTime,
      &     tprewdda3,luminosity_3,effectiveTemperature_3,
      &     gravitationalAcceleration_3)
       call incoolda(table(26)%flag,table(26)%initLink,table(26)%ntrk,
-     &     table(26)%ncol,table(26)%mass,coolingTimes_4,
+     &     table(26)%ncol,table(26)%mass,table(26)%coolingTime,
      &     tprewdda4,luminosity_4,effectiveTemperature_4,
      &     gravitationalAcceleration_4)
       
