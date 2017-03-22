@@ -248,10 +248,15 @@ C       tcool temp idb coordinate_Zcylindr  uu vv ww
 C       velocities output
 93212   write(1156,*)  uu(i),vv(i),ww(i)     
       continue
+
+
+C     --- Making radial velocities zeroes  ---
 C     ------------------------------------------------------------------
+C      call vrado(uu,vv,ww)
 
 
 C     ---  Making histogram of the mass---
+C     ------------------------------------------------------------------
       K=0
   40  k=k+1 
       

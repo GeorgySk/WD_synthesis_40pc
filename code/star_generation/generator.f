@@ -154,10 +154,10 @@ C       --- Birth time from SFR constant  ---
        
 C       ---  Calculating the height pattern in kpc ---
 C       ---  modal of constant heightPattern  ---
-C        heightPattern(k)=sheight
+        heightPattern(k)=sheight
 C       --- modal of variable heightPattern  ---
-        heightPattern(k)=hDistr_zi*dexp(-starBirthTime(k)/hDistr_t)+
-     &                   hDistr_zf
+C        heightPattern(k)=hDistr_zi*dexp(-starBirthTime(k)/hDistr_t)+
+C     &                    hDistr_zf
 
 C       --- Calculating z ---
 C       TODO: delete this goto and put loop here

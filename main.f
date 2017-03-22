@@ -268,11 +268,12 @@ C     ---   Testing vrad=0   ---
       
       write(6, *) '10. Making vrad to be null (10/10)'
 
-      call vrado
+C      NOTE: here it is useless
+C      call vrado
 
       write (6,*) 'The end'
 
-C     ---   Formatss   ---
+C     ---   Formats   ---
 
 100   format(I6,2x,I6)           
 

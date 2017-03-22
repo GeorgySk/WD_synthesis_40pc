@@ -1,6 +1,6 @@
 C***********************************************************************
 C     TODO:rewrite      
-      subroutine vrado
+      subroutine vrado(u,v,w)
 C***********************************************************************
 C     This subroutine calculates the heliocentric velocities, starting
 C     from the proper motions in galactic coordinates, making zero
@@ -20,6 +20,7 @@ C     ---   Dimensiones   ---
       double precision rgac(numberOfStars),lgac(numberOfStars),
      &                 bgac(numberOfStars)
       double precision iwd(numberOfStars)
+      double precision u(ntwd),v(ntwd),w(ntwd)
 
 C    ---   Commons  ---
       common /lb/ lgac,bgac
@@ -38,11 +39,14 @@ C          making zero the radial velocity ---
         a1=-k*xcb*xsl
         b1=-k*xsb*xcl
         c1=0.0
+        u(i)=a1*mpl(i)*r+b1*mpb(i)*r+c1*vr(i)
         a2=k*xcb*xcl
         b2=-k*xsb*xsl
         c2=0.0
+        v(i)=a2*mpl(i)*r+b2*mpb(i)*r+c2*vr(i)
         b3=k*xcb
         c3=0.0
+        w(i)=b3*mpb(i)*r+c3*vr(i)
 1     continue
          
       return

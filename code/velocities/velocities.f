@@ -84,13 +84,13 @@ C       ---  Calculating the dispersions  ---
 C       ----------------------------------------------------------------      
 C       ---  THIN DISK  ---
 C       ---  model of sigmas depending on h variable
-        sigma(3)=dsqrt(heightPattern(i)/(6.25d-4))          
-        sigma(1)=(dsqrt(2.0d0))*sigma(3)
-        sigma(2)=(dsqrt(0.32+(1.67d-5)*sigma(1)*sigma(1)))*sigma(1)
+C        sigma(3)=dsqrt(heightPattern(i)/(6.25d-4))          
+C        sigma(1)=(dsqrt(2.0d0))*sigma(3)
+C        sigma(2)=(dsqrt(0.32+(1.67d-5)*sigma(1)*sigma(1)))*sigma(1)
 C       ---  model of constant sigmas
-C        sigma(1)=32.4
-C        sigma(2)=23.0
-C        sigma(3)=18.1 
+        sigma(1)=32.4
+        sigma(2)=23.0
+        sigma(3)=18.1 
 C       ---   Calling to the function of gaussian distribution  ---
         yy=gasdev(iseed)
         uop=uom(coordinate_R(i),coordinate_Theta(i),a,b,
