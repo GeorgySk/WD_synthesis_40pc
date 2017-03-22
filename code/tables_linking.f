@@ -1,108 +1,75 @@
-      do 1 i=1,7
-        table(i)%initLink=10
-        table(i)%link=10+i
-        table(i)%tableType="cooling"
-        table(i)%WDtype="DA"
-        table(i)%flag=1
-        table(i)%Z=0.001
-        table(i)%ncol=7
-        table(i)%nrow=650
-1     continue
+      table(1)%initLink=10
+      table(1)%tableType="cooling"
+      table(1)%WDtype="DA"
+      table(1)%flag=1
+      table(1)%Z=0.001
+      table(1)%ncol=7
+      table(1)%nrow=650
 
-      do 2 i=8,17
-        table(i)%initLink=20
-        table(i)%link=13+i
-        table(i)%tableType="cooling"
-        table(i)%WDtype="DA"
-        table(i)%flag=2
-        table(i)%Z=0.01
-        table(i)%ncol=10
-        table(i)%nrow=650
-2     continue
+      table(2)%initLink=20
+      table(2)%tableType="cooling"
+      table(2)%WDtype="DA"
+      table(2)%flag=2
+      table(2)%Z=0.01
+      table(2)%ncol=10
+      table(2)%nrow=650
 
-      do 3 i=18,25
-        table(i)%initLink=30
-        table(i)%link=13+i
-        table(i)%tableType="cooling"
-        table(i)%WDtype="DA"
-        table(i)%flag=3
-        table(i)%Z=0.03
-        table(i)%ncol=8
-        table(i)%nrow=650
-3     continue
+      table(3)%initLink=30
+      table(3)%tableType="cooling"
+      table(3)%WDtype="DA"
+      table(3)%flag=3
+      table(3)%Z=0.03
+      table(3)%ncol=8
+      table(3)%nrow=650
 
-      do 4 i=26,33
-        table(i)%initLink=40
-        table(i)%link=15+i
-        table(i)%tableType="cooling"
-        table(i)%WDtype="DA"
-        table(i)%flag=3
-        table(i)%Z=0.06
-        table(i)%ncol=8
-        table(i)%nrow=650
-4     continue
+      table(4)%initLink=40
+      table(4)%tableType="cooling"
+      table(4)%WDtype="DA"
+      table(4)%flag=3
+      table(4)%Z=0.06
+      table(4)%ncol=8
+      table(4)%nrow=650
 
-      do 5 i=34,40
-        table(i)%initLink=90
-        table(i)%link=57+i
-        table(i)%tableType="cooling"
-        table(i)%WDtype="DB"
-        table(i)%flag=1
-        table(i)%Z=0.001
-        table(i)%ncol=7
-        table(i)%nrow=400
-5     continue
+      table(5)%initLink=90
+      table(5)%tableType="cooling"
+      table(5)%WDtype="DB"
+      table(5)%flag=1
+      table(5)%Z=0.001
+      table(5)%ncol=7
+      table(5)%nrow=400
 
-      do 6 i=41,49
-        table(i)%initLink=100
-        table(i)%link=60+i
-        table(i)%tableType="cooling"
-        table(i)%WDtype="DB"
-        table(i)%flag=2
-        table(i)%Z=0.01
-        table(i)%ncol=9
-        table(i)%nrow=400
-6     continue
+      table(6)%initLink=100
+      table(6)%tableType="cooling"
+      table(6)%WDtype="DB"
+      table(6)%flag=2
+      table(6)%Z=0.01
+      table(6)%ncol=9
+      table(6)%nrow=400
 
-      do 77 i=50,58
-        table(i)%initLink=110
-        table(i)%link=61+i
-        table(i)%tableType="cooling"
-        table(i)%WDtype="DB"
-        table(i)%flag=3
-        table(i)%Z=0.06
-        table(i)%ncol=9
-        table(i)%nrow=400
-77     continue
+      table(7)%initLink=110
+      table(7)%tableType="cooling"
+      table(7)%WDtype="DB"
+      table(7)%flag=3
+      table(7)%Z=0.06
+      table(7)%ncol=9
+      table(7)%nrow=400
 
-      do 8 i=59,64
-        table(i)%initLink=120
-        table(i)%link=62+i
-        table(i)%tableType="color"
-        table(i)%WDtype="ONe"
-8     continue
+      table(8)%initLink=120
+      table(8)%tableType="color"
+      table(8)%WDtype="ONe"
 
-      do 9 i=65,69
-        table(i)%initLink=127
-        table(i)%link=62+i
-        table(i)%tableType="cooling"
-        table(i)%WDtype="ONe"
-9     continue
+      table(9)%initLink=127
+      table(9)%tableType="cooling"
+      table(9)%WDtype="ONe"
 
-      do 10 i=70,76
-        table(i)%initLink=131
-        table(i)%link=62+i
-        table(i)%tableType="colors"
-        table(i)%WDtype="DB"
-        table(i)%ncol=7
-        table(i)%nrow=60
-10     continue
+      table(10)%initLink=131
+      table(10)%tableType="colors"
+      table(10)%WDtype="DB"
+      table(10)%ncol=7
+      table(10)%nrow=60
 
-      do 11 i=77,86
-        table(i)%initLink=60
-        table(i)%link=i-16
-        table(i)%tableType="colors"
-        table(i)%WDtype="DA"
-        table(i)%ncol=10
-        table(i)%nrow=650
-11     continue
+      table(11)%initLink=60
+      table(11)%tableType="colors"
+      table(11)%WDtype="DA"
+      table(11)%ncol=10
+      table(11)%nrow=650

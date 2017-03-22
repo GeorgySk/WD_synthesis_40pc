@@ -14,6 +14,7 @@ C----------------------------------------------------------------------
 C     adding FileInfo type which carries all the info about
 C     files of cooling and color tables: fort.xx links, numbers of rows
 C     and columns, metallicities
+C     TODO: adapt FileInfo to the case of 11 instances (file groups)      
       include 'code/external_types.f'
 
       program monte
@@ -60,7 +61,7 @@ C     QUESTION: what is gamma?
       double precision parameterIFMR,variationOfGravConst,gamma
 
 C     TODO: make only 11 instances for each type not for each file      
-      TYPE(FileInfo),DIMENSION(86) :: table
+      TYPE(FileGroupInfo),DIMENSION(11) :: table
 
 C     --- Dimensions of variables of S.Torres  ---
 C--------------------------------------------------------------------
@@ -185,39 +186,37 @@ C     Calling the function 'incoolda' for 4 metalicities that we have
      &     table(1)%ncol,table(1)%mass,
      &     table(1)%coolingTime,table(1)%prevTime,table(1)%luminosity,
      &     table(1)%effTemp,table(1)%gravAcc)
-      call incoolda(table(8)%flag,table(8)%initLink,table(8)%ntrk,
-     &     table(8)%ncol,table(8)%mass,table(8)%coolingTime,
-     &     table(8)%prevTime,table(8)%luminosity,table(8)%effTemp,
-     &     table(8)%gravAcc)
-      call incoolda(table(18)%flag,table(18)%initLink,table(18)%ntrk,
-     &     table(18)%ncol,table(18)%mass,table(18)%coolingTime,
-     &     table(18)%prevTime,table(18)%luminosity,
-     &     table(18)%effTemp,
-     &     table(18)%gravAcc)
-      call incoolda(table(26)%flag,table(26)%initLink,table(26)%ntrk,
-     &     table(26)%ncol,table(26)%mass,table(26)%coolingTime,
-     &     table(26)%prevTime,table(26)%luminosity,
-     &     table(26)%effTemp,
-     &     table(26)%gravAcc)
+      call incoolda(table(2)%flag,table(2)%initLink,table(2)%ntrk,
+     &     table(2)%ncol,table(2)%mass,table(2)%coolingTime,
+     &     table(2)%prevTime,table(2)%luminosity,table(2)%effTemp,
+     &     table(2)%gravAcc)
+      call incoolda(table(3)%flag,table(3)%initLink,table(3)%ntrk,
+     &     table(3)%ncol,table(3)%mass,table(3)%coolingTime,
+     &     table(3)%prevTime,table(3)%luminosity,
+     &     table(3)%effTemp,table(3)%gravAcc)
+      call incoolda(table(4)%flag,table(4)%initLink,table(4)%ntrk,
+     &     table(4)%ncol,table(4)%mass,table(4)%coolingTime,
+     &     table(4)%prevTime,table(4)%luminosity,
+     &     table(4)%effTemp,table(4)%gravAcc)
       
       write(6,*) '   1.2 Tracks of CO non-DA (DB) WD'
 
 C     TODO: rename the function 'incooldb'
-      call incooldb(table(34)%flag,table(34)%initLink,
-     &     table(34)%ncol,table(34)%ntrk,
-     &     table(34)%mass,table(34)%coolingTime,
-     &     table(34)%prevTime,table(34)%luminosity,
-     &     table(34)%effTemp,table(34)%gravAcc)
-      call incooldb(table(41)%flag,table(41)%initLink,
-     &     table(41)%ncol,table(41)%ntrk,
-     &     table(41)%mass,table(41)%coolingTime,
-     &     table(41)%prevTime,table(41)%luminosity,
-     &     table(41)%effTemp,table(41)%gravAcc)
-      call incooldb(table(50)%flag,table(50)%initLink,
-     &     table(50)%ncol,table(50)%ntrk,
-     &     table(50)%mass,table(50)%coolingTime,
-     &     table(50)%prevTime,table(50)%luminosity,
-     &     table(50)%effTemp,table(50)%gravAcc)
+      call incooldb(table(5)%flag,table(5)%initLink,
+     &     table(5)%ncol,table(5)%ntrk,
+     &     table(5)%mass,table(5)%coolingTime,
+     &     table(5)%prevTime,table(5)%luminosity,
+     &     table(5)%effTemp,table(5)%gravAcc)
+      call incooldb(table(6)%flag,table(6)%initLink,
+     &     table(6)%ncol,table(6)%ntrk,
+     &     table(6)%mass,table(6)%coolingTime,
+     &     table(6)%prevTime,table(6)%luminosity,
+     &     table(6)%effTemp,table(6)%gravAcc)
+      call incooldb(table(7)%flag,table(7)%initLink,
+     &     table(7)%ncol,table(7)%ntrk,
+     &     table(7)%mass,table(7)%coolingTime,
+     &     table(7)%prevTime,table(7)%luminosity,
+     &     table(7)%effTemp,table(7)%gravAcc)
 
       write(6,*) '   1.3 Tracks of ONe DA WD'
 
@@ -227,14 +226,13 @@ C     TODO: rename the function 'incoolone'
       write(6,*) '   1.4 Reading the colors table of Rene(DAs) and Berge
      &ron(DBs)'
 C     TODO: rename these functions      
-      call color(table(77)%ncol,table(77)%ntrk,table(77)%mass,
-     &     table(77)%luminosity,
-     &     table(77)%color_U,table(77)%color_B,table(77)%color_R,
-     &     table(77)%color_V,table(77)%color_I)      
-      call colordb(table(70)%ncol,table(70)%ntrk,
-     &     table(70)%mass,table(70)%luminosity,table(70)%color_U,
-     &     table(70)%color_B,table(70)%color_V,table(70)%color_R,
-     &     table(70)%color_I)
+      call color(table(11)%ncol,table(11)%ntrk,table(11)%mass,
+     &     table(11)%luminosity,table(11)%color_U,table(11)%color_B,
+     &     table(11)%color_R,table(11)%color_V,table(11)%color_I)      
+      call colordb(table(10)%ncol,table(10)%ntrk,
+     &     table(10)%mass,table(10)%luminosity,table(10)%color_U,
+     &     table(10)%color_B,table(10)%color_V,table(10)%color_R,
+     &     table(10)%color_I)
 
       write (6,*) '   1.5 Reading the tables of CO DA with G variable'
 C     TODO: rename this function      

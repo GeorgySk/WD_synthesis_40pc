@@ -64,7 +64,7 @@ C     ---   Declaration of variables   ---
      &                 color_B(10,nrow),color_V(10,nrow)
       double precision color_R(10,nrow),color_I(10,nrow)
 
-      TYPE(FileInfo),DIMENSION(86) :: table
+      TYPE(FileGroupInfo),DIMENSION(11) :: table
 
 C     ---   Commons   ---
       common /nums/ numberOfMassesWithColors,
@@ -117,83 +117,83 @@ C     Interpolación para Z
      &       table(1)%gravAcc,logg1)
         Z2=zet2
         call interp(model,modlog,tcool,mass,
-     &       table(8)%ncol,table(8)%ntrk,table(8)%coolingTime,
-     &       table(8)%prevTime,table(8)%mass,table(8)%luminosity,lum2)
+     &       table(2)%ncol,table(2)%ntrk,table(2)%coolingTime,
+     &       table(2)%prevTime,table(2)%mass,table(2)%luminosity,lum2)
         modlog=1
         call interp(model,modlog,tcool,mass,
-     &       table(8)%ncol,table(8)%ntrk,table(8)%coolingTime,
-     &       table(8)%prevTime,table(8)%mass,table(8)%effTemp,
+     &       table(2)%ncol,table(2)%ntrk,table(2)%coolingTime,
+     &       table(2)%prevTime,table(2)%mass,table(2)%effTemp,
      &       teff2)
         modlog=0
         call interp(model,modlog,tcool,mass,
-     &       table(8)%ncol,table(8)%ntrk,table(8)%coolingTime,
-     &       table(8)%prevTime,table(8)%mass,
-     &       table(8)%gravAcc,logg2)
+     &       table(2)%ncol,table(2)%ntrk,table(2)%coolingTime,
+     &       table(2)%prevTime,table(2)%mass,
+     &       table(2)%gravAcc,logg2)
       end if
       
       if(Z.ge.zet2.AND.Z.lt.zet3) then
         Z1=zet2
         call interp(model,modlog,tcool,mass,
-     &       table(8)%ncol,table(8)%ntrk,table(8)%coolingTime,
-     &       table(8)%prevTime,table(8)%mass,table(8)%luminosity,lum1)
+     &       table(2)%ncol,table(2)%ntrk,table(2)%coolingTime,
+     &       table(2)%prevTime,table(2)%mass,table(2)%luminosity,lum1)
         modlog=1
         call interp(model,modlog,tcool,mass,
-     &       table(8)%ncol,table(8)%ntrk,table(8)%coolingTime,
-     &       table(8)%prevTime,table(8)%mass,table(8)%effTemp,
+     &       table(2)%ncol,table(2)%ntrk,table(2)%coolingTime,
+     &       table(2)%prevTime,table(2)%mass,table(2)%effTemp,
      &       teff1)
         modlog=0
         call interp(model,modlog,tcool,mass,
-     &       table(8)%ncol,table(8)%ntrk,table(8)%coolingTime,
-     &       table(8)%prevTime,table(8)%mass,
-     &       table(8)%gravAcc,logg1)
+     &       table(2)%ncol,table(2)%ntrk,table(2)%coolingTime,
+     &       table(2)%prevTime,table(2)%mass,
+     &       table(2)%gravAcc,logg1)
         Z2=zet3
         call interp(model,modlog,tcool,mass,
-     &       table(18)%ncol,table(18)%ntrk,table(18)%coolingTime,
-     &       table(18)%prevTime,table(18)%mass,table(18)%luminosity,
+     &       table(3)%ncol,table(3)%ntrk,table(3)%coolingTime,
+     &       table(3)%prevTime,table(3)%mass,table(3)%luminosity,
      &       lum2)
         modlog=1
         call interp(model,modlog,tcool,mass,
-     &       table(18)%ncol,table(18)%ntrk,table(18)%coolingTime,
-     &       table(18)%prevTime,table(18)%mass,table(18)%effTemp,
+     &       table(3)%ncol,table(3)%ntrk,table(3)%coolingTime,
+     &       table(3)%prevTime,table(3)%mass,table(3)%effTemp,
      &       teff2)
         modlog=0
         call interp(model,modlog,tcool,mass,
-     &       table(18)%ncol,table(18)%ntrk,table(18)%coolingTime,
-     &       table(18)%prevTime,table(18)%mass,
-     &       table(18)%gravAcc,logg2)
+     &       table(3)%ncol,table(3)%ntrk,table(3)%coolingTime,
+     &       table(3)%prevTime,table(3)%mass,
+     &       table(3)%gravAcc,logg2)
       end if
       
       if(Z.ge.zet3.AND.Z.le.zet4) then
         Z1=zet3
         call interp(model,modlog,tcool,mass,
-     &       table(18)%ncol,table(18)%ntrk,table(18)%coolingTime,
-     &       table(18)%prevTime,table(18)%mass,table(18)%luminosity,
+     &       table(3)%ncol,table(3)%ntrk,table(3)%coolingTime,
+     &       table(3)%prevTime,table(3)%mass,table(3)%luminosity,
      &       lum1)
         modlog=1
         call interp(model,modlog,tcool,mass,
-     &       table(18)%ncol,table(18)%ntrk,table(18)%coolingTime,
-     &       table(18)%prevTime,table(18)%mass,table(18)%effTemp,
+     &       table(3)%ncol,table(3)%ntrk,table(3)%coolingTime,
+     &       table(3)%prevTime,table(3)%mass,table(3)%effTemp,
      &       teff1)
         modlog=0
         call interp(model,modlog,tcool,mass,
-     &       table(18)%ncol,table(18)%ntrk,table(18)%coolingTime,
-     &       table(18)%prevTime,table(18)%mass,
-     &       table(18)%gravAcc,logg1)
+     &       table(3)%ncol,table(3)%ntrk,table(3)%coolingTime,
+     &       table(3)%prevTime,table(3)%mass,
+     &       table(3)%gravAcc,logg1)
         Z2=zet4
         call interp(model,modlog,tcool,mass,
-     &       table(26)%ncol,table(26)%ntrk,table(26)%coolingTime,
-     &       table(26)%prevTime,table(26)%mass,table(26)%luminosity,
+     &       table(4)%ncol,table(4)%ntrk,table(4)%coolingTime,
+     &       table(4)%prevTime,table(4)%mass,table(4)%luminosity,
      &       lum2)
         modlog=1
         call interp(model,modlog,tcool,mass,
-     &       table(26)%ncol,table(26)%ntrk,table(26)%coolingTime,
-     &       table(26)%prevTime,table(26)%mass,table(26)%effTemp,
+     &       table(4)%ncol,table(4)%ntrk,table(4)%coolingTime,
+     &       table(4)%prevTime,table(4)%mass,table(4)%effTemp,
      &       teff2)
         modlog=0
         call interp(model,modlog,tcool,mass,
-     &       table(26)%ncol,table(26)%ntrk,table(26)%coolingTime,
-     &       table(26)%prevTime,table(26)%mass,
-     &       table(26)%gravAcc,logg2)
+     &       table(4)%ncol,table(4)%ntrk,table(4)%coolingTime,
+     &       table(4)%prevTime,table(4)%mass,
+     &       table(4)%gravAcc,logg2)
       end if
       
       lum=lum1+(lum2-lum1)*(Z-Z1)/(Z2-Z1)
@@ -201,10 +201,10 @@ C     Interpolación para Z
       logg=logg1+(logg2-logg1)*(Z-Z1)/(Z2-Z1)
       
 C     interpolation of colors, here there is no metalicity
-      call intermag(mass,lum,table(77)%ncol,table(77)%ntrk,
-     &     table(77)%mass,
-     &     table(77)%luminosity,table(77)%color_U,table(77)%color_B,
-     &     table(77)%color_V,table(77)%color_R,table(77)%color_I,
+      call intermag(mass,lum,table(11)%ncol,table(11)%ntrk,
+     &     table(11)%mass,
+     &     table(11)%luminosity,table(11)%color_U,table(11)%color_B,
+     &     table(11)%color_V,table(11)%color_R,table(11)%color_I,
      &     c1,c2,c3,
      &     c4,c5)
 

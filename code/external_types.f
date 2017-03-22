@@ -1,6 +1,6 @@
       MODULE external_types
 
-      TYPE FileInfo
+      TYPE FileGroupInfo
         SEQUENCE
         CHARACTER(len=7) :: tableType
         CHARACTER(len=3) :: WDtype
@@ -34,6 +34,6 @@ C       should be color_R(ncol,nrow)..
         DOUBLE PRECISION :: color_R(10,650)
 C       should be color_I(ncol,nrow)..   
         DOUBLE PRECISION :: color_I(10,650)
-      ENDTYPE FileInfo
+      ENDTYPE FileGroupInfo
 
       END MODULE external_types
