@@ -26,7 +26,6 @@ C     a,b: Oort constants (values by Kerr and Lynden-Bell 1986)
 C          a=14.4 Km/sKpc
 C          b=-12.8 Km/sKpc
 C     solarGalactocentricDistance=8.5 Kpc
-C     uo,vo,wo: peculiar velocities of the Sun
 C--------------------------------------------------------------------
       parameter (numberOfStars=6000000)
       parameter (a=14.4,b=-12.8,solarGalactocentricDistance=8.5d0)
@@ -46,15 +45,21 @@ C--------------------------------------------------------------------
       double precision iwd(numberOfStars)
       double precision zz(numberOfStars),zh(numberOfStars)
       
-C     ---   Commons  ---
+C     ---  Commons  ---
       common /vel/ uu,vv,ww
       common /patron/ heightPattern
       common /coorcil/ coordinate_R,coordinate_Theta,coordinate_Zcylindr
       common /index/ iwd,ntwd
-      
-      uo=-10.0
-      vo=-5.2
-      wo=-7.2
+
+C     ---  Peculiar solar velocities  ---
+C     ---  old values  ---
+C      uo=-10.0
+C      vo=-5.2
+C      wo=-7.2
+C     ---  values from Anguiano et al. 2017
+      uo=-11.0
+      vo=-12.0
+      wo=-7.0
 
 C     ---  Making the transfer of heightPattern, of z  ---
       do 2 i=1,numberOfStarsInSample
