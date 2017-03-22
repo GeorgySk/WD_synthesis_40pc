@@ -11,10 +11,12 @@ C the IMF, is assigned with a birth time according to the SFR. Finally
 C the maximum volume method is used to calculate the density function of 
 C white dwarfs.
 C----------------------------------------------------------------------
+
+C     NOTE: modules are better than includes
+
 C     adding FileInfo type which carries all the info about
 C     files of cooling and color tables: fort.xx links, numbers of rows
-C     and columns, metallicities
-C     TODO: adapt FileInfo to the case of 11 instances (file groups)      
+C     and columns, metallicities     
       include 'code/external_types.f'
 
       program monte
@@ -31,7 +33,6 @@ C     minimumSectorRadius - min radius of the sector of considered stars
 C     maximumSectorRadius - max radius of the sector of considered stars
 C     angleCoveringSector - angle in degrees, which covers the sector
 C     radiusOfSector: radius (kpc) of the sector centered at Sun
-C     TODO give better names or create class (if possible)    
 C     zDistribution_zo(zo),heightPattern(h) - parameters of distribution 
 C            of z; zo*exp(-z/h)
 C     galacticDiskAge (Gyr)
@@ -56,131 +57,97 @@ C----------------------------------------------------------------------
 
       integer i,ISEED1,ISEED2,iseed,numberOfStarsInSample
       double precision randomNumber,fractionOfDB
+      double precision parameterIFMR
 
-C     QUESTION: what is gamma?    
-      double precision parameterIFMR,variationOfGravConst,gamma
-
-C     TODO: make only 11 instances for each type not for each file      
       TYPE(FileGroupInfo),DIMENSION(11) :: table
 
-C     --- Dimensions of variables of S.Torres  ---
-C--------------------------------------------------------------------
-C     QUESTION: is z_cyl=z_cart?
-C     (coordinate_R,coordinate_Theta,coordinate_Zcylindr): cylindrical 
-C         coordinates 
-C     (coordinate_X,coordinate_Y,z): coordenadas cartesianas
-C     (heliocentricVelocity_U,heliocentricVelocity_V,
-C         heliocentricVelocity_W): heliocentric velocities
-C     heliocentricVelocities_sigma(3): dispersion of the velocities
-C     NOTE: there are a lot of variables with this name
-C     TODO: give better names to these variables
-C     m: masa de la estrella
-C     QUESTION: what is altura patron?
-C     heightPattern: altura patron
-C--------------------------------------------------------------------      
-    
-C     ---  Commons S.Torres   ---
-       
       common /RSEED/ ISEED1,ISEED2
-      
-      common /vargra/ variationOfGravConst,gamma
       common /param/ fractionOfDB,galacticDiskAge,parameterIMF,
      &               parameterIFMR,timeOfBurst
       common /tables/ table
-      
+
+C     filling info about groups of files (cooling, color tables)      
       include 'code/tables_linking.f'
+   
 
-C     TODO: if input is from file then these parameters will be zeroes
-C     ---  Screen output of used parameters  ---
-C     NOTE: wrong logic, some of these variables are overwritten later
-      write(6,*) '=========================================='
-      write(6,*) ' '
-      write(6,*) '            Programa monte.f'
-      write(6,*) '          by S.Torres, 14.02.11 '
-      write(6,*) ' '
-      write(6,*) '            Used parameters:'
-      write(6,*) 'numberOfStars=',numberOfStars
-      write(6,*) 'SFR: parameterOfSFR=',parameterOfSFR,'Gyr'
-      write(6,*) 'galacticDiskAge=',galacticDiskAge,'Gyr'
-      write(6,*) 'minimumSectorRadius=',minimumSectorRadius,
-     &           'kpc; maximumSectorRadius=',maximumSectorRadius,'kpc'
-      write(6,*) 'radiusOfSector=',radiusOfSector,'kpc'
-      write(6,*) ' '
-      write(6,*) '=========================================='
-      write(6,*) ' '
-      write(6,*) '          Start of calculations:'
-      
-C     --- Initializing random number generator and reading the seeds ---
-      
-      iseed=-9
-      read(72,100) iseed1,iseed2
-      write(6,*) 'iseed1=',iseed1
-      write(6,*) 'iseed2=',iseed2
-
-C     QUESTION: why do we need this part?      
-      do 8123 i=1,10
-      randomNumber=ran(iseed)
-      write (6,*) i,randomNumber
-8123  continue      
-
-C     ---  Reading free parameters ---
-      
-      
+C     ---  Reading free parameters  ---
 C ======================================================================
-C  
-C      fractionOfDB: fraction of DB's
 C      galacticDiskAge (Gyr)
 C      parameterIMF (alpha): M^{alpha}
-C      Initial-to-Final Mass Relation : 
+C      Initial-to-Final Mass Relation (IFMR) : 
 C         mfinal_new=parameterIFMR*mfinal_old
         
-C     Reading parameters from the file parameter.dat:
+C     Reading parameters line from $temporary_files/grid_set_line.in:
       read (10,*) fractionOfDB,galacticDiskAge,parameterIMF,
      &            parameterIFMR,timeOfBurst
 
-C     Fiducial values (trusted):
-C        fractionOfDB=0.20
-C        galacticDiskAge=8.9
-C        parameterIMF=-2.35
-C        parameterIFMR=1.0
-C        timeOfBurst=0.6
+C       Fiducial values (trusted):
+C           fractionOfDB=0.20
+C           galacticDiskAge=8.9
+C           parameterIMF=-2.35
+C           parameterIFMR=1.0
+C           timeOfBurst=0.6
+
+C     Overwriting parameters (this is not good)
       fractionOfDB=0.20 
       galacticDiskAge=8.9
       parameterIMF=-2.35
       parameterIFMR=1.0
       timeOfBurst=0.6     
 
+      write(6,*) '=========================================='
+      write(6,*) ' '
+      write(6,*) '            Programa monte.f'
+      write(6,*) '          by S.Torres, 14.02.11 '
+      write(6,*) ' '
+      write(6,*) '            Used parameters:'
+      write(6,*) 'numberOfStars=    ',numberOfStars
+      write(6,*) 'SFR: parameterOfSFR=',parameterOfSFR,'Gyr'
+      write(6,*) 'galacticDiskAge=    ',galacticDiskAge,'Gyr'
+      write(6,*) 'minimumSectorRadius=',minimumSectorRadius,'kpc' 
+      write(6,*) 'maximumSectorRadius=',maximumSectorRadius,'kpc'
+      write(6,*) 'radiusOfSector=     ',radiusOfSector,'kpc'
+      write(6,*) ' '
+      write(6,*) '=========================================='
+      write(6,*) ' '
+      write(6,*) '          Start of calculations:'
+      write(6,*) ' '
+      write(6,*) 'Initializing random number generator and reading the s
+     &eeds'
+      write(6,*) ' '
+
+      iseed=-9
+C     Reading line from $temporary_files/seeds_line.in
+      read(72,100) iseed1,iseed2
+      write(6,*) 'iseed1=',iseed1
+      write(6,*) 'iseed2=',iseed2
+
+C     QUESTION: why do we need this part?      
+      do 8123 i=1,10
+        randomNumber=ran(iseed)
+        write (6,*) i,randomNumber
+8123  continue  
+
       write (157,157) fractionOfDB,galacticDiskAge,parameterIMF,
      &                parameterIFMR,timeOfBurst
  157  format(5(f6.3,2x))
-C                      
-C                                                                      |
+
+
+
+C     ---  Calculating the area of the sector  ---
 C ======================================================================
-C                                                                      |
-C                        Parameters of G   
-
-      variationOfGravConst=-1.0d-11
-      gamma=3.6
-
-C                                                                      |
-C ======================================================================
-C     ---    Calculating the area of the sector  ---
-
-C     QUESTION: isn't there a better way to get Pi?
+C     This style ensures maximum precision when assigning a value to PI.
       pi=4.0*atan(1.0)
 C     QUESTION: what about square function?
-      areaOfSector=pi*radiusOfSector*radiusOfSector
+      areaOfSector=pi*radiusOfSector**2
 
-      
 
-C     ---   Reading the cooling tables  ---
-
+C     ---  Program itself  ---
+C ======================================================================
       write(6,*) '1. Reading the cooling tables (1/10)'
 
       write(6,*) '   1.1 Tracks of CO DA WD Z=0.001;0.01;0.03;0.06'
 
-C     TODO: rename the function 'incoolda'     
-C     NOTE: ALl this can be place in one more compact block
 C     Calling the function 'incoolda' for 4 metalicities that we have
       call incoolda(table(1)%flag,table(1)%initLink,table(1)%ntrk,
      &     table(1)%ncol,table(1)%mass,
@@ -315,9 +282,6 @@ C     ---   Formatss   ---
 
 
 
-C***********************************************************************
-C***********************************************************************
-C***********************************************************************
 C***********************************************************************
       include 'code/star_generation/generator.f'
      
