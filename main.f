@@ -119,6 +119,7 @@ C     Overwriting parameters (this is not good)
       iseed=-9
 C     Reading line from $temporary_files/seeds_line.in
       read(72,100) iseed1,iseed2
+100   format(I6,2x,I6)  
       write(6,*) 'iseed1=',iseed1
       write(6,*) 'iseed2=',iseed2
 
@@ -147,38 +148,25 @@ C ======================================================================
       write(6,*) '1. Reading the cooling tables (1/10)'
 
       write(6,*) '   1.1 Tracks of CO DA WD Z=0.001;0.01;0.03;0.06'
-
 C     Calling the function 'incoolda' for 4 metalicities that we have
-      call incoolda(table(1)%flag,table(1)%initLink,table(1)%ntrk,
-     &     table(1)%ncol,table(1)%mass,
-     &     table(1)%coolingTime,table(1)%prevTime,table(1)%luminosity,
-     &     table(1)%effTemp,table(1)%gravAcc)
-      call incoolda(table(2)%flag,table(2)%initLink,table(2)%ntrk,
-     &     table(2)%ncol,table(2)%mass,table(2)%coolingTime,
-     &     table(2)%prevTime,table(2)%luminosity,table(2)%effTemp,
-     &     table(2)%gravAcc)
+      call incoolda2(table(1))
+      call incoolda2(table(2))
+C     FIXME: changing to incoolda2 gives error in interp
       call incoolda(table(3)%flag,table(3)%initLink,table(3)%ntrk,
      &     table(3)%ncol,table(3)%mass,table(3)%coolingTime,
      &     table(3)%prevTime,table(3)%luminosity,
      &     table(3)%effTemp,table(3)%gravAcc)
-      call incoolda(table(4)%flag,table(4)%initLink,table(4)%ntrk,
-     &     table(4)%ncol,table(4)%mass,table(4)%coolingTime,
-     &     table(4)%prevTime,table(4)%luminosity,
-     &     table(4)%effTemp,table(4)%gravAcc)
+      call incoolda2(table(4))
       
       write(6,*) '   1.2 Tracks of CO non-DA (DB) WD'
-
-C     TODO: rename the function 'incooldb'
-      call incooldb(table(5)%flag,table(5)%initLink,
-     &     table(5)%ncol,table(5)%ntrk,
-     &     table(5)%mass,table(5)%coolingTime,
-     &     table(5)%prevTime,table(5)%luminosity,
-     &     table(5)%effTemp,table(5)%gravAcc)
+      call incooldb2(table(5))
+C     FIXME: changing to incooldb2 gives error in interp      
       call incooldb(table(6)%flag,table(6)%initLink,
      &     table(6)%ncol,table(6)%ntrk,
      &     table(6)%mass,table(6)%coolingTime,
      &     table(6)%prevTime,table(6)%luminosity,
      &     table(6)%effTemp,table(6)%gravAcc)
+C     FIXME: changing to incooldb2 gives error in interp      
       call incooldb(table(7)%flag,table(7)%initLink,
      &     table(7)%ncol,table(7)%ntrk,
      &     table(7)%mass,table(7)%coolingTime,
@@ -186,103 +174,65 @@ C     TODO: rename the function 'incooldb'
      &     table(7)%effTemp,table(7)%gravAcc)
 
       write(6,*) '   1.3 Tracks of ONe DA WD'
-
-C     TODO: rename the function 'incoolone'
       call incoolone
       
       write(6,*) '   1.4 Reading the colors table of Rene(DAs) and Berge
      &ron(DBs)'
-C     TODO: rename these functions      
+C     FIXME: changing to color2 gives error in interp
       call color(table(11)%ncol,table(11)%ntrk,table(11)%mass,
      &     table(11)%luminosity,table(11)%color_U,table(11)%color_B,
      &     table(11)%color_R,table(11)%color_V,table(11)%color_I)      
+C     FIXME: changing to colordb2 gives different values
       call colordb(table(10)%ncol,table(10)%ntrk,
      &     table(10)%mass,table(10)%luminosity,table(10)%color_U,
      &     table(10)%color_B,table(10)%color_V,table(10)%color_R,
      &     table(10)%color_I)
 
-      write (6,*) '   1.5 Reading the tables of CO DA with G variable'
-C     TODO: rename this function      
+      write (6,*) '   1.5 Reading the tables of CO DA with G variable'      
       call incoolea
 
-C     QUESTION: what is t_b?
-C     ---  Calling subroutine calculating IMF, t_b, heightPattern and z 
-
       write(6,*) '2. Calling the IMF and SFR (2/10)'
-C     TODO: rename it
       call gen(iseed,parameterOfSFR,areaOfSector,numberOfStarsInSample,
      &     galacticDiskAge,timeOfBurst)
-      
       write(6,*) "numberOfStarsInSample=", numberOfStarsInSample
-
-C     ---   Calling subroutine calculating luminosities ---
-
+      
       write(6,*) '3. Calculating luminosities (3/10)'
-C     TODO: rename it
       call lumx(iseed,numberOfStarsInSample)      
 
-C     ---  Calling subroutine calculating polar coordinates  ---
-
       write(6,*) '4. Calculating polar coordinates (4/10)'
-C     TODO: rename it
       call polar(iseed,minimumSectorRadius,maximumSectorRadius,
      &     angleCoveringSector,radiusOfSector,
      &     solarGalactocentricDistance,scaleLength)
 
-C     ---   Calling subroutine calculating heliocentric velocities ---
-
       write(6,*) '5. Generating heliocentric velocities (5/10)'
-C     TODO: rename it
       call velh(iseed,numberOfStarsInSample)
 
 C     QUESTION: why are we missing the next step?
       goto 7
 C     QUESTION: what does this mean?
 C     ---   Calculating the trajectories according to/along z-coordinate ---
-      
       write(6,*) '6. Integrating trajectories (6/10)'
-C     TODO: give a better name
       call traject(galacticDiskAge)
 
-C     ---   Calling subroutine calculating coordinates ---
-
 7     write(6,*) '7. Calculating coordinates (7/10)'
-C     TODO: rename this
       call coor(solarGalactocentricDistance)
 
-C     ---   Calling subroutine calculating visual magnitude ---
-
       write(6,*) '8. Determinating visual magnitudes (8/10)'
-C     TODO: rename it
       call magi(fractionOfDB) 
 
-C     ---   Writing the data referring to the WD's   ---
-
+C     TODO: give a better description to this step
       write(6,*) '9. Generating the Luminosity Function (9/10)'
-C     TODO: rename it
       call volum_40pc
-  
-
-C     TODO: give a better name to vrad      
-C     ---   Testing vrad=0   ---
       
-      write(6, *) '10. Making vrad to be null (10/10)'
-
 C      NOTE: here it is useless
+      write(6, *) '10. Making vrad to be null (10/10)'
 C      call vrado
 
       write (6,*) 'The end'
-
-C     ---   Formats   ---
-
-100   format(I6,2x,I6)           
+ 
 
       stop
-
       end
-
-
-
 C***********************************************************************
       include 'code/star_generation/generator.f'
      
