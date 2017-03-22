@@ -32,6 +32,7 @@ C     QUESTION: what is nbins and sheight?
       integer numberOfStars,nbins,iseed
       double precision zDistribution_zo,deltaT_SFRThickDisk,
      &                 heightSFR_ThickDisk,sheight
+      double precision hDistr_zi,hDistr_t,hDistr_zf
 
 
 C     ---   Parameters   ---
@@ -44,6 +45,9 @@ C     delta t SFR thick disk
 C     height SFR thick disk
       parameter (heightSFR_ThickDisk=5.0)
       parameter (sheight=0.250)
+      parameter (hDistr_zi=242.5)
+      parameter (hDistr_t=0.7)
+      parameter (hDistr_zf=0.250)
 
 C     ---   Dimensions   ---
       
@@ -148,8 +152,12 @@ C       --- Birth time from SFR constant  ---
         t=to+dfloat(i-1)*deltat+xseed 
         starBirthTime(k)=t 
        
-C       --- Calculating the height pattern in kpc ---
-        heightPattern(k)=sheight
+C       ---  Calculating the height pattern in kpc ---
+C       ---  modal of constant heightPattern  ---
+C        heightPattern(k)=sheight
+C       --- modal of variable heightPattern  ---
+        heightPattern(k)=hDistr_zi*dexp(-starBirthTime(k)/hDistr_t)+
+     &                   hDistr_zf
 
 C       --- Calculating z ---
 C       TODO: delete this goto and put loop here
