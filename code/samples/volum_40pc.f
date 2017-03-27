@@ -12,41 +12,41 @@ C-------------------------------------------------------------------
 C     ---   Parameters  ---
 C     NOTE: smth wrong with the name here
 C     parameterIFMR: covered sky area
-C     restrictions: muo: proper motion
-C                   deco: declination
-C                   pio: parallax
-C
+C     restrictions: minimumProperMotion
+C                   declinationLimit
+C                   minimumParallax
 C=======================================================================
       implicit double precision (a-h,m,o-z)
       external ran
       real ran
 
-      integer numberOfStars,numberOfWDs,i,j,iseed
-      integer r1,r2,r3,r4,r5,r32
-      double precision parameterIFMR,muo,mumax,deco,pio
-      double precision mbolmin,mbolinc,mbolmax,vtanmin
-      double precision cont,d,hrm,gz
-      double precision dmonte,errinfa,errsupa,mbol
-C     NOTE: vvv is always 0
-      double precision fnora,fnor,pi,rg,vmedia,vo,fi,vvv,x,xx
-      double precision xya,zmedia,voinv
+C     NOTE:too many variables. i need to split the subr to more subr-s
+      integer i,j,iseed
+      integer numberOfStars,numberOfWDs
+      integer eleminatedByParallax,eleminatedByDeclination,
+     &        eleminatedByProperMotion,eleminatedByApparentMagn,
+     &        eleminatedByReducedPropM
+      double precision parameterIFMR
+      double precision minimumProperMotion,declinationLimit,
+     &                 minimumParallax
+      double precision mbolmin,mbolinc,mbolmax      
+      double precision hrm,gz
+      double precision errinfa,errsupa,mbol
+      double precision fnora,fnor,pi,rg,vvv,x,xx
+      double precision xya,zmedia
       
       parameter (numberOfStars=6000000)
       parameter (betaV=0.5)
 C     declination (Only-north Hemisphere)
-      parameter (deco=0.0)
+      parameter (declinationLimit=0.0)
 C     MINIMUM PARALLAX BELOW WHICH WE DISCARD RESULTS (0.025<=>40 pc)
-      parameter (pio=0.025)
+      parameter (minimumParallax=0.025)
 C     BINNING WDLF old values
       parameter (mbolmin=5.75,mbolmax=20.75,mbolinc=0.5)
 c      new values 
 C      parameter (mbolmin=6.0,mbolmax=21.0,mbolinc=0.5)
-C     MIN. TANGENCIAL VEL. BELOW WHICH WE DISCARD RESULTS (30)
-      parameter (vtanmin=0)
 C     MINIMUM PROPER MONTION 
-      parameter (muo=0.04)
-C     MAXIMUM PROPER MONTION 
-      parameter (mumax=1000.0)
+      parameter (minimumProperMotion=0.04)
 C     Parameters histogram masses
       parameter (xmasi=0.1)
       parameter (xmasf=1.4)
@@ -133,7 +133,6 @@ C     ---   Initialization of variables   ---
 C-------------------------------------------------------------------
 C     ---  Defining pi  ---
       pi=4.0*atan(1.0d0)
-      fi=180.0/pi
 
 C     ---  Initializating ndf's  ---
       do 1 i=1,70
@@ -157,19 +156,16 @@ C     ---  Initializating ndf's  ---
 C     ---  Writing data   ---
       cont=0.0
       zmedia=0.0
-      vmedia=0.0
-      r1=0
-      r2=0
-      r32=0
-      r3=0
-      r4=0
-      r5=0
+      eleminatedByParallax=0
+      eleminatedByDeclination=0
+      eleminatedByReducedPropM=0
+      eleminatedByProperMotion=0
+      eleminatedByApparentMagn=0
            
 C-------------------------------------------------------------------
 C     ---   Initiating loop  ---
 C-------------------------------------------------------------------
       do 5 i=1,numberOfWDs
-        d=dec(i)*fi
         rg=rgac(i)*1000.0
         parj(i)=1.0/rg
         vtan(i)=4.74*mu(i)*rg
@@ -179,18 +175,17 @@ C        go to 93212
 
 C     ---   Restrictions of the sample  ---
 
-C     ---   1) Eliminate WDs with parallax <pio'' 
-        if (parj(i).lt.pio) then   
-          r1=r1+1
+C     ---   1) Eliminate WDs with parallax <minimumParallax'' 
+        if (parj(i).lt.minimumParallax) then   
+          eleminatedByParallax=eleminatedByParallax+1
           go to 5        
         end if
 
 C       ---   4) Eliminate declination  ---          
-        if (dec(i).lt.deco) then   
-          r2=r2+1
+        if (dec(i).lt.declinationLimit) then   
+          eleminatedByDeclination=eleminatedByDeclination+1
           go to 5        
         end if
-        write (73,*) hrm,gz
 C        goto 93212
 
 C       ---  Eleminating too fast WD's  ---
@@ -199,8 +194,8 @@ C          go to 5
 C        end if 
 
 C       ---   2) Minimum proper motion cut 
-        if (mu(i).lt.muo) then   
-          r3=r3+1
+        if (mu(i).lt.minimumProperMotion) then   
+          eleminatedByProperMotion=eleminatedByProperMotion+1
           go to 5  
         end if
 
@@ -209,7 +204,7 @@ C       --- Reduced proper motion ---
         gz=gr(i)+rz(i)
         if(gz.lt.-0.33) then
           if(hrm.lt.14.0) then 
-            r32=r32+1
+            eleminatedByReducedPropM=eleminatedByReducedPropM+1
             go to 5
           endif
         else 
@@ -218,7 +213,7 @@ C       --- Reduced proper motion ---
               xxx=ran(iseed)
             endif
             go to 5
-            r32=r32+1
+            eleminatedByReducedPropM=eleminatedByReducedPropM+1
           endif
         endif
  453    write (160,*) 2.5*leb(i)+4.75,rgac(i)  
@@ -226,7 +221,7 @@ C       QUESTION: what does it mean?
 
 C       ---   3) Restriction V (de momento lo hacemos con go)---
         if(v(i).ge.19.0) then 
-          r4=r4+1
+          eleminatedByApparentMagn=eleminatedByApparentMagn+1
           goto 5
         endif      
 C       QUESTION: is it really z-coordinate or maybe metallicity?        
@@ -267,7 +262,6 @@ C     ---   Calculating the luminosity function---
 C     QUESTION: what does it mean?
 C     ---   Calculos de turno varios  ---
  41   cont=cont+1.0
-      vmedia=vmedia+vo*voinv
       zmedia=zmedia+dabs(coordinate_Zcylindr(i))
       j=0
       mbol=2.5*leb(i) + 4.75 
@@ -351,13 +345,9 @@ C         TODO: place all this code for SD in subroutine
 C-------------------------------------------------------------------
 C     ---  Write data of the LF of the WD's
 C-------------------------------------------------------------------
-      dmonte=0.0
-
       do 6 i=1,nbins
         if (ndfa(i).le.0.0) then
           ndfa(i)=10.0d-40
-        else
-          dmonte=dmonte+ndfa(i)*mbolinc
         endif 
 6     continue
 
@@ -390,7 +380,6 @@ C       QUESTION: Why is this line here?
           xya=0.0d0
           errsupa=0.0d0
           errinfa=0.0d0
-          vvv=0.0
           go to 9
         end if 
       
@@ -405,7 +394,7 @@ C       QUESTION: Why is this line here?
         vvv=0.000
         mbin(i)=mbin(i)/dfloat(nbin(i))
       
-C       NOTE I added output for average velocities + SD in each bin here      
+C       NOTE vvv is always 0      
 9       write(155,200) vvv,xx,xya,errsupa,errinfa,nbin(i),i,
      &                 averageWDVelocityInBin_u(i),
      &                 averageWDVelocityInBin_v(i),
@@ -509,15 +498,22 @@ C-----------------------------------------------------------------------
 C     ----- Some results of the sample ----
              
       write(6,*) 'Initial number of WDs:               ',numberOfWDs
-      write(6,*) 'Eliminated by parallax:              ',r1
-      write(6,*) '    "       "       declination:     ',r2
-      write(6,*) 'Initial number northern hemisphere:  ',numberOfWDs-r1-
-     &                                                   r2
-      write(6,*) '    "       " proper motion:         ',r3
-      write(6,*) '    "       " reduced proper motion: ',r32
-      write(6,*) '    "       " apparent magnitude:    ',r4
-      write(6,*) 'Restricted sample           :        ',numberOfWDs-r1-
-     &                                                   r2-r3-r32-r4
+      write(6,*) 'Eliminated by parallax:              ',
+     &eleminatedByParallax
+      write(6,*) '    "       "       declination:     ',
+     &eleminatedByDeclination
+      write(6,*) 'Initial number northern hemisphere:  ',numberOfWDs-
+     &eleminatedByParallax-eleminatedByDeclination
+      write(6,*) '    "       " proper motion:         ',
+     &eleminatedByProperMotion
+      write(6,*) '    "       " reduced proper motion: ',
+     &eleminatedByReducedPropM
+      write(6,*) '    "       " apparent magnitude:    ',
+     &eleminatedByApparentMagn
+      write(6,*) 'Restricted sample           :        ',numberOfWDs-
+     &eleminatedByParallax-eleminatedByDeclination-
+     &eleminatedByProperMotion-eleminatedByReducedPropM-
+     &eleminatedByApparentMagn
 
 200   format(f6.3,2x,f6.3,2x,3(1pd14.7,2x),i4,i4,2x,6(1pd14.7,2x))
 

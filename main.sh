@@ -162,8 +162,6 @@ do
 
 
    #Outputs
-   #TODO: check inputs. looks like there is garbage here
-   ln -s $output_data/colorsfull.out fort.73
    #TODO:check the name because it doesn't look appropriate
    ln -s $output_data/tburstdata.out  fort.81
    ln -s $output_data/extrapolcolores.out fort.1007
