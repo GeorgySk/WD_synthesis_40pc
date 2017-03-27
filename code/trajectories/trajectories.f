@@ -40,6 +40,7 @@ C     ---   Commons   ---
       common /coorcil/ coordinate_R,coordinate_Theta,coordinate_Zcylindr
       common /tm/ starBirthTime,m
       common /index/ iwd,numberOfWDs         
+C     NOTE: names are different in this block      
       common /plano/ xpla,ypla
       common /carte/ xcar,ycar
 

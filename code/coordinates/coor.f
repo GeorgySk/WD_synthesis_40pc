@@ -41,15 +41,16 @@ C     ---   Dimensions   ---
      &                 vr(numberOfStars)
       double precision uu(numberOfStars),vv(numberOfStars),
      &                 ww(numberOfStars)
-      double precision mu(numberOfStars)
-      double precision arec(numberOfStars),dec(numberOfStars)
+      double precision properMotion(numberOfStars)
+      double precision rightAscension(numberOfStars),
+     &                 declination(numberOfStars)
       double precision iwd(numberOfStars)
        
 C     ---   Commons   ---
       common /coorcil/ coordinate_R,coordinate_Theta,coordinate_Zcylindr
       common /vel/ uu,vv,ww
       common /paral/ rgac
-      common /mad/ mu,arec,dec
+      common /mad/ properMotion,rightAscension,declination
       common /index/ iwd,numberOfWDs
       common /mopro/ mpb,mpl,vr
       common /lb/ lgac,bgac
@@ -107,32 +108,33 @@ C       ---   Calculating the components of the proper motion ---
         mpb(i)=(-zkri*zcl*zsb*uu(i))+(-zkri*zsb*zsl*vv(i))+
      &         (zkri*zcb*ww(i))
         vr(i)=(zcb*zcl*uu(i))+(zcb*zsl*vv(i))+(zsb*ww(i)) 
-        mu(i)=dsqrt(mpl(i)*mpl(i)+mpb(i)*mpb(i))
+        properMotion(i)=dsqrt(mpl(i)*mpl(i)+mpb(i)*mpb(i))
 C-------------------------------------------------------------------
 C       ---   Calculating right ascension and the declination  ---
 C-------------------------------------------------------------------      
 C       ---   Calculating the declination   ---
         zz=zsdg*zsb+zcdg*zcb*dcos(theta-lgac(i))
-        dec(i)=dasin(zz)
+        declination(i)=dasin(zz)
 C       ---   Calculating the right ascension ---
-        xs= ((zcb*dsin(theta-lgac(i)))/dcos(dec(i)))
-        xc= ((zcdg*zsb-zsdg*zcb*dcos(theta-lgac(i)))/dcos(dec(i)))
+        xs= ((zcb*dsin(theta-lgac(i)))/dcos(declination(i)))
+        xc= ((zcdg*zsb-zsdg*zcb*dcos(theta-lgac(i)))/
+     &      dcos(declination(i)))
 C       --Looking at the sign that corresponds to the right ascension---
         if (xs.ge.0.0) then
           if (xc.ge.0.0) then 
-            arec(i)=dasin(xs)+alfag
+            rightAscension(i)=dasin(xs)+alfag
           else
-            arec(i)=dacos(xc)+alfag
+            rightAscension(i)=dacos(xc)+alfag
           endif    
         else
           if (xc.lt.0.0) then
-            arec(i)=pi-dasin(xs)+alfag
+            rightAscension(i)=pi-dasin(xs)+alfag
           else
-            arec(i)=2*pi+dasin(xs)+alfag
+            rightAscension(i)=2*pi+dasin(xs)+alfag
           endif
         endif            
-        if (arec(i)*fi.gt.360.0) then
-          arec(i)=arec(i)-2*pi
+        if (rightAscension(i)*fi.gt.360.0) then
+          rightAscension(i)=rightAscension(i)-2*pi
         endif
 C--------------------------------------------------------------------
 C       ---  Calculating the proper motion in ecuatorial coordinates ---

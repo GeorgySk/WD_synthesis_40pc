@@ -2,8 +2,8 @@
 C     Determining the Luminosity Function of 40 pc,using criteria from
 C     (Limoges et al. 2015)
 C     Restrictions:
-C        dec>0 Nort-Hemisphere SUPERBLINK survey
-C        mu>40 mas/yr-1
+C        declination>0 Nort-Hemisphere SUPERBLINK survey
+C        properMotion>40 mas/yr-1
 C        V band limit: V<19
 C     Method:
 C        Number density per pc^3 and half bolometric magnitude
@@ -20,7 +20,7 @@ C=======================================================================
       external ran
       real ran
 
-C     NOTE:too many variables. i need to split the subr to more subr-s
+C     NOTE:too many variables. whole subr needs to be splited
       integer i,j,iseed
       integer numberOfStars,numberOfWDs
       integer eleminatedByParallax,eleminatedByDeclination,
@@ -32,29 +32,26 @@ C     NOTE:too many variables. i need to split the subr to more subr-s
       double precision mbolmin,mbolinc,mbolmax      
       double precision hrm,gz
       double precision errinfa,errsupa,mbol
-      double precision fnora,fnor,pi,rg,vvv,x,xx
-      double precision xya,zmedia
+      double precision fnora,fnor,pi,rg,vvv,x,xx,xya
       
       parameter (numberOfStars=6000000)
       parameter (betaV=0.5)
-C     declination (Only-north Hemisphere)
+C     (Only-north Hemisphere)
       parameter (declinationLimit=0.0)
-C     MINIMUM PARALLAX BELOW WHICH WE DISCARD RESULTS (0.025<=>40 pc)
+C     Minimum parallax below which we discard results (0.025<=>40 pc)
       parameter (minimumParallax=0.025)
-C     BINNING WDLF old values
+C     Binning of Luminosity Function 
       parameter (mbolmin=5.75,mbolmax=20.75,mbolinc=0.5)
-c      new values 
-C      parameter (mbolmin=6.0,mbolmax=21.0,mbolinc=0.5)
-C     MINIMUM PROPER MONTION 
+C     Minimum proper motion
       parameter (minimumProperMotion=0.04)
-C     Parameters histogram masses
+C     Parameters of mass histograms
       parameter (xmasi=0.1)
       parameter (xmasf=1.4)
       parameter (xmasinc=0.05)
 
-C     ---   Dimension   ---
-      double precision mu(numberOfStars),arec(numberOfStars),
-     &                 dec(numberOfStars)
+      double precision properMotion(numberOfStars),
+     &                 rightAscension(numberOfStars),
+     &                 declination(numberOfStars)
       double precision leb(numberOfStars),meb(numberOfStars),
      &                 zeb(numberOfStars),teb(numberOfStars)
       double precision iwd(numberOfStars)
@@ -113,7 +110,7 @@ C     same as for arrayOfVelocitiesForSD_u/v/w. (For cloud)
 C     ---   Commons  ---
       common /enanas/ leb,meb,zeb,teb
       common /index/ iwd,numberOfWDs      
-      common /mad/ mu,arec,dec
+      common /mad/ properMotion,rightAscension,declination
       common /paral/ rgac
       common /coorcil/ coordinate_R,coordinate_Theta,coordinate_Zcylindr
       common /cool/ tcool
@@ -154,8 +151,6 @@ C     ---  Initializating ndf's  ---
  2    continue
 
 C     ---  Writing data   ---
-      cont=0.0
-      zmedia=0.0
       eleminatedByParallax=0
       eleminatedByDeclination=0
       eleminatedByReducedPropM=0
@@ -168,7 +163,7 @@ C-------------------------------------------------------------------
       do 5 i=1,numberOfWDs
         rg=rgac(i)*1000.0
         parj(i)=1.0/rg
-        vtan(i)=4.74*mu(i)*rg
+        vtan(i)=4.74*properMotion(i)*rg
 
 C       --- Full sample : we  eliminate the observational cuts ---
 C        go to 93212
@@ -182,7 +177,7 @@ C     ---   1) Eliminate WDs with parallax <minimumParallax''
         end if
 
 C       ---   4) Eliminate declination  ---          
-        if (dec(i).lt.declinationLimit) then   
+        if (declination(i).lt.declinationLimit) then   
           eleminatedByDeclination=eleminatedByDeclination+1
           go to 5        
         end if
@@ -194,13 +189,13 @@ C          go to 5
 C        end if 
 
 C       ---   2) Minimum proper motion cut 
-        if (mu(i).lt.minimumProperMotion) then   
+        if (properMotion(i).lt.minimumProperMotion) then   
           eleminatedByProperMotion=eleminatedByProperMotion+1
           go to 5  
         end if
 
 C       --- Reduced proper motion ---
-        hrm=go(i)+5.0*dlog10(mu(i))+5.0
+        hrm=go(i)+5.0*dlog10(properMotion(i))+5.0
         gz=gr(i)+rz(i)
         if(gz.lt.-0.33) then
           if(hrm.lt.14.0) then 
@@ -225,13 +220,16 @@ C       ---   3) Restriction V (de momento lo hacemos con go)---
           goto 5
         endif      
 C       QUESTION: is it really z-coordinate or maybe metallicity?        
-C       1    2   3 4    5    6   7   8   9   10   11  12   13   14 15   
-C       Meb -Lum Z Mbol Gap0 g-i g-r u-r r-z arec dec rgac parj mu vtan   
-C       16    17   18  19 20 21 22
-C       tcool temp idb coordinate_Zcylindr  uu vv ww 
+C       1    2   3 4    5    6   7   8   9   10             11         
+C       Meb -Lum Z Mbol Gap0 g-i g-r u-r r-z rightAscension declination 
+C       12   13   14           15   16    17   18  19                   
+C       rgac parj properMotion vtan tcool temp idb coordinate_Zcylindr   
+C       20 21 22
+C       uu vv ww
 93212   write(156,*)  meb(i),leb(i),zeb(i),2.5*leb(i)+4.75,go(i),gi(i),
-     &                gr(i),ur(i),rz(i),arec(i),dec(i),rgac(i),parj(i),
-     &                mu(i),vtan(i),tcool(i),teb(i),idb(i),
+     &                gr(i),ur(i),rz(i),rightAscension(i),
+     &                declination(i),rgac(i),parj(i),properMotion(i),
+     &                vtan(i),tcool(i),teb(i),idb(i),
      &                coordinate_Zcylindr(i),uu(i),vv(i),ww(i)
 C       velocities output
       write(1156,*)  uu(i),vv(i),ww(i)     
@@ -261,9 +259,7 @@ C     ---   Calculating the luminosity function---
 
 C     QUESTION: what does it mean?
 C     ---   Calculos de turno varios  ---
- 41   cont=cont+1.0
-      zmedia=zmedia+dabs(coordinate_Zcylindr(i))
-      j=0
+ 41   j=0
       mbol=2.5*leb(i) + 4.75 
 4     j=j+1
 

@@ -58,6 +58,7 @@ C         mfinal_new=parameterIFMR*mfinal_old
 
       TYPE(FileGroupInfo),DIMENSION(11) :: table
 
+C     NOTE: use of commons is strongly discouraged!
       common /RSEED/ ISEED1,ISEED2
       common /param/ fractionOfDB,galacticDiskAge,parameterIMF,
      &               parameterIFMR,timeOfBurst
@@ -150,7 +151,7 @@ C     Calling the function 'incooldb' for 3 metalicities that we have
       write(6,*) '   1.4 Reading the colors table of Rene(DAs) and Berge
      &ron(DBs)'
       call color(table(11))
-      call colordb2(table(10))
+      call colordb(table(10))
 
       write (6,*) '   1.5 Reading the tables of CO DA with G variable'      
       call incoolea

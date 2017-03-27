@@ -23,6 +23,7 @@ C     TODO: size should be table%nrow
       double precision g,gr,bj,term
 
 C     Curve to delimit RPMD, for Mwd=0.61Mo
+C     NOTE: these common blocks are never used      
       common /Hgcurve/ Hg,ggii
       common /Hbjcurve/ Hbj,bjr
 

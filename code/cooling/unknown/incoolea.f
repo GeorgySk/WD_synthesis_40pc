@@ -33,6 +33,7 @@ C     ---   Dimensions   ---
       dimension ginic(nbank)
 
 C     ---   Commons   ---
+C     NOTE: it is used only here
       common /tracks/ ginic,luminosity,mtrk,ttrk,ntrk
       
 C     --- Values of the mass and G for A=-1.1d-11 ---

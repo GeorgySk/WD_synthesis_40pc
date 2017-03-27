@@ -71,6 +71,7 @@ C     ---   Dimensions   ---
       TYPE(FileGroupInfo),DIMENSION(11) :: table
 
 C     ---   Commons   ---
+C     TODO: delete this
       common /dbnums/ numberOfSequences,numberOfSequencesInGroup_1,
      &                numberOfSequencesInGroup_2,
      &                numberOfSequencesInGroup_3

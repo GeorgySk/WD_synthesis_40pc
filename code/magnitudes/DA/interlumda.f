@@ -69,6 +69,7 @@ C     ---   Declaration of variables   ---
       TYPE(FileGroupInfo),DIMENSION(11) :: table
 
 C     ---   Commons   ---
+C     TODO: delete this
       common /nums/ numberOfMassesWithColors,
      &              numberOfMassesWithCoolSeq_1,
      &              numberOfMassesWithCoolSeq_2,
