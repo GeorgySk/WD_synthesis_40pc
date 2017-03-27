@@ -8,7 +8,7 @@ C     the component of radial velocity
 C***********************************************************************
       implicit double precision (a-h,m,o-z)
        
-      integer numberOfStars,i,ntwd
+      integer numberOfStars,i,numberOfWDs
       double precision k,xcb,xsb,xcl,xsl,r
       double precision a1,a2,b1,b2,b3,c1,c2,c3
 C     ---   Parameters  ---
@@ -20,17 +20,17 @@ C     ---   Dimensiones   ---
       double precision rgac(numberOfStars),lgac(numberOfStars),
      &                 bgac(numberOfStars)
       double precision iwd(numberOfStars)
-      double precision u(ntwd),v(ntwd),w(ntwd)
+      double precision u(numberOfWDs),v(numberOfWDs),w(numberOfWDs)
 
 C    ---   Commons  ---
       common /lb/ lgac,bgac
       common /paral/ rgac
       common /mopro/ mpb,mpl,vr
-      common /index/ iwd,ntwd
+      common /index/ iwd,numberOfWDs
 
 C     ---  Calculating the heliocentric velocity  
 C          making zero the radial velocity ---
-      do 1 i=1,ntwd
+      do 1 i=1,numberOfWDs
         xcb=cos(bgac(i))
         xsb=sin(bgac(i))
         xcl=cos(lgac(i))

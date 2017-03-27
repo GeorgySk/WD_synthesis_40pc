@@ -1,3 +1,9 @@
+      subroutine fillTable(table)
+      use external_types
+      implicit double precision (a-h,m,o-z)
+
+      TYPE(FileGroupInfo),DIMENSION(11) :: table
+
       table(1)%initLink=10
       table(1)%tableType="cooling"
       table(1)%WDtype="DA"
@@ -138,3 +144,6 @@
       allocate(table(11)%color_V(table(11)%ncol,table(11)%nrow))
       allocate(table(11)%color_R(table(11)%ncol,table(11)%nrow))
       allocate(table(11)%color_I(table(11)%ncol,table(11)%nrow))
+
+      return
+      end

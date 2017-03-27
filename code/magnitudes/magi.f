@@ -19,7 +19,7 @@ C       none
 C=======================================================================
       implicit double precision (a-h,m,o-z)
 
-      integer numberOfStars,iseed,i,ntwd,in
+      integer numberOfStars,iseed,i,numberOfWDs,in
       
 C     ---   Variables  ---
       double precision lum,teff,xlog,c1,c2,c3,c4,c5,n1,n2,n3,n4,n5
@@ -45,7 +45,7 @@ C     ---   Dimensions  ---
 
 C     ---   Commons   ---
       common /enanas/ leb,meb,zeb,teb
-      common /index/ iwd,ntwd
+      common /index/ iwd,numberOfWDs
       common /paral/ rgac
       common /photo/ go,gr,gi,ur,rz
       common /johnson/ v
@@ -61,7 +61,7 @@ C     ---   Commons   ---
 C     ---  Interpolating Mv, luminosity, colors and other variables
 C          from tcool and the mwd  ---
 C     ---  Start DO on all the stars
-      do i=1,ntwd
+      do i=1,numberOfWDs
 C       ---  ATENTION! choosing only if .lt.1.1!!!  ---
 C       ---  Start IF mass <1.4  ----
         if(meb(i).le.1.4) then

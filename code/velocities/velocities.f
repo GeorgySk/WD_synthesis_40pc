@@ -16,7 +16,7 @@ C       numberOfStarsInSample
 C=======================================================================
       implicit double precision (a-h,m,o-z)
       
-      integer numberOfStars,iseed,numberOfStarsInSample,i,k,ntwd
+      integer numberOfStars,iseed,numberOfStarsInSample,i,k,numberOfWDs
       double precision uo,vo,wo,a,b,solarGalactocentricDistance,uop,vop,
      &                 yy,gasdev,uom,vom
           
@@ -49,7 +49,7 @@ C     ---  Commons  ---
       common /vel/ uu,vv,ww
       common /patron/ heightPattern
       common /coorcil/ coordinate_R,coordinate_Theta,coordinate_Zcylindr
-      common /index/ iwd,ntwd
+      common /index/ iwd,numberOfWDs
 
 C     ---  Peculiar solar velocities  ---
 C     ---  old values  ---
@@ -77,7 +77,7 @@ C     ---  Making the transfer of heightPattern, of z  ---
       endif
 3     continue
 
-      do 1 i=1,ntwd
+      do 1 i=1,numberOfWDs
 
 
 C       ---  Calculating the dispersions  ---

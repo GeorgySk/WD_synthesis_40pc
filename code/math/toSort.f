@@ -246,7 +246,7 @@ C***********************************************************************
 
       FUNCTION GAMMQ(A,X)
       implicit double precision (a-h,o-z)
-      IF(X.LT.0..OR.A.LE.0.)PAUSE
+      IF(X.LT.0..OR.A.LE.0.)read (*,*)
       IF(X.LT.A+1.)THEN
         CALL GSER(GAMSER,A,X,GLN)
         GAMMQ=1.-GAMSER
@@ -261,7 +261,7 @@ C***********************************************************************
       PARAMETER (ITMAX=100,EPS=3.E-7)
       GLN=GAMMLN(A)
       IF(X.LE.0.)THEN
-        IF(X.LT.0.)PAUSE
+        IF(X.LT.0.) read(*,*)
         GAMSER=0.
         RETURN
       ENDIF
@@ -274,7 +274,8 @@ C***********************************************************************
         SUM=SUM+DEL
         IF(dABS(DEL).LT.dABS(SUM)*EPS)GO TO 1
 11    CONTINUE
-      PAUSE 'A too large, ITMAX too small'
+      write(6,*) 'A too large, ITMAX too small'
+      read(*,*)
 1     GAMSER=SUM*dEXP(-X+A*dLOG(X)-GLN)
       RETURN
       END
@@ -304,7 +305,8 @@ C***********************************************************************
           GOLD=G
         ENDIF
 11    CONTINUE
-      PAUSE 'A too large, ITMAX too small'
+      write(6,*) 'A too large, ITMAX too small'
+      read(*,*)
 1     GAMMCF=dEXP(-X+A*dLOG(X)-GLN)*G
       RETURN
       END

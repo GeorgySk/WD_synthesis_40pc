@@ -21,14 +21,14 @@ C     QUESTION: did i fail to name this variable correctly?
 C     radiusOfSector: radial distance to the Sun
 C     solarGalactocentricDistance: galactocentric distance of the Sun
 C     scaleLength: scale length
-C     ntwd: total number of WDs
+C     numberOfWDs: total number of WDs
 C=======================================================================
       implicit double precision (a-h,m,o-z)
 
 C     --- Declaration of variables  ---
       external ran       
       real ran
-      integer ntwd,iseed,j
+      integer numberOfWDs,iseed,j
       double precision dospi,minimumSectorRadius,maximumSectorRadius,
      &                 angleCoveringSector,radiusOfSector,
      &                 solarGalactocentricDistance,scaleLength,asr
@@ -49,7 +49,7 @@ C     ---  Dimensions  ---
 C     ---  Commons  ---
       common /coorcil/ coordinate_R,coordinate_Theta,coordinate_Zcylindr
       common /plano/ x,y
-      common /index/ iwd,ntwd
+      common /index/ iwd,numberOfWDs
 
 C     ---  Inicialization of pi and sigma ---
       pi=4.0*atan(1.0)
@@ -65,7 +65,7 @@ C      and radius between minimumSectorRadius and maximumSectorRadius ---
       xcte=xmax-xmin
       xinc=maximumSectorRadius-minimumSectorRadius
                 
-      do 2 j=1,ntwd
+      do 2 j=1,numberOfWDs
 3       coordinate_Theta(j)=asr*ran(iseed)-(asr/2)
         if (coordinate_Theta(j).lt.0.0) then
           coordinate_Theta(j)=dospi+coordinate_Theta(j)

@@ -16,13 +16,13 @@ C       numberOfStarsInSample
 C-----------------------------------------------------------------------
 C     output parameters
 C       leb: luminosities of the WDs
-C       ntwd: total number of the WDs
+C       numberOfWDs: total number of the WDs
 C=======================================================================
       implicit double precision (a-h,m,o-z)
 
 C     ---   Definition of variables  ---
-      integer iseed,numberOfStarsInSample,ntwd,numberOfStars,ntwdone,
-     &        igorda,i,k,param
+      integer iseed,numberOfStarsInSample,numberOfWDs,numberOfStars,
+     &        ntwdone,igorda,i,k,param
       double precision galacticDiskAge,mebmin,mebmax,xntwd,mone,
      &                 parameterIFMR
 
@@ -39,7 +39,7 @@ C       leb: luminosity of the WD
 C       meb: mass of the WD
 C       iwd: 0 - it's not WD, 1 - it's a WD
 C       m: mass in the main sequence
-C       ntwd: total number of WDs
+C       numberOfWDs: total number of WDs
 C-----------------------------------------------------------------------
       double precision starBirthTime(numberOfStars),tms(numberOfStars),
      &                 tcool(numberOfStars)
@@ -54,7 +54,7 @@ C-----------------------------------------------------------------------
 C     ---  Commons  ---
       common /tm/ starBirthTime,m
       common /enanas/ leb,meb,zeb,teb
-      common /index/ iwd,ntwd
+      common /index/ iwd,numberOfWDs
       common /cool/ tcool
       common /tms/ tms
       common /param/ fractionOfDB,galacticDiskAge,parameterIMF,
@@ -65,7 +65,7 @@ C     ---  Deciding what stars are WDs  ---
 C-----------------------------------------------------------------------
       mebmin=0.2
       mebmax=1.2
-      ntwd=0
+      numberOfWDs=0
       ntwdone=0
       igorda=0      
       param=1
@@ -91,7 +91,7 @@ C           Using Z solar z=0.01
             meb(i)=parameterIFMR*meb(i)
             if(meb(i).le.1.4) then 
               iwd(i)=1
-              ntwd=ntwd+1
+              numberOfWDs=numberOfWDs+1
               if(meb(i).gt.mone) then
                 ntwdone=ntwdone+1
               endif
@@ -107,8 +107,8 @@ C           Using Z solar z=0.01
  1    continue
 
       write (6,*) '******** Data   ***********'
-      write (6,*) ' Number of WDs: ', ntwd
-      xntwd=dfloat(ntwd)
+      write (6,*) ' Number of WDs: ', numberOfWDs
+      xntwd=dfloat(numberOfWDs)
       write (6,*) ' Number of ONe: ', ntwdone
       write (6,*) ' ONe percentage: ',100.0*dfloat(ntwdone)/xntwd, '%'
 
@@ -138,7 +138,7 @@ C     ---   Making the transfer   ---
  81   format (5(f7.4,2x))
 
 C     ---   Writing data   ---
-      write(6,*) '      Total number of WDs ntwd=',ntwd
+      write(6,*) '      Total number of WDs=',numberOfWDs
       write(6,*) '      WDs of ONe=',ntwdone
 
       return

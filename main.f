@@ -12,16 +12,14 @@ C the maximum volume method is used to calculate the density function of
 C white dwarfs.
 C----------------------------------------------------------------------
 
-C     NOTE: modules are better than includes
-
 C     adding FileInfo type which carries all the info about
 C     files of cooling and color tables: fort.xx links, numbers of rows
 C     and columns, metallicities     
+C     NOTE: modules are better than includes
       include 'code/external_types.f'
 
       program monte
-      use external_types
-       
+      use external_types 
       implicit double precision (a-h,m,o-z)
    
 C     'external' statement specifies that 'ran' function is no longer
@@ -29,23 +27,23 @@ C     intrinsic and must be defined in program
       external ran
       real ran
 
+C     ---  Variables description ---
 C     minimumSectorRadius - min radius of the sector of considered stars
 C     maximumSectorRadius - max radius of the sector of considered stars
 C     angleCoveringSector - angle in degrees, which covers the sector
 C     radiusOfSector: radius (kpc) of the sector centered at Sun
-C     zDistribution_zo(zo),heightPattern(h) - parameters of distribution 
-C            of z; zo*exp(-z/h)
 C     galacticDiskAge (Gyr)
-C     parameterOfSFR (taus): parameter of the SFR; Y=exp(-t/taus)
+C     parameterOfSFR (taus): Y=exp(-t/taus)
 C     solarGalactocentricDistance: distance from Sun to Galaxy center;
-C----------------------------------------------------------------------
+C     parameterIMF (alpha): M^{alpha}
+C     Initial-to-Final Mass Relation (IFMR) : 
+C         mfinal_new=parameterIFMR*mfinal_old
       integer numberOfStars
       double precision galacticDiskAge,parameterOfSFR,
      &                 solarGalactocentricDistance,minimumSectorRadius,
      &                 maximumSectorRadius,angleCoveringSector,
-     &                 parameterIMF
-      double precision radiusOfSector,scaleLength,areaOfSector,pi
-      
+     &                 parameterIMF,radiusOfSector,scaleLength,
+     &                 areaOfSector,pi   
       parameter (numberOfStars=6000000)
       parameter (solarGalactocentricDistance=8.5)
       parameter (minimumSectorRadius=8.45)
@@ -54,7 +52,6 @@ C----------------------------------------------------------------------
       parameter (radiusOfSector=0.050)
       parameter (parameterOfSFR=25.0)
       parameter (scaleLength=3.5)
-
       integer i,j,k,ISEED1,ISEED2,iseed,numberOfStarsInSample
       double precision randomNumber,fractionOfDB
       double precision parameterIFMR
@@ -65,29 +62,19 @@ C----------------------------------------------------------------------
       common /param/ fractionOfDB,galacticDiskAge,parameterIMF,
      &               parameterIFMR,timeOfBurst
 
-C     filling info about groups of files (cooling, color tables)      
-      include 'code/tables_linking.f'
+
+C     --- Filling info about groups of files (cooling, color tables) ---    
+C ======================================================================
+      call fillTable(table)
    
 
-C     ---  Reading free parameters  ---
+C     ---Reading parameters line from $temporary_files/grid_set_line.in
 C ======================================================================
-C      galacticDiskAge (Gyr)
-C      parameterIMF (alpha): M^{alpha}
-C      Initial-to-Final Mass Relation (IFMR) : 
-C         mfinal_new=parameterIFMR*mfinal_old
-        
-C     Reading parameters line from $temporary_files/grid_set_line.in:
       read (10,*) fractionOfDB,galacticDiskAge,parameterIMF,
      &            parameterIFMR,timeOfBurst
 
-C       Fiducial values (trusted):
-C           fractionOfDB=0.20
-C           galacticDiskAge=8.9
-C           parameterIMF=-2.35
-C           parameterIFMR=1.0
-C           timeOfBurst=0.6
-
-C     Overwriting parameters (this is not good)
+C     Overwriting parameters
+C     NOTE: this is not good
       fractionOfDB=0.20 
       galacticDiskAge=8.9
       parameterIMF=-2.35
@@ -115,36 +102,34 @@ C     Overwriting parameters (this is not good)
      &eeds'
       write(6,*) ' '
 
-      iseed=-9
-C     Reading line from $temporary_files/seeds_line.in
-      read(72,100) iseed1,iseed2
-100   format(I6,2x,I6)  
-      write(6,*) 'iseed1=',iseed1
-      write(6,*) 'iseed2=',iseed2
-
-C     QUESTION: why do we need this part?      
-      do 8123 i=1,10
-        randomNumber=ran(iseed)
-        write (6,*) i,randomNumber
-8123  continue  
-
+C     NOTE: this just repeats inputs
       write (157,157) fractionOfDB,galacticDiskAge,parameterIMF,
      &                parameterIFMR,timeOfBurst
  157  format(5(f6.3,2x))
 
-
+C     ---Reading seeds line from $temporary_files/seeds_line.in
+C ======================================================================
+      iseed=-9
+      read(72,100) iseed1,iseed2
+100   format(I6,2x,I6)  
+      write(6,*) 'iseed1=',iseed1
+      write(6,*) 'iseed2=',iseed2
+C     QUESTION: why do we need this part?      
+      do i=1,10
+        randomNumber=ran(iseed)
+        write (6,*) i,randomNumber
+      end do  
 
 C     ---  Calculating the area of the sector  ---
 C ======================================================================
 C     This style ensures maximum precision when assigning a value to PI.
       pi=4.0*atan(1.0)
-C     QUESTION: what about square function?
       areaOfSector=pi*radiusOfSector**2
 
 
 C     ---  Program itself  ---
 C ======================================================================
-      write(6,*) '1. Reading the cooling tables (1/10)'
+      write(6,*) '1. Reading the cooling tables (1/9)'
 
       write(6,*) '   1.1 Tracks of CO DA WD Z=0.001;0.01;0.03;0.06'
 C     Calling the function 'incoolda' for 4 metalicities that we have
@@ -170,44 +155,41 @@ C     Calling the function 'incooldb' for 3 metalicities that we have
       write (6,*) '   1.5 Reading the tables of CO DA with G variable'      
       call incoolea
 
-      write(6,*) '2. Calling the IMF and SFR (2/10)'
+      write(6,*) '2. Calling the IMF and SFR (2/9)'
       call gen(iseed,parameterOfSFR,areaOfSector,numberOfStarsInSample,
      &     galacticDiskAge,timeOfBurst)
       write(6,*) "numberOfStarsInSample=", numberOfStarsInSample
       
-      write(6,*) '3. Calculating luminosities (3/10)'
+      write(6,*) '3. Calculating luminosities (3/9)'
       call lumx(iseed,numberOfStarsInSample)      
 
-      write(6,*) '4. Calculating polar coordinates (4/10)'
+      write(6,*) '4. Calculating polar coordinates (4/9)'
       call polar(iseed,minimumSectorRadius,maximumSectorRadius,
      &     angleCoveringSector,radiusOfSector,
      &     solarGalactocentricDistance,scaleLength)
 
-      write(6,*) '5. Generating heliocentric velocities (5/10)'
+      write(6,*) '5. Generating heliocentric velocities (5/9)'
       call velh(iseed,numberOfStarsInSample)
 
 C     QUESTION: why are we missing the next step?
       goto 7
 C     QUESTION: what does this mean?
-C     ---   Calculating the trajectories according to/along z-coordinate ---
-      write(6,*) '6. Integrating trajectories (6/10)'
+C     ---  Calculating the trajectories according to/along z-coordinate
+      write(6,*) '6. Integrating trajectories (6/9)'
       call traject(galacticDiskAge)
 
-7     write(6,*) '7. Calculating coordinates (7/10)'
+7     write(6,*) '7. Calculating coordinates (7/9)'
       call coor(solarGalactocentricDistance)
 
-      write(6,*) '8. Determinating visual magnitudes (8/10)'
+      write(6,*) '8. Determinating visual magnitudes (8/9)'
       call magi(fractionOfDB,table) 
 
 C     TODO: give a better description to this step
-      write(6,*) '9. Generating the Luminosity Function (9/10)'
-      call volum_40pc
-      
-C     NOTE: here it is useless
-      write(6, *) '10. Making vrad to be null (10/10)'
-C      call vrado
+      write(6,*) '9. Working with obtained sample (9/9)'
+      call volum_40pc(iseed)
 
-      write (6,*) 'The end'
+
+      write (6,*) 'End'
  
 
       stop
@@ -260,3 +242,5 @@ C***********************************************************************
       include 'code/velocities/vrado.f'
 
       include 'code/math/toSort.f'
+
+      include 'code/tables_linking.f'

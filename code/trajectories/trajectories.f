@@ -15,7 +15,7 @@ C       numberOfStarsInSample
 C=======================================================================
       implicit double precision (a-h,m,o-z)
       
-      integer numberOfStars,ntwd,njumps,n,i,NOK,NBAD
+      integer numberOfStars,numberOfWDs,njumps,n,i,NOK,NBAD
       double precision galacticDiskAge,wosun,hmin,eps,fcgys,tf,xcar,ycar
       double precision wo,zo,ecini,tb,tinc,htry,ti,ecinf
       double precision epotf,epoti,f
@@ -39,7 +39,7 @@ C     ---   Commons   ---
       common /vel/ uu,vv,ww
       common /coorcil/ coordinate_R,coordinate_Theta,coordinate_Zcylindr
       common /tm/ starBirthTime,m
-      common /index/ iwd,ntwd         
+      common /index/ iwd,numberOfWDs         
       common /plano/ xpla,ypla
       common /carte/ xcar,ycar
 
@@ -57,7 +57,7 @@ C     ---   Test   ---
       tf=galacticDiskAge*fcgys 
 
 C     ---   Integrating trajectories   ---
-      do 1 i=1,ntwd
+      do 1 i=1,numberOfWDs
         xcar=xpla(i)
         ycar=ypla(i)
         wo=ww(i)+8.0

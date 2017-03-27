@@ -1,13 +1,6 @@
-C***********************************************************************
-C     TODO: rewrite
       subroutine volum_40pc(iseed)
-C=======================================================================
-C
-C     Determining the Luminosity Function of 40 pc, 
-C     using criteria (Limoges et al. 2015)
-C
-C     Based on version of 22.09.07 by S. Torres
-C
+C     Determining the Luminosity Function of 40 pc,using criteria from
+C     (Limoges et al. 2015)
 C     Restrictions:
 C        dec>0 Nort-Hemisphere SUPERBLINK survey
 C        mu>40 mas/yr-1
@@ -16,10 +9,6 @@ C     Method:
 C        Number density per pc^3 and half bolometric magnitude
 C        No 1/Vmax correction applied
 C-------------------------------------------------------------------
-C     Input parameters:
-C       galacticDiskAge
-C       numberOfStarsInSample
-C
 C     ---   Parameters  ---
 C     NOTE: smth wrong with the name here
 C     parameterIFMR: covered sky area
@@ -32,8 +21,7 @@ C=======================================================================
       external ran
       real ran
 
-C     ---   Declaration of variables  ---
-      integer numberOfStars,ntwd,i,j
+      integer numberOfStars,numberOfWDs,i,j,iseed
       integer r1,r2,r3,r4,r5,r32
       double precision parameterIFMR,muo,mumax,deco,pio
       double precision mbolmin,mbolinc,mbolmax,vtanmin
@@ -124,7 +112,7 @@ C     same as for arrayOfVelocitiesForSD_u/v/w. (For cloud)
 
 C     ---   Commons  ---
       common /enanas/ leb,meb,zeb,teb
-      common /index/ iwd,ntwd      
+      common /index/ iwd,numberOfWDs      
       common /mad/ mu,arec,dec
       common /paral/ rgac
       common /coorcil/ coordinate_R,coordinate_Theta,coordinate_Zcylindr
@@ -180,7 +168,7 @@ C     ---  Writing data   ---
 C-------------------------------------------------------------------
 C     ---   Initiating loop  ---
 C-------------------------------------------------------------------
-      do 5 i=1,ntwd
+      do 5 i=1,numberOfWDs
         d=dec(i)*fi
         rg=rgac(i)*1000.0
         parj(i)=1.0/rg
@@ -520,15 +508,16 @@ C     output for chi² of maximum-region vs galactic disk age - test
 C-----------------------------------------------------------------------
 C     ----- Some results of the sample ----
              
-      write(6,*) 'Initial number of WDs:               ',ntwd
+      write(6,*) 'Initial number of WDs:               ',numberOfWDs
       write(6,*) 'Eliminated by parallax:              ',r1
       write(6,*) '    "       "       declination:     ',r2
-      write(6,*) 'Initial number northern hemisphere:  ',ntwd-r1-r2
+      write(6,*) 'Initial number northern hemisphere:  ',numberOfWDs-r1-
+     &                                                   r2
       write(6,*) '    "       " proper motion:         ',r3
       write(6,*) '    "       " reduced proper motion: ',r32
       write(6,*) '    "       " apparent magnitude:    ',r4
-      write(6,*) 'Restricted sample           :        ',ntwd-r1-r2-r3-
-     &           r32-r4
+      write(6,*) 'Restricted sample           :        ',numberOfWDs-r1-
+     &                                                   r2-r3-r32-r4
 
 200   format(f6.3,2x,f6.3,2x,3(1pd14.7,2x),i4,i4,2x,6(1pd14.7,2x))
 

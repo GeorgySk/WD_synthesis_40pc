@@ -14,12 +14,12 @@ C     Revised in 22.09.07 by S. Torres
 C-------------------------------------------------------------------
 C     Input parameters:
 C       solarGalactocentricDistance
-C       ntwd: number of WDs
+C       numberOfWDs
 C=======================================================================
       implicit double precision (a-h,m,o-z)
       
 C     ---   Definition of variables  ---
-      integer numberOfStars,i,ntwd
+      integer numberOfStars,i,numberOfWDs
       double precision solarGalactocentricDistance,pi,fi,zsdg,zcdg,ros,
      &                 zz,zzx
       double precision k,alfag,deltag,theta
@@ -50,7 +50,7 @@ C     ---   Commons   ---
       common /vel/ uu,vv,ww
       common /paral/ rgac
       common /mad/ mu,arec,dec
-      common /index/ iwd,ntwd
+      common /index/ iwd,numberOfWDs
       common /mopro/ mpb,mpl,vr
       common /lb/ lgac,bgac
       
@@ -64,7 +64,7 @@ C--------------------------------------------------------------------
 C     ---   Calculating galactocentric coordinates (r,l,b)  ---
 C--------------------------------------------------------------------
       i=1
-      do 1 i=1,ntwd
+      do 1 i=1,numberOfWDs
 C        ---   Galactic coordinate r (Kpc) ---
         ros=((solarGalactocentricDistance*solarGalactocentricDistance)+
      &      (coordinate_R(i)*coordinate_R(i))-(2*coordinate_R(i)*
