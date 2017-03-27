@@ -154,6 +154,7 @@ C     Calling the function 'incoolda' for 4 metalicities that we have
       call incoolda(table(4))
       
       write(6,*) '   1.2 Tracks of CO non-DA (DB) WD'
+C     Calling the function 'incooldb' for 3 metalicities that we have
       call incooldb(table(5))
       call incooldb(table(6))
       call incooldb(table(7))
@@ -163,15 +164,8 @@ C     Calling the function 'incoolda' for 4 metalicities that we have
       
       write(6,*) '   1.4 Reading the colors table of Rene(DAs) and Berge
      &ron(DBs)'
-C     FIXME: changing to color2 gives error in interp
-      call color(table(11)%ncol,table(11)%ntrk,table(11)%mass,
-     &     table(11)%luminosity,table(11)%color_U,table(11)%color_B,
-     &     table(11)%color_R,table(11)%color_V,table(11)%color_I)      
-C     FIXME: changing to colordb2 gives different values
-      call colordb(table(10)%ncol,table(10)%ntrk,
-     &     table(10)%mass,table(10)%luminosity,table(10)%color_U,
-     &     table(10)%color_B,table(10)%color_V,table(10)%color_R,
-     &     table(10)%color_I)
+      call color(table(11))
+      call colordb2(table(10))
 
       write (6,*) '   1.5 Reading the tables of CO DA with G variable'      
       call incoolea
@@ -209,7 +203,7 @@ C     TODO: give a better description to this step
       write(6,*) '9. Generating the Luminosity Function (9/10)'
       call volum_40pc
       
-C      NOTE: here it is useless
+C     NOTE: here it is useless
       write(6, *) '10. Making vrad to be null (10/10)'
 C      call vrado
 
