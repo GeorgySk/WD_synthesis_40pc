@@ -1,6 +1,8 @@
 C***********************************************************************
 C     TODO: rewrite       
-      subroutine interlumdb(tcool,mass,Z,lum,c1,c2,c3,c4,c5,teff,logg)
+      subroutine interlumdb(tcool,mass,Z,lum,c1,c2,c3,c4,c5,teff,logg,
+     &           table)
+      use external_types
 C=======================================================================
 C
 C     This subroutine interpolates luminosity of DB WD's
@@ -92,7 +94,6 @@ C     ---   Commons   ---
       common /dbcolors/ luminosityDB,colorDB_U,colorDB_B,colorDB_V,
      &                  colorDB_R,colorDB_I
 
-      common /tables/ table
      
       zet1=0.001
       zet2=0.01

@@ -1,6 +1,8 @@
 C***********************************************************************
 C     TODO: rewrite      
-      subroutine interlumda(tcool,mass,Z,lum,teff,logg,c1,c2,c3,c4,c5)
+      subroutine interlumda(tcool,mass,Z,lum,teff,logg,c1,c2,c3,c4,c5,
+     &           table)
+      use external_types
 C=======================================================================
 C
 C     This subroutine interpolates the luminosity of DA WD according
@@ -91,7 +93,6 @@ C     ---   Commons   ---
       common /datprewd/ tprewdda1,tprewdda2,tprewdda3,tprewdda4
       common /colors/ luminosity,color_U,color_B,color_V,color_R,color_I
 
-      common /tables/ table
       
       model=0
       modlog=0

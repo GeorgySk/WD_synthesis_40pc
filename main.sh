@@ -181,6 +181,8 @@ do
    ln -s $output_data/flmass$currentNumberOfExecution.out fort.161
    ln -s $output_data/mass_dis.out fort.162
    ln -s $output_data/mimf.out fort.667
+   ln -s $output_data/coolda_test.out fort.700
+
 
    time ./main.e 
    rm fort.*

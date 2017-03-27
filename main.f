@@ -55,7 +55,7 @@ C----------------------------------------------------------------------
       parameter (parameterOfSFR=25.0)
       parameter (scaleLength=3.5)
 
-      integer i,ISEED1,ISEED2,iseed,numberOfStarsInSample
+      integer i,j,k,ISEED1,ISEED2,iseed,numberOfStarsInSample
       double precision randomNumber,fractionOfDB
       double precision parameterIFMR
 
@@ -64,7 +64,6 @@ C----------------------------------------------------------------------
       common /RSEED/ ISEED1,ISEED2
       common /param/ fractionOfDB,galacticDiskAge,parameterIMF,
      &               parameterIFMR,timeOfBurst
-      common /tables/ table
 
 C     filling info about groups of files (cooling, color tables)      
       include 'code/tables_linking.f'
@@ -149,29 +148,15 @@ C ======================================================================
 
       write(6,*) '   1.1 Tracks of CO DA WD Z=0.001;0.01;0.03;0.06'
 C     Calling the function 'incoolda' for 4 metalicities that we have
-      call incoolda2(table(1))
-      call incoolda2(table(2))
-C     FIXME: changing to incoolda2 gives error in interp
-      call incoolda(table(3)%flag,table(3)%initLink,table(3)%ntrk,
-     &     table(3)%ncol,table(3)%mass,table(3)%coolingTime,
-     &     table(3)%prevTime,table(3)%luminosity,
-     &     table(3)%effTemp,table(3)%gravAcc)
-      call incoolda2(table(4))
+      call incoolda(table(1))
+      call incoolda(table(2))
+      call incoolda(table(3))
+      call incoolda(table(4))
       
       write(6,*) '   1.2 Tracks of CO non-DA (DB) WD'
-      call incooldb2(table(5))
-C     FIXME: changing to incooldb2 gives error in interp      
-      call incooldb(table(6)%flag,table(6)%initLink,
-     &     table(6)%ncol,table(6)%ntrk,
-     &     table(6)%mass,table(6)%coolingTime,
-     &     table(6)%prevTime,table(6)%luminosity,
-     &     table(6)%effTemp,table(6)%gravAcc)
-C     FIXME: changing to incooldb2 gives error in interp      
-      call incooldb(table(7)%flag,table(7)%initLink,
-     &     table(7)%ncol,table(7)%ntrk,
-     &     table(7)%mass,table(7)%coolingTime,
-     &     table(7)%prevTime,table(7)%luminosity,
-     &     table(7)%effTemp,table(7)%gravAcc)
+      call incooldb(table(5))
+      call incooldb(table(6))
+      call incooldb(table(7))
 
       write(6,*) '   1.3 Tracks of ONe DA WD'
       call incoolone
@@ -218,7 +203,7 @@ C     ---   Calculating the trajectories according to/along z-coordinate ---
       call coor(solarGalactocentricDistance)
 
       write(6,*) '8. Determinating visual magnitudes (8/10)'
-      call magi(fractionOfDB) 
+      call magi(fractionOfDB,table) 
 
 C     TODO: give a better description to this step
       write(6,*) '9. Generating the Luminosity Function (9/10)'

@@ -205,6 +205,11 @@ C       ---   4) Eliminate declination  ---
         write (73,*) hrm,gz
 C        goto 93212
 
+C       ---  Eleminating too fast WD's  ---
+C        if (sqrt(uu(i)**2+vv(i)**2+ww(i)**2) .ge. 500.0) then
+C          go to 5
+C        end if 
+
 C       ---   2) Minimum proper motion cut 
         if (mu(i).lt.muo) then   
           r3=r3+1
@@ -241,12 +246,12 @@ C       1    2   3 4    5    6   7   8   9   10   11  12   13   14 15
 C       Meb -Lum Z Mbol Gap0 g-i g-r u-r r-z arec dec rgac parj mu vtan   
 C       16    17   18  19 20 21 22
 C       tcool temp idb coordinate_Zcylindr  uu vv ww 
-        write(156,*)  meb(i),leb(i),zeb(i),2.5*leb(i)+4.75,go(i),gi(i),
+93212   write(156,*)  meb(i),leb(i),zeb(i),2.5*leb(i)+4.75,go(i),gi(i),
      &                gr(i),ur(i),rz(i),arec(i),dec(i),rgac(i),parj(i),
      &                mu(i),vtan(i),tcool(i),teb(i),idb(i),
      &                coordinate_Zcylindr(i),uu(i),vv(i),ww(i)
 C       velocities output
-93212   write(1156,*)  uu(i),vv(i),ww(i)     
+      write(1156,*)  uu(i),vv(i),ww(i)     
       continue
 
 
@@ -310,35 +315,47 @@ C     NOTE I need to make subroutines and not to mix all this
       do 50 j=1,nbins
 C       calculating average velocities of WD for each bin (only from 
 C       restricted sample) 
-        averageWDVelocityInBin_u(j)=sumOfWDVelocitiesInBin_u(j)/nbin(j)
-        averageWDVelocityInBin_v(j)=sumOfWDVelocitiesInBin_v(j)/nbin(j)
-        averageWDVelocityInBin_w(j)=sumOfWDVelocitiesInBin_w(j)/nbin(j)
-C       calculating Standart Deviation for velocities in each bin
-C       TODO: place all this code for SD in subroutine
-        sumOfSquareDifferences_u = 0.0
-        sumOfSquareDifferences_v = 0.0
-        sumOfSquareDifferences_w = 0.0
-        do 51 i=1,nbin(j)
-          sumOfSquareDifferences_u=sumOfSquareDifferences_u+
-     &                             (arrayOfVelocitiesForSD_u(j,i)-
-     &                             averageWDVelocityInBin_u(j))**2
-          sumOfSquareDifferences_v=sumOfSquareDifferences_v+
-     &                             (arrayOfVelocitiesForSD_v(j,i)-
-     &                             averageWDVelocityInBin_v(j))**2
-          sumOfSquareDifferences_w=sumOfSquareDifferences_w+
-     &                             (arrayOfVelocitiesForSD_w(j,i)-
-     &                             averageWDVelocityInBin_w(j))**2
-          write(815,444) arrayOfVelocitiesForSD_u(j,i), 
+        if (nbin(j) .ne. 0) then
+          averageWDVelocityInBin_u(j)=sumOfWDVelocitiesInBin_u(j)/
+     &    nbin(j)
+          averageWDVelocityInBin_v(j)=sumOfWDVelocitiesInBin_v(j)/
+     &    nbin(j)
+          averageWDVelocityInBin_w(j)=sumOfWDVelocitiesInBin_w(j)/
+     &    nbin(j)
+        
+C         calculating Standart Deviation for velocities in each bin
+C         TODO: place all this code for SD in subroutine
+          sumOfSquareDifferences_u = 0.0
+          sumOfSquareDifferences_v = 0.0
+          sumOfSquareDifferences_w = 0.0
+          do 51 i=1,nbin(j)
+            sumOfSquareDifferences_u=sumOfSquareDifferences_u+
+     &                               (arrayOfVelocitiesForSD_u(j,i)-
+     &                               averageWDVelocityInBin_u(j))**2
+            sumOfSquareDifferences_v=sumOfSquareDifferences_v+
+     &                               (arrayOfVelocitiesForSD_v(j,i)-
+     &                               averageWDVelocityInBin_v(j))**2
+            sumOfSquareDifferences_w=sumOfSquareDifferences_w+
+     &                              (arrayOfVelocitiesForSD_w(j,i)-
+     &                               averageWDVelocityInBin_w(j))**2
+            write(815,444) arrayOfVelocitiesForSD_u(j,i), 
      &                     arrayOfVelocitiesForSD_v(j,i), 
      &                     arrayOfVelocitiesForSD_w(j,i), 
      &                     arrayOfMagnitudes(j,i)
-51      continue
-        standardDeviation_u(j)=(sumOfSquareDifferences_u/
-     &                         dfloat(nbin(j)))**0.5
-        standardDeviation_v(j)=(sumOfSquareDifferences_v/
-     &                         dfloat(nbin(j)))**0.5
-        standardDeviation_w(j)=(sumOfSquareDifferences_w/
-     &                         dfloat(nbin(j)))**0.5
+51        continue
+          if (nbin(j) .ne. 1) then
+            standardDeviation_u(j)=(sumOfSquareDifferences_u/
+     &                             dfloat(nbin(j))-1.0)**0.5
+            standardDeviation_v(j)=(sumOfSquareDifferences_v/
+     &                             dfloat(nbin(j))-1.0)**0.5
+            standardDeviation_w(j)=(sumOfSquareDifferences_w/
+     &                             dfloat(nbin(j))-1.0)**0.5
+          else
+            standardDeviation_u(j)=100.0
+            standardDeviation_v(j)=100.0
+            standardDeviation_w(j)=100.0
+          endif
+        endif
 50    continue
 
 

@@ -1,6 +1,7 @@
 C***********************************************************************
 C     TODO: rewrite      
-      subroutine magi(fractionOfDB)
+      subroutine magi(fractionOfDB,table)
+      use external_types
 C=======================================================================
 C
 C     This subroutine calculates ltc,cbv,cvi,cvr,cuv visual absolute 
@@ -40,6 +41,7 @@ C     ---   Dimensions  ---
      &                 rz(numberOfStars)
       double precision tcool(numberOfStars)
       double precision idb(numberOfStars)
+      TYPE(FileGroupInfo),DIMENSION(11) :: table
 
 C     ---   Commons   ---
       common /enanas/ leb,meb,zeb,teb
@@ -74,13 +76,13 @@ C           ---  IF DA ---
               idb(i)=0
               n1=n1+1
               call interlumda(tcool(i),meb(i),zeb(i),lum,teff,xlog,c1,
-     &             c2,c3,c4,c5)
+     &             c2,c3,c4,c5,table)
 C           ---  ELSE DB  ---
             else
               n3=n3+1
               idb(i)=1    
               call interlumdb(tcool(i),meb(i),zeb(i),lum,c1,c2,c3,c4,c5,
-     &             teff,xlog)
+     &             teff,xlog,table)
               if(teff.lt.6000) n5=n5+1
             end if
 C           ---  END IF DB/NON-DB

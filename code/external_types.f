@@ -1,3 +1,4 @@
+C     TODO: delete unncecessary attributes
       MODULE external_types
 
       TYPE FileGroupInfo
@@ -11,29 +12,41 @@
         INTEGER :: ncol
         INTEGER :: nrow
 C       should be ntrk(ncol) but compiler gets angry. 10 is max of ncol
-        INTEGER :: ntrk(10)
+C        INTEGER :: ntrk(10)
+        INTEGER,allocatable :: ntrk(:)
 C       should be mass(ncol)..        
-        DOUBLE PRECISION :: mass(10)
+c        DOUBLE PRECISION :: mass(10)
+        DOUBLE PRECISION,allocatable :: mass(:)
 C       should be coolingTime(ncol,nrow)..   
-        DOUBLE PRECISION :: coolingTime(10,650)
+C        DOUBLE PRECISION :: coolingTime(10,650)
+        DOUBLE PRECISION,allocatable :: coolingTime(:,:)
 C       should be prevTime(ncol)..        
-        DOUBLE PRECISION :: prevTime(10)
+C        DOUBLE PRECISION :: prevTime(10)
+        DOUBLE PRECISION,allocatable :: prevTime(:)
 C       should be luminosity(ncol,nrow)..   
-        DOUBLE PRECISION :: luminosity(10,650)
+C        DOUBLE PRECISION :: luminosity(10,650)
+        DOUBLE PRECISION,allocatable :: luminosity(:,:)
 C       should be effTemp(ncol,nrow)..   
-        DOUBLE PRECISION :: effTemp(10,650)
+C        DOUBLE PRECISION :: effTemp(10,650)
+        DOUBLE PRECISION ,allocatable:: effTemp(:,:)
 C       should be gravAcc(ncol,nrow)..   
-        DOUBLE PRECISION :: gravAcc(10,650)
+C        DOUBLE PRECISION :: gravAcc(10,650)
+        DOUBLE PRECISION,allocatable :: gravAcc(:,:)
 C       should be color_U(ncol,nrow)..   
-        DOUBLE PRECISION :: color_U(10,650)
+C        DOUBLE PRECISION :: color_U(10,650)
+        DOUBLE PRECISION,allocatable :: color_U(:,:)
 C       should be color_B(ncol,nrow)..   
-        DOUBLE PRECISION :: color_B(10,650)
+C        DOUBLE PRECISION :: color_B(10,650)
+        DOUBLE PRECISION,allocatable :: color_B(:,:)
 C       should be color_V(ncol,nrow)..   
-        DOUBLE PRECISION :: color_V(10,650)
+C        DOUBLE PRECISION :: color_V(10,650)
+        DOUBLE PRECISION,allocatable :: color_V(:,:)
 C       should be color_R(ncol,nrow)..   
-        DOUBLE PRECISION :: color_R(10,650)
+C        DOUBLE PRECISION :: color_R(10,650)
+        DOUBLE PRECISION,allocatable :: color_R(:,:)
 C       should be color_I(ncol,nrow)..   
-        DOUBLE PRECISION :: color_I(10,650)
+C        DOUBLE PRECISION :: color_I(10,650)
+        DOUBLE PRECISION,allocatable :: color_I(:,:)
       ENDTYPE FileGroupInfo
 
       END MODULE external_types
