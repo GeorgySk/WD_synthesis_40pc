@@ -126,29 +126,14 @@ C     TODO: make a WD-class with these args
       pi=4.0*atan(1.0d0)
       numberOfBins=(mbolmax-mbolmin)/mbolinc
 
-C     TODO: remove unnecessary links
-      do 1 i=1,70
-        ndfa(i)=0.0d0
-        numberOfWDsInBin(i)=0
-        massInBin(i)=0.0
-        sumOfWDVelocitiesInBin_u(i)=0.0
-        sumOfWDVelocitiesInBin_v(i)=0.0
-        sumOfWDVelocitiesInBin_w(i)=0.0
-        averageWDVelocityInBin_u(i)=0.0
-        averageWDVelocityInBin_v(i)=0.0
-        averageWDVelocityInBin_w(i)=0.0
- 1    continue
-
-      do 2 i=1,26
-        nbinmass(i)=0
- 2    continue
-
-      eleminatedByParallax=0
-      eleminatedByDeclination=0
-      eleminatedByReducedPropM=0
-      eleminatedByProperMotion=0
-      eleminatedByApparentMagn=0
-           
+C     make inputs equal 0
+      call initializeVolum40(ndfa,numberOfWDsInBin,massInBin,
+     &     sumOfWDVelocitiesInBin_u,sumOfWDVelocitiesInBin_v,
+     &     sumOfWDVelocitiesInBin_w,averageWDVelocityInBin_u,
+     &     averageWDVelocityInBin_v,averageWDVelocityInBin_w,nbinmass,
+     &     eleminatedByParallax,eleminatedByDeclination,
+     &     eleminatedByReducedPropM,eleminatedByProperMotion,
+     &     eleminatedByApparentMagn)           
 
 C     ---  Eleminating WD's from the sample by restrictions  ---
 C-----------------------------------------------------------------------
@@ -495,5 +480,50 @@ C-----------------------------------------------------------------------
 
 200   format(f6.3,2x,f6.3,2x,3(1pd14.7,2x),i4,i4,2x,6(1pd14.7,2x))
 
+      return
+      end
+
+
+      subroutine initializeVolum40(ndfa,numberOfWDsInBin,massInBin,
+     &     sumOfWDVelocitiesInBin_u,sumOfWDVelocitiesInBin_v,
+     &     sumOfWDVelocitiesInBin_w,averageWDVelocityInBin_u,
+     &     averageWDVelocityInBin_v,averageWDVelocityInBin_w,nbinmass,
+     &     eleminatedByParallax,eleminatedByDeclination,
+     &     eleminatedByReducedPropM,eleminatedByProperMotion,
+     &     eleminatedByApparentMagn)
+      implicit double precision (a-h,m,o-z)
+      integer i
+      integer numberOfWDsInBin(70),eleminatedByParallax,
+     &  eleminatedByDeclination,eleminatedByReducedPropM,
+     &  eleminatedByProperMotion,eleminatedByApparentMagn
+      double precision ndfa(70),massInBin(70),
+     &  sumOfWDVelocitiesInBin_u(70),sumOfWDVelocitiesInBin_v(70),
+     &  sumOfWDVelocitiesInBin_w(70),averageWDVelocityInBin_u(70),
+     &  averageWDVelocityInBin_v(70),averageWDVelocityInBin_w(70),
+     &  nbinmass(26)
+
+      do i=1,70
+        ndfa(i)=0.0d0
+        numberOfWDsInBin(i)=0
+        massInBin(i)=0.0
+        sumOfWDVelocitiesInBin_u(i)=0.0
+        sumOfWDVelocitiesInBin_v(i)=0.0
+        sumOfWDVelocitiesInBin_w(i)=0.0
+        averageWDVelocityInBin_u(i)=0.0
+        averageWDVelocityInBin_v(i)=0.0
+        averageWDVelocityInBin_w(i)=0.0
+      end do
+
+      do i=1,26
+        nbinmass(i)=0
+      end do
+
+      eleminatedByParallax=0
+      eleminatedByDeclination=0
+      eleminatedByReducedPropM=0
+      eleminatedByProperMotion=0
+      eleminatedByApparentMagn=0
+
+      
       return
       end

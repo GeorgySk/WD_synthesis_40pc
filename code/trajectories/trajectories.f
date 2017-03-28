@@ -45,7 +45,8 @@ C     NOTE: names are different in this block
       common /carte/ xcar,ycar
 
 C     ---   Externals  ---
-C     QUESTION: what is this?
+C     External - specifies procedures as external, and allows their 
+C     symbolic names to be used as actual arguments.
       EXTERNAL DERIVS
       EXTERNAL RKQC
             
