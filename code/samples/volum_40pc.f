@@ -1,4 +1,4 @@
-      subroutine volum_40pc(iseed)
+      subroutine volum_40pc
 C     Determining the Luminosity Function of 40 pc,using criteria from
 C     (Limoges et al. 2015)
 C     Restrictions:
@@ -17,7 +17,7 @@ C=======================================================================
       real ran
 
 C     NOTE:too many variables. whole subr needs to be splited
-      integer i,j,iseed
+      integer i,j
       logical eleminationFlag
       integer numberOfStars,numberOfWDs
       integer eleminatedByParallax,eleminatedByDeclination,
@@ -27,9 +27,8 @@ C     NOTE:too many variables. whole subr needs to be splited
       double precision minimumProperMotion,declinationLimit,
      &                 minimumParallax
       double precision mbolmin,mbolinc,mbolmax      
-      double precision hrm,gz
       double precision errinfa,errsupa,mbol
-      double precision fnora,fnor,pi,rg,vvv,x,xx,xya
+      double precision fnora,fnor,pi,vvv,x,xx,xya
       
       parameter (numberOfStars=6000000)
 C     (Only northern hemisphere)
@@ -138,121 +137,70 @@ C     make inputs equal 0
 
 C     ---  Eleminating WD's from the sample by restrictions  ---
 C-----------------------------------------------------------------------
-      do 5 i=1,numberOfWDs
+      do i=1,numberOfWDs
         eleminationFlag=.FALSE.
-        rg=rgac(i)*1000.0
-        parallax(i)=1.0/rg
-        tangenVelo(i)=4.74*properMotion(i)*rg
-C       TODO: make signals warning about skipping steps
-C        go to 93212
-C       ---  1) Eliminate WDs with parallax<minimumParallax 
-        if (parallax(i).lt.minimumParallax) then   
-          eleminatedByParallax=eleminatedByParallax+1
-C         QUESTION: can I avoid all these goto's?          
-          go to 5
+        call eleminateWD(i,eleminationFlag,eleminatedByParallax,
+     &       eleminatedByDeclination,eleminatedByProperMotion,
+     &       eleminatedByReducedPropM,eleminatedByApparentMagn)
+
+        if(eleminationFlag .EQV. .FALSE.) then
+C         4    5    6   7   8   9            
+C         Mbol Gap0 g-i g-r u-r r-z  
+          write(156,*)  massOfWD(i),luminosityOfWD(i),
+     &    metallicityOfWD(i),2.5*luminosityOfWD(i)+4.75,go(i),gi(i),
+     &    gr(i),ur(i),rz(i),rightAscension(i),declination(i),rgac(i),
+     &    parallax(i),properMotion(i),tangenVelo(i),coolingTime(i),
+     &    effTempOfWD(i),typeOfWD(i),coordinate_Zcylindr(i),uu(i),vv(i),
+     &    ww(i)
+
+C         --- Making radial velocities zeroes  ---
+C         --------------------------------------------------------------
+C         call vrado(uu,vv,ww)
+
+C         ---  Making histogram of the mass---
+C         --------------------------------------------------------------
+          k=0  
+          do
+            k=k+1
+            xi=xmasi+dfloat(k-1)*xmasinc
+            xf=xi+xmasinc
+            if (massOfWD(i).gt.xi.and.massOfWD(i).lt.xf) exit
+          end do
+          nbinmass(k)=nbinmass(k)+1
+
+C         ---   Calculating the luminosity function--- 
+C         --------------------------------------------------------------
+          mbol=2.5*luminosityOfWD(i) + 4.75
+          do j=1,numberOfBins
+            if (mbol.le.mbolmin+mbolinc*dfloat(j).and.mbol.ge.mbolmin) 
+     &      then
+C             NOTE: useless - use numberOfWDsInBin instead          
+              ndfa(j)=ndfa(j)+1
+              numberOfWDsInBin(j)=numberOfWDsInBin(j)+1
+              massInBin(j)=massInBin(j)+massOfWD(i)
+C             calculating sum of velocities of WD in bin Nºj (only from 
+C             restricted sample). We will need it for calculating average 
+C             velocities of WD for each bin (only from restricted sample)
+              sumOfWDVelocitiesInBin_u(j)=sumOfWDVelocitiesInBin_u(j)+
+     &                                   uu(i)
+              sumOfWDVelocitiesInBin_v(j)=sumOfWDVelocitiesInBin_v(j)+
+     &                                   vv(i)
+              sumOfWDVelocitiesInBin_w(j)=sumOfWDVelocitiesInBin_w(j)+
+     &                                    ww(i)
+C             filling arrays of velocites for calculating SD
+              arrayOfVelocitiesForSD_u(j,numberOfWDsInBin(j))=uu(i)
+              arrayOfVelocitiesForSD_v(j,numberOfWDsInBin(j))=vv(i)
+              arrayOfVelocitiesForSD_w(j,numberOfWDsInBin(j))=ww(i)
+C             filling array of bolometric magnitudes for each WD in restr.s.
+              arrayOfMagnitudes(j,numberOfWDsInBin(j))=mbol
+C             this exit breaks out of DO-END DO loop
+              exit
+            end if
+          end do
         end if
-
-C       ---  2) Eliminate by declination  ---          
-        if (declination(i).lt.declinationLimit) then   
-          eleminatedByDeclination=eleminatedByDeclination+1
-          go to 5        
-        end if
-C        goto 93212
-C       ---  3) Eleminating too fast WD's  ---
-C        if (sqrt(uu(i)**2+vv(i)**2+ww(i)**2) .ge. 500.0) then
-C          go to 5
-C        end if 
-
-C       ---  4) Minimum proper motion cut  --- 
-        if (properMotion(i).lt.minimumProperMotion) then   
-          eleminatedByProperMotion=eleminatedByProperMotion+1
-          go to 5  
-        end if
-
-C       ---  5) Reduced proper motion  ---
-        hrm=go(i)+5.0*dlog10(properMotion(i))+5.0
-        gz=gr(i)+rz(i)
-        if(gz.lt.-0.33) then
-          if(hrm.lt.14.0) then 
-            eleminatedByReducedPropM=eleminatedByReducedPropM+1
-            go to 5
-          endif
-        else 
-          if(hrm.lt.(3.559*gz+15.17)) then
-            go to 5
-C           NOTE: increment is after goto
-            eleminatedByReducedPropM=eleminatedByReducedPropM+1
-          endif
-        endif
-
-C       QUESTION: what does it mean? 
-C       ---  6) Restriction V (de momento lo hacemos con go)  ---
-        if(v(i).ge.19.0) then 
-          eleminatedByApparentMagn=eleminatedByApparentMagn+1
-          goto 5
-        endif      
-C       4    5    6   7   8   9            
-C       Mbol Gap0 g-i g-r u-r r-z  
-93212   write(156,*)  massOfWD(i),luminosityOfWD(i),metallicityOfWD(i),
-     &    2.5*luminosityOfWD(i)+4.75,go(i),gi(i),gr(i),ur(i),rz(i),
-     &    rightAscension(i),declination(i),rgac(i),parallax(i),
-     &    properMotion(i),tangenVelo(i),coolingTime(i),effTempOfWD(i),
-     &    typeOfWD(i),coordinate_Zcylindr(i),uu(i),vv(i),ww(i)
-      continue
-
-C     --- Making radial velocities zeroes  ---
-C     ------------------------------------------------------------------
-C      call vrado(uu,vv,ww)
+      end do
 
 
-C     TODO: place this in separate subroutine
-C     ---  Making histogram of the mass---
-C     ------------------------------------------------------------------
-      K=0
-  40  k=k+1 
-      
-      xi=xmasi+dfloat(k-1)*xmasinc
-      xf=xi+xmasinc
-      if(massOfWD(i).gt.xi.and.massOfWD(i).lt.xf) then 
-        nbinmass(k)=nbinmass(k)+1
-        goto 41
-      else
-        goto 40
-      endif
-
-C     ---   Calculating the luminosity function--- 
-
-C     QUESTION: what does it mean?
-C     ---   Calculos de turno varios  ---
- 41   j=0
-      mbol=2.5*luminosityOfWD(i) + 4.75 
-4     j=j+1
-
-C     ---   Calculating luminosity function of the WD's---
-      if (mbol.le.mbolmin+mbolinc*dfloat(j).and.mbol.ge.mbolmin) then
-C         NOTE: useless - use numberOfWDsInBin instead          
-          ndfa(j)=ndfa(j)+1
-          numberOfWDsInBin(j)=numberOfWDsInBin(j)+1
-          massInBin(j)=massInBin(j)+massOfWD(i)
-C         calculating sum of velocities of WD in bin Nºj (only from 
-C         restricted sample). We will need it for calculating average 
-C         velocities of WD for each bin (only from restricted sample)
-          sumOfWDVelocitiesInBin_u(j)=sumOfWDVelocitiesInBin_u(j)+uu(i)
-          sumOfWDVelocitiesInBin_v(j)=sumOfWDVelocitiesInBin_v(j)+vv(i)
-          sumOfWDVelocitiesInBin_w(j)=sumOfWDVelocitiesInBin_w(j)+ww(i)
-C         filling arrays of velocites for calculating SD
-          arrayOfVelocitiesForSD_u(j,numberOfWDsInBin(j))=uu(i)
-          arrayOfVelocitiesForSD_v(j,numberOfWDsInBin(j))=vv(i)
-          arrayOfVelocitiesForSD_w(j,numberOfWDsInBin(j))=ww(i)
-C         filling array of bolometric magnitudes for each WD in restr.s.
-          arrayOfMagnitudes(j,numberOfWDsInBin(j))=mbol
-      else 
-        if (j.eq.numberOfBins) then
-          goto 5
-        endif
-        goto 4
-      endif
-5     continue
 
 C     NOTE that next loops can be put in one
 C     NOTE I need to make subroutines and not to mix all this
@@ -605,7 +553,7 @@ C     ---  6) Restriction V (de momento lo hacemos con go)  ---
         eleminatedByApparentMagn=eleminatedByApparentMagn+1
         eleminationFlag=.TRUE.
       endif      
-      
+
 
       return
       end

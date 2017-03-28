@@ -187,7 +187,7 @@ C     ---  Calculating the trajectories according to/along z-coordinate
 
 C     TODO: give a better description to this step
       write(6,*) '9. Working with obtained sample (9/9)'
-      call volum_40pc(iseed)
+      call volum_40pc
 
 
       write (6,*) 'End'
