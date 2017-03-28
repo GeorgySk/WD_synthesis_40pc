@@ -159,14 +159,7 @@ C         call vrado(uu,vv,ww)
 
 C         ---  Making histogram of the mass---
 C         --------------------------------------------------------------
-          k=0  
-          do
-            k=k+1
-            xi=xmasi+dfloat(k-1)*xmasinc
-            xf=xi+xmasinc
-            if (massOfWD(i).gt.xi.and.massOfWD(i).lt.xf) exit
-          end do
-          nbinmass(k)=nbinmass(k)+1
+          call makeMassHistogram(massOfWD(i),nbinmass)
 
 C         ---   Calculating the luminosity function--- 
 C         --------------------------------------------------------------
@@ -431,6 +424,23 @@ C-----------------------------------------------------------------------
       end
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
       subroutine initializeVolum40(ndfa,numberOfWDsInBin,massInBin,
      &     sumOfWDVelocitiesInBin_u,sumOfWDVelocitiesInBin_v,
      &     sumOfWDVelocitiesInBin_w,averageWDVelocityInBin_u,
@@ -474,6 +484,15 @@ C-----------------------------------------------------------------------
 
       return
       end
+
+
+
+
+
+
+
+
+
 
 
       subroutine eleminateWD(i,eleminationFlag,eleminatedByParallax,
@@ -556,4 +575,36 @@ C     ---  6) Restriction V (de momento lo hacemos con go)  ---
 
 
       return
+      end
+
+
+
+
+
+
+
+
+
+
+
+
+      subroutine makeMassHistogram(massOfWD,nbinmass)
+      implicit none
+      integer k
+      double precision xi,xmasi,xmasinc,xf,massOfWD,nbinmass(26)
+      parameter (xmasi=0.1)
+      parameter (xmasinc=0.05)
+
+      
+      k=0  
+      do
+        k=k+1
+        xi=xmasi+dfloat(k-1)*xmasinc
+        xf=xi+xmasinc
+        if (massOfWD.gt.xi.and.massOfWD.lt.xf) exit
+      end do
+      nbinmass(k)=nbinmass(k)+1
+
+
+      return 
       end
