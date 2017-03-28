@@ -31,7 +31,7 @@ C     ---   Dimensions   ---
      &                 coordinate_Theta(numberOfStars),
      &                 coordinate_Zcylindr(numberOfStars)
       double precision starBirthTime(numberOfStars),m(numberOfStars)
-      double precision iwd(numberOfStars)
+      double precision flagOfWD(numberOfStars)
       double precision yscal(2),y(2),dydx(2)         
       double precision xpla(numberOfStars),ypla(numberOfStars)
         
@@ -39,7 +39,7 @@ C     ---   Commons   ---
       common /vel/ uu,vv,ww
       common /coorcil/ coordinate_R,coordinate_Theta,coordinate_Zcylindr
       common /tm/ starBirthTime,m
-      common /index/ iwd,numberOfWDs         
+      common /index/ flagOfWD,numberOfWDs         
 C     NOTE: names are different in this block      
       common /plano/ xpla,ypla
       common /carte/ xcar,ycar

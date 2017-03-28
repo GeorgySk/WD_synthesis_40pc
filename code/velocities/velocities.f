@@ -42,14 +42,14 @@ C--------------------------------------------------------------------
      &                 coordinate_Theta(numberOfStars),
      &                 coordinate_Zcylindr(numberOfStars)
       double precision heightPattern(numberOfStars)
-      double precision iwd(numberOfStars)
+      double precision flagOfWD(numberOfStars)
       double precision zz(numberOfStars),zh(numberOfStars)
       
 C     ---  Commons  ---
       common /vel/ uu,vv,ww
       common /patron/ heightPattern
       common /coorcil/ coordinate_R,coordinate_Theta,coordinate_Zcylindr
-      common /index/ iwd,numberOfWDs
+      common /index/ flagOfWD,numberOfWDs
 
 C     ---  Peculiar solar velocities  ---
 C     ---  old values  ---
@@ -69,7 +69,7 @@ C     ---  Making the transfer of heightPattern, of z  ---
 
       k=0      
       do 3 i=1,numberOfStarsInSample
-        if (iwd(i).eq.1) then
+        if (flagOfWD(i).eq.1) then
           k=k+1
           heightPattern(k)=zh(i)
           coordinate_Zcylindr(k)=zz(i)

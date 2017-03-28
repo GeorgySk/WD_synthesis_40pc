@@ -27,20 +27,20 @@ C     ---   Declaration of variables   ---
 C-----------------------------------------------------------------------
 C       starBirthTime: time of birth of the star
 C       tms: lifetime
-C       tcool: time of cooling
+C       coolingTime
 C       luminosityOfWD
 C       massOfWD
-C       iwd: 0 - it's not WD, 1 - it's a WD
+C       flagOfWD: 0 - it's not WD, 1 - it's a WD
 C       m: mass in the main sequence
 C       numberOfWDs: total number of WDs
 C-----------------------------------------------------------------------
       double precision starBirthTime(numberOfStars),tms(numberOfStars),
-     &                 tcool(numberOfStars)
+     &                 coolingTime(numberOfStars)
       double precision luminosityOfWD(numberOfStars),
      &                 massOfWD(numberOfStars),
      &                 metallicityOfWD(numberOfStars),
      &                 effTempOfWD(numberOfStars)
-      double precision iwd(numberOfStars)
+      double precision flagOfWD(numberOfStars)
       double precision m(numberOfStars)
       double precision ztcool(numberOfStars),zmeb(numberOfStars),
      &                 zzeb(numberOfStars),ztms(numberOfStars)
@@ -50,8 +50,8 @@ C     ---  Commons  ---
       common /tm/ starBirthTime,m
       common /enanas/ luminosityOfWD,massOfWD,metallicityOfWD,
      &                effTempOfWD
-      common /index/ iwd,numberOfWDs
-      common /cool/ tcool
+      common /index/ flagOfWD,numberOfWDs
+      common /cool/ coolingTime
       common /tms/ tms
       common /param/ fractionOfDB,galacticDiskAge,parameterIMF,
      &               parameterIFMR,timeOfBurst
@@ -68,7 +68,7 @@ C-----------------------------------------------------------------------
 
 C     ---  Deciding if the star is a WD  ---
       do 1 i=1,numberOfStarsInSample
-        iwd(i)=0
+        flagOfWD(i)=0
 C       ---  Deciding if the star is a WD  ---
 C       Progenitor star that generates a ONe WD: 8.5<M_MS<10.5
 C       WD of CO: m_WD<1.14; of ONe: m_wd>1.14
@@ -78,27 +78,27 @@ C         ---  Attributing a solar metallicity to all the stars ---
 C         ---  Calculating the lifetime in the main sequence ---
           call tsp(m(i),metallicityOfWD(i),tms(i))
 C         ---  Calculating of the cooling time  ---
-          tcool(i)=galacticDiskAge-starBirthTime(i)-tms(i)
-          if (tcool(i).gt.0.0) then
+          coolingTime(i)=galacticDiskAge-starBirthTime(i)-tms(i)
+          if (coolingTime(i).gt.0.0) then
 C           ---- IFMR -----
             call mmswd(m(i),massOfWD(i))
 C           Using Z solar z=0.01 
             write (667,*) m(i),massOfWD(i)
             massOfWD(i)=parameterIFMR*massOfWD(i)
             if(massOfWD(i).le.1.4) then 
-              iwd(i)=1
+              flagOfWD(i)=1
               numberOfWDs=numberOfWDs+1
               if(massOfWD(i).gt.mone) then
                 ntwdone=ntwdone+1
               endif
             else
-              iwd(i)=0
+              flagOfWD(i)=0
             endif
           else
-            iwd(i)=0
+            flagOfWD(i)=0
           endif
         else
-          iwd(i)=0
+          flagOfWD(i)=0
         endif
  1    continue
 
@@ -110,7 +110,7 @@ C           Using Z solar z=0.01
 
 C     ---   Taking the stars that are WDs ---
       do 2 i=1,numberOfStarsInSample
-        ztcool(i)=tcool(i)
+        ztcool(i)=coolingTime(i)
         zmeb(i)=massOfWD(i)
         zzeb(i)=metallicityOfWD(i)
         ztborn(i)=starBirthTime(i)
@@ -120,15 +120,15 @@ C     ---   Taking the stars that are WDs ---
       k=0
 C     ---   Making the transfer   ---
       do 3 i=1,numberOfStarsInSample
-        if (iwd(i).eq.1) then
+        if (flagOfWD(i).eq.1) then
           k=k+1
-          tcool(k)=ztcool(i)
+          coolingTime(k)=ztcool(i)
           massOfWD(k)=zmeb(i)
           metallicityOfWD(k)=zzeb(i)
           starBirthTime(k)=ztborn(i)
           tms(k)=ztms(i)
           write (81,81) massOfWD(k),metallicityOfWD(k),starBirthTime(k),
-     &                  tms(k),tcool(k)
+     &                  tms(k),coolingTime(k)
         endif
  3    continue
 

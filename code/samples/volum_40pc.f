@@ -35,8 +35,7 @@ C     NOTE:too many variables. whole subr needs to be splited
       double precision fnora,fnor,pi,rg,vvv,x,xx,xya
       
       parameter (numberOfStars=6000000)
-      parameter (betaV=0.5)
-C     (Only-north Hemisphere)
+C     (Only northern hemisphere)
       parameter (declinationLimit=0.0)
 C     Minimum parallax below which we discard results (0.025<=>40 pc)
       parameter (minimumParallax=0.025)
@@ -56,9 +55,10 @@ C     Parameters of mass histograms
      &                 massOfWD(numberOfStars),
      &                 metallicityOfWD(numberOfStars),
      &                 effTempOfWD(numberOfStars)
-      double precision iwd(numberOfStars)
+      double precision flagOfWD(numberOfStars)
+C     rgac - galactocentric distance to WD TODO: give a better name
       double precision rgac(numberOfStars)
-      double precision tcool(numberOfStars)
+      double precision coolingTime(numberOfStars)
       integer nbin(70),nbins
       double precision coordinate_R(numberOfStars),
      &                 coordinate_Theta(numberOfStars),
@@ -112,11 +112,11 @@ C     same as for arrayOfVelocitiesForSD_u/v/w. (For cloud)
 C     ---   Commons  ---
       common /enanas/ luminosityOfWD,massOfWD,metallicityOfWD,
      &                effTempOfWD
-      common /index/ iwd,numberOfWDs      
+      common /index/ flagOfWD,numberOfWDs      
       common /mad/ properMotion,rightAscension,declination
       common /paral/ rgac
       common /coorcil/ coordinate_R,coordinate_Theta,coordinate_Zcylindr
-      common /cool/ tcool
+      common /cool/ coolingTime
       common /veltan/ vtan
       common /patron/ heightPattern
       common /photo/ go,gr,gi,ur,rz
@@ -225,14 +225,14 @@ C       ---   3) Restriction V (de momento lo hacemos con go)---
 C       QUESTION: is it really z-coordinate or maybe metallicity?        
 C       1         2   3 4    5    6   7   8   9   10             11         
 C       massOfWD -Lum Z Mbol Gap0 g-i g-r u-r r-z rightAscension declin. 
-C       12   13   14           15   16    17   18  19                   
-C       rgac parj properMotion vtan tcool temp idb coordinate_Zcylindr   
+C       12   13   14           15   16       17   18  19                   
+C       rgac parj properMotion vtan coolTime temp idb coord_Zcylindr   
 C       20 21 22
 C       uu vv ww
 93212   write(156,*)  massOfWD(i),luminosityOfWD(i),metallicityOfWD(i),
      &    2.5*luminosityOfWD(i)+4.75,go(i),gi(i),gr(i),ur(i),rz(i),
      &    rightAscension(i),declination(i),rgac(i),parj(i),
-     &    properMotion(i),vtan(i),tcool(i),effTempOfWD(i),idb(i),
+     &    properMotion(i),vtan(i),coolingTime(i),effTempOfWD(i),idb(i),
      &    coordinate_Zcylindr(i),uu(i),vv(i),ww(i)
 C       velocities output
       write(1156,*)  uu(i),vv(i),ww(i)     

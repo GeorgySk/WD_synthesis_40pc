@@ -44,12 +44,12 @@ C     ---  Dimensions  ---
      &                 coordinate_Theta(numberOfStars),
      &                 coordinate_Zcylindr(numberOfStars)
       double precision x(numberOfStars),y(numberOfStars)
-      double precision iwd(numberOfStars)
+      double precision flagOfWD(numberOfStars)
 
 C     ---  Commons  ---
       common /coorcil/ coordinate_R,coordinate_Theta,coordinate_Zcylindr
       common /plano/ x,y
-      common /index/ iwd,numberOfWDs
+      common /index/ flagOfWD,numberOfWDs
 
 C     ---  Inicialization of pi and sigma ---
       pi=4.0*atan(1.0)
