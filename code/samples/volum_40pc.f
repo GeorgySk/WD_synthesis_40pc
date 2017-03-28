@@ -52,8 +52,10 @@ C     Parameters of mass histograms
       double precision properMotion(numberOfStars),
      &                 rightAscension(numberOfStars),
      &                 declination(numberOfStars)
-      double precision leb(numberOfStars),meb(numberOfStars),
-     &                 zeb(numberOfStars),teb(numberOfStars)
+      double precision luminosityOfWD(numberOfStars),
+     &                 massOfWD(numberOfStars),
+     &                 metallicityOfWD(numberOfStars),
+     &                 effTempOfWD(numberOfStars)
       double precision iwd(numberOfStars)
       double precision rgac(numberOfStars)
       double precision tcool(numberOfStars)
@@ -108,7 +110,8 @@ C     same as for arrayOfVelocitiesForSD_u/v/w. (For cloud)
 
 
 C     ---   Commons  ---
-      common /enanas/ leb,meb,zeb,teb
+      common /enanas/ luminosityOfWD,massOfWD,metallicityOfWD,
+     &                effTempOfWD
       common /index/ iwd,numberOfWDs      
       common /mad/ properMotion,rightAscension,declination
       common /paral/ rgac
@@ -211,7 +214,7 @@ C       --- Reduced proper motion ---
             eleminatedByReducedPropM=eleminatedByReducedPropM+1
           endif
         endif
- 453    write (160,*) 2.5*leb(i)+4.75,rgac(i)  
+ 453    write (160,*) 2.5*luminosityOfWD(i)+4.75,rgac(i)  
 C       QUESTION: what does it mean? 
 
 C       ---   3) Restriction V (de momento lo hacemos con go)---
@@ -220,17 +223,17 @@ C       ---   3) Restriction V (de momento lo hacemos con go)---
           goto 5
         endif      
 C       QUESTION: is it really z-coordinate or maybe metallicity?        
-C       1    2   3 4    5    6   7   8   9   10             11         
-C       Meb -Lum Z Mbol Gap0 g-i g-r u-r r-z rightAscension declination 
+C       1         2   3 4    5    6   7   8   9   10             11         
+C       massOfWD -Lum Z Mbol Gap0 g-i g-r u-r r-z rightAscension declin. 
 C       12   13   14           15   16    17   18  19                   
 C       rgac parj properMotion vtan tcool temp idb coordinate_Zcylindr   
 C       20 21 22
 C       uu vv ww
-93212   write(156,*)  meb(i),leb(i),zeb(i),2.5*leb(i)+4.75,go(i),gi(i),
-     &                gr(i),ur(i),rz(i),rightAscension(i),
-     &                declination(i),rgac(i),parj(i),properMotion(i),
-     &                vtan(i),tcool(i),teb(i),idb(i),
-     &                coordinate_Zcylindr(i),uu(i),vv(i),ww(i)
+93212   write(156,*)  massOfWD(i),luminosityOfWD(i),metallicityOfWD(i),
+     &    2.5*luminosityOfWD(i)+4.75,go(i),gi(i),gr(i),ur(i),rz(i),
+     &    rightAscension(i),declination(i),rgac(i),parj(i),
+     &    properMotion(i),vtan(i),tcool(i),effTempOfWD(i),idb(i),
+     &    coordinate_Zcylindr(i),uu(i),vv(i),ww(i)
 C       velocities output
       write(1156,*)  uu(i),vv(i),ww(i)     
       continue
@@ -248,7 +251,7 @@ C     ------------------------------------------------------------------
       
       xi=xmasi+dfloat(k-1)*xmasinc
       xf=xi+xmasinc
-      if(meb(i).gt.xi.and.meb(i).lt.xf) then 
+      if(massOfWD(i).gt.xi.and.massOfWD(i).lt.xf) then 
         nbinmass(k)=nbinmass(k)+1
         goto 41
       else
@@ -260,14 +263,14 @@ C     ---   Calculating the luminosity function---
 C     QUESTION: what does it mean?
 C     ---   Calculos de turno varios  ---
  41   j=0
-      mbol=2.5*leb(i) + 4.75 
+      mbol=2.5*luminosityOfWD(i) + 4.75 
 4     j=j+1
 
 C     ---   Calculating luminosity function of the WD's---
       if (mbol.le.mbolmin+mbolinc*dfloat(j).and.mbol.ge.mbolmin) then
           ndfa(j)=ndfa(j)+1
           nbin(j)=nbin(j)+1
-          mbin(j)=mbin(j)+meb(i)
+          mbin(j)=mbin(j)+massOfWD(i)
 C         calculating sum of velocities of WD in bin Nºj (only from 
 C         restricted sample). We will need it for calculating average 
 C         velocities of WD for each bin (only from restricted sample)

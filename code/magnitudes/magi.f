@@ -31,8 +31,10 @@ C     ---   Parameters  ---
       parameter (mone=1.14)
 
 C     ---   Dimensions  ---
-      double precision leb(numberOfStars),meb(numberOfStars),
-     &                 zeb(numberOfStars),teb(numberOfStars)
+      double precision luminosityOfWD(numberOfStars),
+     &                 massOfWD(numberOfStars),
+     &                 metallicityOfWD(numberOfStars),
+     &                 effTempOfWD(numberOfStars)
       double precision iwd(numberOfStars)
       double precision rgac(numberOfStars)
       double precision g(numberOfStars),go(numberOfStars),
@@ -44,7 +46,8 @@ C     ---   Dimensions  ---
       TYPE(FileGroupInfo),DIMENSION(11) :: table
 
 C     ---   Commons   ---
-      common /enanas/ leb,meb,zeb,teb
+      common /enanas/ luminosityOfWD,massOfWD,metallicityOfWD,
+     &                effTempOfWD
       common /index/ iwd,numberOfWDs
       common /paral/ rgac
       common /photo/ go,gr,gi,ur,rz
@@ -64,9 +67,9 @@ C     ---  Start DO on all the stars
       do i=1,numberOfWDs
 C       ---  ATENTION! choosing only if .lt.1.1!!!  ---
 C       ---  Start IF mass <1.4  ----
-        if(meb(i).le.1.4) then
+        if(massOfWD(i).le.1.4) then
 C         ---  IF CO core ---
-          if(meb(i).lt.mone) then  
+          if(massOfWD(i).lt.mone) then  
 C           --- Atention We put the "old" ones to 0.6Msol ---
 C           --- Distribucion DA/DB ---
             call dbd_fid(iseed,fractionOfDB,in)
@@ -75,14 +78,14 @@ C           ---  IF DA ---
             if(in.eq.0) then
               idb(i)=0
               n1=n1+1
-              call interlumda(tcool(i),meb(i),zeb(i),lum,teff,xlog,c1,
-     &             c2,c3,c4,c5,table)
+              call interlumda(tcool(i),massOfWD(i),metallicityOfWD(i),
+     &             lum,teff,xlog,c1,c2,c3,c4,c5,table)
 C           ---  ELSE DB  ---
             else
               n3=n3+1
               idb(i)=1    
-              call interlumdb(tcool(i),meb(i),zeb(i),lum,c1,c2,c3,c4,c5,
-     &             teff,xlog,table)
+              call interlumdb(tcool(i),massOfWD(i),metallicityOfWD(i),
+     &             lum,c1,c2,c3,c4,c5,teff,xlog,table)
               if(teff.lt.6000) n5=n5+1
             end if
 C           ---  END IF DB/NON-DB
@@ -90,13 +93,13 @@ C         ---  ELSE ONe ---
           else
             n2=n2+1
             idb(i)=2
-            call interlumone(tcool(i),meb(i),lum,c1,c2,c3,c4,c5,teff,
-     &           xlog)
+            call interlumone(tcool(i),massOfWD(i),lum,c1,c2,c3,c4,c5,
+     &           teff,xlog)
           end if
 C         ---  END IF CO/ONe ---
           if(teff.lt.6000) n4=n4+1
-          leb(i)=-lum
-          teb(i)=teff            
+          luminosityOfWD(i)=-lum
+          effTempOfWD(i)=teff            
           V(i)=c3
           UB=c1-c2
           BV=c2-c3

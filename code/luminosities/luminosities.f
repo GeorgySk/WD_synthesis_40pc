@@ -9,14 +9,7 @@ C     Revised at 26.09.07 by S. Torres
 C     Introduced metalicity 08/2012 (ER Cojocaru)
 C     Adapted for G_Var 14.05.15 by S.Torres
 C-----------------------------------------------------------------------
-C     input parameters:
-C       galacticDiskAge
-C       numberOfStars
-C       numberOfStarsInSample
-C-----------------------------------------------------------------------
-C     output parameters
-C       leb: luminosities of the WDs
-C       numberOfWDs: total number of the WDs
+C     TODO: figure out what I/O parameters are 
 C=======================================================================
       implicit double precision (a-h,m,o-z)
 
@@ -35,16 +28,18 @@ C-----------------------------------------------------------------------
 C       starBirthTime: time of birth of the star
 C       tms: lifetime
 C       tcool: time of cooling
-C       leb: luminosity of the WD
-C       meb: mass of the WD
+C       luminosityOfWD
+C       massOfWD
 C       iwd: 0 - it's not WD, 1 - it's a WD
 C       m: mass in the main sequence
 C       numberOfWDs: total number of WDs
 C-----------------------------------------------------------------------
       double precision starBirthTime(numberOfStars),tms(numberOfStars),
      &                 tcool(numberOfStars)
-      double precision leb(numberOfStars),meb(numberOfStars),
-     &                 zeb(numberOfStars),teb(numberOfStars)
+      double precision luminosityOfWD(numberOfStars),
+     &                 massOfWD(numberOfStars),
+     &                 metallicityOfWD(numberOfStars),
+     &                 effTempOfWD(numberOfStars)
       double precision iwd(numberOfStars)
       double precision m(numberOfStars)
       double precision ztcool(numberOfStars),zmeb(numberOfStars),
@@ -53,7 +48,8 @@ C-----------------------------------------------------------------------
 
 C     ---  Commons  ---
       common /tm/ starBirthTime,m
-      common /enanas/ leb,meb,zeb,teb
+      common /enanas/ luminosityOfWD,massOfWD,metallicityOfWD,
+     &                effTempOfWD
       common /index/ iwd,numberOfWDs
       common /cool/ tcool
       common /tms/ tms
@@ -78,21 +74,21 @@ C       Progenitor star that generates a ONe WD: 8.5<M_MS<10.5
 C       WD of CO: m_WD<1.14; of ONe: m_wd>1.14
         if (m(i).le.10.5) then
 C         ---  Attributing a solar metallicity to all the stars ---
-          zeb(i)=0.01
+          metallicityOfWD(i)=0.01
 C         ---  Calculating the lifetime in the main sequence ---
-          call tsp(m(i),zeb(i),tms(i))
+          call tsp(m(i),metallicityOfWD(i),tms(i))
 C         ---  Calculating of the cooling time  ---
           tcool(i)=galacticDiskAge-starBirthTime(i)-tms(i)
           if (tcool(i).gt.0.0) then
 C           ---- IFMR -----
-            call mmswd(m(i),meb(i))
+            call mmswd(m(i),massOfWD(i))
 C           Using Z solar z=0.01 
-            write (667,*) m(i),meb(i)
-            meb(i)=parameterIFMR*meb(i)
-            if(meb(i).le.1.4) then 
+            write (667,*) m(i),massOfWD(i)
+            massOfWD(i)=parameterIFMR*massOfWD(i)
+            if(massOfWD(i).le.1.4) then 
               iwd(i)=1
               numberOfWDs=numberOfWDs+1
-              if(meb(i).gt.mone) then
+              if(massOfWD(i).gt.mone) then
                 ntwdone=ntwdone+1
               endif
             else
@@ -115,8 +111,8 @@ C           Using Z solar z=0.01
 C     ---   Taking the stars that are WDs ---
       do 2 i=1,numberOfStarsInSample
         ztcool(i)=tcool(i)
-        zmeb(i)=meb(i)
-        zzeb(i)=zeb(i)
+        zmeb(i)=massOfWD(i)
+        zzeb(i)=metallicityOfWD(i)
         ztborn(i)=starBirthTime(i)
         ztms(i)=tms(i)
  2    continue
@@ -127,11 +123,12 @@ C     ---   Making the transfer   ---
         if (iwd(i).eq.1) then
           k=k+1
           tcool(k)=ztcool(i)
-          meb(k)=zmeb(i)
-          zeb(k)=zzeb(i)
+          massOfWD(k)=zmeb(i)
+          metallicityOfWD(k)=zzeb(i)
           starBirthTime(k)=ztborn(i)
           tms(k)=ztms(i)
-          write (81,81) meb(k),zeb(k),starBirthTime(k),tms(k),tcool(k)
+          write (81,81) massOfWD(k),metallicityOfWD(k),starBirthTime(k),
+     &                  tms(k),tcool(k)
         endif
  3    continue
 
@@ -278,23 +275,23 @@ C********************************************************************
 
 
 C     TODO: rewrite
-      subroutine mmswd(mass,meb)
+      subroutine mmswd(mass,massOfWD)
 C ======================================================================
 C     IFMR according to model by Catalán et al.2008
 C     combination with the model by Iben for Mi>6Mo
 C=======================================================================
       implicit double precision (a-h,m,o-z)
 
-      double precision mass,meb
+      double precision mass,massOfWD
       
       if(mass.lt.2.7)then
-        meb=0.096d0*mass+0.429d0
+        massOfWD=0.096d0*mass+0.429d0
       elseif((mass.ge.2.7).and.(mass.le.6.0))then
 C       Small correction for continuity
-        meb=0.137d0*mass+0.3183d0
+        massOfWD=0.137d0*mass+0.3183d0
       else
 C       Slope of Iben + continuity in Mi=6Mo
-        meb=0.1057d0*mass+0.5061d0
+        massOfWD=0.1057d0*mass+0.5061d0
       end if
 
       return
