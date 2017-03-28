@@ -59,12 +59,13 @@ C     Parameters of mass histograms
 C     rgac - galactocentric distance to WD TODO: give a better name
       double precision rgac(numberOfStars)
       double precision coolingTime(numberOfStars)
-      integer nbin(70),nbins
+C     NOTE: this 70 comes from nowhere      
+      integer numberOfWDsInBin(70),numberOfBins
       double precision coordinate_R(numberOfStars),
      &                 coordinate_Theta(numberOfStars),
      &                 coordinate_Zcylindr(numberOfStars)
-      double precision parj(numberOfStars)
-      double precision vtan(numberOfStars)
+      double precision parallax(numberOfStars)
+      double precision tangenVelo(numberOfStars)
       double precision error(70),errora(70),ndfa(70)
       double precision vvmax(70)
       double precision heightPattern(numberOfStars)
@@ -117,7 +118,6 @@ C     ---   Commons  ---
       common /paral/ rgac
       common /coorcil/ coordinate_R,coordinate_Theta,coordinate_Zcylindr
       common /cool/ coolingTime
-      common /veltan/ vtan
       common /patron/ heightPattern
       common /photo/ go,gr,gi,ur,rz
       common /indexdb/ idb
@@ -126,7 +126,7 @@ C     ---   Commons  ---
      &               parameterIFMR,timeOfBurst
       common /vel/ uu,vv,ww
       
-      nbins=(mbolmax-mbolmin)/mbolinc
+      numberOfBins=(mbolmax-mbolmin)/mbolinc
      
 C-------------------------------------------------------------------
 C     ---   Initialization of variables   ---
@@ -138,7 +138,7 @@ C     ---  Initializating ndf's  ---
       do 1 i=1,70
         error(i)=0.0d0
         ndfa(i)=0.0d0
-        nbin(i)=0
+        numberOfWDsInBin(i)=0
         vvmax(i)=0.0
         mbin(i)=0.0
         sumOfWDVelocitiesInBin_u(i)=0.0
@@ -165,8 +165,8 @@ C     ---   Initiating loop  ---
 C-------------------------------------------------------------------
       do 5 i=1,numberOfWDs
         rg=rgac(i)*1000.0
-        parj(i)=1.0/rg
-        vtan(i)=4.74*properMotion(i)*rg
+        parallax(i)=1.0/rg
+        tangenVelo(i)=4.74*properMotion(i)*rg
 
 C       --- Full sample : we  eliminate the observational cuts ---
 C        go to 93212
@@ -174,7 +174,7 @@ C        go to 93212
 C     ---   Restrictions of the sample  ---
 
 C     ---   1) Eliminate WDs with parallax <minimumParallax'' 
-        if (parj(i).lt.minimumParallax) then   
+        if (parallax(i).lt.minimumParallax) then   
           eleminatedByParallax=eleminatedByParallax+1
           go to 5        
         end if
@@ -225,15 +225,15 @@ C       ---   3) Restriction V (de momento lo hacemos con go)---
 C       QUESTION: is it really z-coordinate or maybe metallicity?        
 C       1         2   3 4    5    6   7   8   9   10             11         
 C       massOfWD -Lum Z Mbol Gap0 g-i g-r u-r r-z rightAscension declin. 
-C       12   13   14           15   16       17   18  19                   
-C       rgac parj properMotion vtan coolTime temp idb coord_Zcylindr   
+C       12   13       14         15      16       17   18  19                   
+C       rgac parallax propMotion tangVel coolTime temp idb coord_Zcyl   
 C       20 21 22
 C       uu vv ww
 93212   write(156,*)  massOfWD(i),luminosityOfWD(i),metallicityOfWD(i),
      &    2.5*luminosityOfWD(i)+4.75,go(i),gi(i),gr(i),ur(i),rz(i),
-     &    rightAscension(i),declination(i),rgac(i),parj(i),
-     &    properMotion(i),vtan(i),coolingTime(i),effTempOfWD(i),idb(i),
-     &    coordinate_Zcylindr(i),uu(i),vv(i),ww(i)
+     &    rightAscension(i),declination(i),rgac(i),parallax(i),
+     &    properMotion(i),tangenVelo(i),coolingTime(i),effTempOfWD(i),
+     &    idb(i),coordinate_Zcylindr(i),uu(i),vv(i),ww(i)
 C       velocities output
       write(1156,*)  uu(i),vv(i),ww(i)     
       continue
@@ -269,7 +269,7 @@ C     ---   Calculos de turno varios  ---
 C     ---   Calculating luminosity function of the WD's---
       if (mbol.le.mbolmin+mbolinc*dfloat(j).and.mbol.ge.mbolmin) then
           ndfa(j)=ndfa(j)+1
-          nbin(j)=nbin(j)+1
+          numberOfWDsInBin(j)=numberOfWDsInBin(j)+1
           mbin(j)=mbin(j)+massOfWD(i)
 C         calculating sum of velocities of WD in bin Nºj (only from 
 C         restricted sample). We will need it for calculating average 
@@ -278,13 +278,13 @@ C         velocities of WD for each bin (only from restricted sample)
           sumOfWDVelocitiesInBin_v(j)=sumOfWDVelocitiesInBin_v(j)+vv(i)
           sumOfWDVelocitiesInBin_w(j)=sumOfWDVelocitiesInBin_w(j)+ww(i)
 C         filling arrays of velocites for calculating SD
-          arrayOfVelocitiesForSD_u(j,nbin(j))=uu(i)
-          arrayOfVelocitiesForSD_v(j,nbin(j))=vv(i)
-          arrayOfVelocitiesForSD_w(j,nbin(j))=ww(i)
+          arrayOfVelocitiesForSD_u(j,numberOfWDsInBin(j))=uu(i)
+          arrayOfVelocitiesForSD_v(j,numberOfWDsInBin(j))=vv(i)
+          arrayOfVelocitiesForSD_w(j,numberOfWDsInBin(j))=ww(i)
 C         filling array of bolometric magnitudes for each WD in restr.s.
-          arrayOfMagnitudes(j,nbin(j))=mbol
+          arrayOfMagnitudes(j,numberOfWDsInBin(j))=mbol
       else 
-        if (j.eq.nbins) then
+        if (j.eq.numberOfBins) then
           goto 5
         endif
         goto 4
@@ -293,23 +293,23 @@ C         filling array of bolometric magnitudes for each WD in restr.s.
 
 C     NOTE that next loops can be put in one
 C     NOTE I need to make subroutines and not to mix all this
-      do 50 j=1,nbins
+      do 50 j=1,numberOfBins
 C       calculating average velocities of WD for each bin (only from 
 C       restricted sample) 
-        if (nbin(j) .ne. 0) then
+        if (numberOfWDsInBin(j) .ne. 0) then
           averageWDVelocityInBin_u(j)=sumOfWDVelocitiesInBin_u(j)/
-     &    nbin(j)
+     &    numberOfWDsInBin(j)
           averageWDVelocityInBin_v(j)=sumOfWDVelocitiesInBin_v(j)/
-     &    nbin(j)
+     &    numberOfWDsInBin(j)
           averageWDVelocityInBin_w(j)=sumOfWDVelocitiesInBin_w(j)/
-     &    nbin(j)
+     &    numberOfWDsInBin(j)
         
 C         calculating Standart Deviation for velocities in each bin
 C         TODO: place all this code for SD in subroutine
           sumOfSquareDifferences_u = 0.0
           sumOfSquareDifferences_v = 0.0
           sumOfSquareDifferences_w = 0.0
-          do 51 i=1,nbin(j)
+          do 51 i=1,numberOfWDsInBin(j)
             sumOfSquareDifferences_u=sumOfSquareDifferences_u+
      &                               (arrayOfVelocitiesForSD_u(j,i)-
      &                               averageWDVelocityInBin_u(j))**2
@@ -324,13 +324,13 @@ C         TODO: place all this code for SD in subroutine
      &                     arrayOfVelocitiesForSD_w(j,i), 
      &                     arrayOfMagnitudes(j,i)
 51        continue
-          if (nbin(j) .ne. 1) then
+          if (numberOfWDsInBin(j) .ne. 1) then
             standardDeviation_u(j)=(sumOfSquareDifferences_u/
-     &                             dfloat(nbin(j))-1.0)**0.5
+     &                             dfloat(numberOfWDsInBin(j))-1.0)**0.5
             standardDeviation_v(j)=(sumOfSquareDifferences_v/
-     &                             dfloat(nbin(j))-1.0)**0.5
+     &                             dfloat(numberOfWDsInBin(j))-1.0)**0.5
             standardDeviation_w(j)=(sumOfSquareDifferences_w/
-     &                             dfloat(nbin(j))-1.0)**0.5
+     &                             dfloat(numberOfWDsInBin(j))-1.0)**0.5
           else
             standardDeviation_u(j)=100.0
             standardDeviation_v(j)=100.0
@@ -344,7 +344,7 @@ C         TODO: place all this code for SD in subroutine
 C-------------------------------------------------------------------
 C     ---  Write data of the LF of the WD's
 C-------------------------------------------------------------------
-      do 6 i=1,nbins
+      do 6 i=1,numberOfBins
         if (ndfa(i).le.0.0) then
           ndfa(i)=10.0d-40
         endif 
@@ -361,11 +361,11 @@ C       n=17 is lum=-3.8 Mbol=14.25 with 72 objetos
 C     ---   Recalculating LF   ---
 C     QUESTION: what does it mean?
 C     ojo factor norma
-      do 71 i=1,nbins
+      do 71 i=1,numberOfBins
         ndfa(i)=ndfa(i)/fnora
 71    continue
 
-      do 7 i=1,nbins
+      do 7 i=1,numberOfBins
 C       ---   Calculating error bars final touches  ---
 C       old definition of binning
         x=mbolmin+(mbolinc)*dfloat(i)
@@ -375,7 +375,7 @@ C        x=mbolmin+(mbolinc)*dfloat(i)-mbolinc/2.0
 C       QUESTION: Why is this line here?
         xx=(x-4.75)/2.5
       
-        if (nbin(i) .eq. 0) then
+        if (numberOfWDsInBin(i) .eq. 0) then
           xya=0.0d0
           errsupa=0.0d0
           errinfa=0.0d0
@@ -384,23 +384,23 @@ C       QUESTION: Why is this line here?
       
         xya=dlog10(ndfa(i))
         errsupa=dlog10(ndfa(i)+errora(i))-xya
-        if (nbin(i).eq.1) then
+        if (numberOfWDsInBin(i).eq.1) then
           errinfa=-25.0
         else
           errinfa=dlog10(ndfa(i)-errora(i))-xya
         endif
 
         vvv=0.000
-        mbin(i)=mbin(i)/dfloat(nbin(i))
+        mbin(i)=mbin(i)/dfloat(numberOfWDsInBin(i))
       
 C       NOTE vvv is always 0      
-9       write(155,200) vvv,xx,xya,errsupa,errinfa,nbin(i),i,
+9       write(155,200) vvv,xx,xya,errsupa,errinfa,numberOfWDsInBin(i),i,
      &                 averageWDVelocityInBin_u(i),
      &                 averageWDVelocityInBin_v(i),
      &                 averageWDVelocityInBin_w(i),
      &                 standardDeviation_u(i),standardDeviation_v(i),
      &                 standardDeviation_w(i)
-        write(161,*) xx,mbin(i),nbin(i)
+        write(161,*) xx,mbin(i),numberOfWDsInBin(i)
 
 7     continue     
 
