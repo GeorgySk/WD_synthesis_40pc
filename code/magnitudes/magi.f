@@ -42,7 +42,7 @@ C     ---   Dimensions  ---
       double precision gi(numberOfStars),ur(numberOfStars),
      &                 rz(numberOfStars)
       double precision coolingTime(numberOfStars)
-      double precision idb(numberOfStars)
+      double precision typeOfWD(numberOfStars)
       TYPE(FileGroupInfo),DIMENSION(11) :: table
 
 C     ---   Commons   ---
@@ -53,7 +53,7 @@ C     ---   Commons   ---
       common /photo/ go,gr,gi,ur,rz
       common /johnson/ v
       common /cool/ coolingTime
-      common /indexdb/ idb
+      common /indexdb/ typeOfWD
 
       n1=0
       n2=0
@@ -76,7 +76,7 @@ C           --- Distribucion DA/DB ---
 C           --- End of distribution ---
 C           ---  IF DA ---
             if(in.eq.0) then
-              idb(i)=0
+              typeOfWD(i)=0
               n1=n1+1
               call interlumda(coolingTime(i),massOfWD(i),
      &             metallicityOfWD(i),lum,teff,xlog,c1,c2,c3,c4,c5,
@@ -84,7 +84,7 @@ C           ---  IF DA ---
 C           ---  ELSE DB  ---
             else
               n3=n3+1
-              idb(i)=1    
+              typeOfWD(i)=1    
               call interlumdb(coolingTime(i),massOfWD(i),
      &             metallicityOfWD(i),lum,c1,c2,c3,c4,c5,teff,xlog,
      &             table)
@@ -94,7 +94,7 @@ C           ---  END IF DB/NON-DB
 C         ---  ELSE ONe ---
           else
             n2=n2+1
-            idb(i)=2
+            typeOfWD(i)=2
             call interlumone(coolingTime(i),massOfWD(i),lum,c1,c2,c3,c4,
      &           c5,teff,xlog)
           end if
@@ -118,7 +118,7 @@ C         ---  Making g and V apparent magnitude ---
           V(i)=V(i)-5.0d0+5.0d0*(dlog10(rgac(i))+3.0d0)
 C       ---  ELSE mass >= 1.4  --- EXPLOTA, exceeding Chandrasekar limit
         else
-          idb(i)=5
+          typeOfWD(i)=5
         end if
 C       ---  END IF about WD mass ---
       end do

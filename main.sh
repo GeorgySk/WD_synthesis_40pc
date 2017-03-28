@@ -168,7 +168,6 @@ do
    ln -s $output_data/average_velocities.out fort.815
    ln -s $output_data/fl_prueba.out fort.155
    ln -s $output_data/boot_rowell_thin_$currentNumberOfExecution.out fort.156
-   ln -s $output_data/velocities.out fort.1156
    ln -s $output_data/parametersMC.out  fort.157
    #Velocities
    ln -s $output_data/fl_velocidades.out  fort.158

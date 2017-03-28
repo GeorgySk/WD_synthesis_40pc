@@ -10,11 +10,7 @@ C        Number density per pc^3 and half bolometric magnitude
 C        No 1/Vmax correction applied
 C-------------------------------------------------------------------
 C     ---   Parameters  ---
-C     NOTE: smth wrong with the name here
-C     parameterIFMR: covered sky area
-C     restrictions: minimumProperMotion
-C                   declinationLimit
-C                   minimumParallax
+C     TODO: fill in 
 C=======================================================================
       implicit double precision (a-h,m,o-z)
       external ran
@@ -66,20 +62,22 @@ C     NOTE: this 70 comes from nowhere
      &                 coordinate_Zcylindr(numberOfStars)
       double precision parallax(numberOfStars)
       double precision tangenVelo(numberOfStars)
-      double precision error(70),errora(70),ndfa(70)
-      double precision vvmax(70)
-      double precision heightPattern(numberOfStars)
+      double precision errora(70),ndfa(70)
+C     ugriz-color system and V-band from Johnson system
       double precision go(numberOfStars),gr(numberOfStars),
      &                 v(numberOfStars)
       double precision gi(numberOfStars),ur(numberOfStars),
      &                 rz(numberOfStars)
-      double precision mbin(70)
-      double precision idb(numberOfStars)
+      double precision massInBin(70)
+      double precision typeOfWD(numberOfStars)
+C     values of LF in each bin. o-observational
       double precision xfl(19),xflo(19),xflcut(3),xflocut(3)
       double precision xflhot(11),xflohot(11)
 C     bins for max-region: for synthetic and observational samples
       double precision xflMaxRegion(6), xfloMaxRegion(6)
+C     number of WDs in bin of mass histogram
       double precision nbinmass(26)
+C     WDs velocities. QUESTION: relative to what?
       double precision uu(numberOfStars), vv(numberOfStars), 
      &                 ww(numberOfStars)
 C     sum of WDs velocities in specific bin, _u/_v/_w - components
@@ -95,13 +93,12 @@ C     this is used to calculate sigma (SD)
      &                 sumOfSquareDifferences_v,
      &                 sumOfSquareDifferences_w
 C     SD for velocities in each bin
-C     NOTE: this 70 is random. array should be declared as dynamic
       double precision standardDeviation_u(70),standardDeviation_v(70),
      &                 standardDeviation_w(70) 
 C     2D-array of velocities (nº of bin; newly assigned to WD nº in bin)
 C     needed to calculate Standart Deviation (SD) for velocities in each 
 C     bin
-C     NOTE: I need dynamic array, static takes too much memory
+C     TODO: make dinamic array or linked list
       double precision arrayOfVelocitiesForSD_u(25,50000)
       double precision arrayOfVelocitiesForSD_v(25,50000)
       double precision arrayOfVelocitiesForSD_w(25,50000)
@@ -110,7 +107,7 @@ C     same as for arrayOfVelocitiesForSD_u/v/w. (For cloud)
       double precision arrayOfMagnitudes(25,50000)
 
 
-C     ---   Commons  ---
+C     TODO: make a WD-class with these args
       common /enanas/ luminosityOfWD,massOfWD,metallicityOfWD,
      &                effTempOfWD
       common /index/ flagOfWD,numberOfWDs      
@@ -118,29 +115,22 @@ C     ---   Commons  ---
       common /paral/ rgac
       common /coorcil/ coordinate_R,coordinate_Theta,coordinate_Zcylindr
       common /cool/ coolingTime
-      common /patron/ heightPattern
       common /photo/ go,gr,gi,ur,rz
-      common /indexdb/ idb
+      common /indexdb/ typeOfWD
       common /johnson/ V
       common /param/ fractionOfDB,galacticDiskAge,parameterIMF,
      &               parameterIFMR,timeOfBurst
       common /vel/ uu,vv,ww
-      
-      numberOfBins=(mbolmax-mbolmin)/mbolinc
      
-C-------------------------------------------------------------------
-C     ---   Initialization of variables   ---
-C-------------------------------------------------------------------
-C     ---  Defining pi  ---
-      pi=4.0*atan(1.0d0)
 
-C     ---  Initializating ndf's  ---
+      pi=4.0*atan(1.0d0)
+      numberOfBins=(mbolmax-mbolmin)/mbolinc
+
+C     TODO: remove unnecessary links
       do 1 i=1,70
-        error(i)=0.0d0
         ndfa(i)=0.0d0
         numberOfWDsInBin(i)=0
-        vvmax(i)=0.0
-        mbin(i)=0.0
+        massInBin(i)=0.0
         sumOfWDVelocitiesInBin_u(i)=0.0
         sumOfWDVelocitiesInBin_v(i)=0.0
         sumOfWDVelocitiesInBin_w(i)=0.0
@@ -153,51 +143,46 @@ C     ---  Initializating ndf's  ---
         nbinmass(i)=0
  2    continue
 
-C     ---  Writing data   ---
       eleminatedByParallax=0
       eleminatedByDeclination=0
       eleminatedByReducedPropM=0
       eleminatedByProperMotion=0
       eleminatedByApparentMagn=0
            
-C-------------------------------------------------------------------
-C     ---   Initiating loop  ---
-C-------------------------------------------------------------------
+
+C     ---  Eleminating WD's from the sample by restrictions  ---
+C-----------------------------------------------------------------------
       do 5 i=1,numberOfWDs
         rg=rgac(i)*1000.0
         parallax(i)=1.0/rg
         tangenVelo(i)=4.74*properMotion(i)*rg
-
-C       --- Full sample : we  eliminate the observational cuts ---
+C       TODO: make signals warning about skipping steps
 C        go to 93212
-
-C     ---   Restrictions of the sample  ---
-
-C     ---   1) Eliminate WDs with parallax <minimumParallax'' 
+C       ---  1) Eliminate WDs with parallax<minimumParallax 
         if (parallax(i).lt.minimumParallax) then   
           eleminatedByParallax=eleminatedByParallax+1
-          go to 5        
+C         QUESTION: can I avoid all these goto's?          
+          go to 5
         end if
 
-C       ---   4) Eliminate declination  ---          
+C       ---  2) Eliminate by declination  ---          
         if (declination(i).lt.declinationLimit) then   
           eleminatedByDeclination=eleminatedByDeclination+1
           go to 5        
         end if
 C        goto 93212
-
-C       ---  Eleminating too fast WD's  ---
+C       ---  3) Eleminating too fast WD's  ---
 C        if (sqrt(uu(i)**2+vv(i)**2+ww(i)**2) .ge. 500.0) then
 C          go to 5
 C        end if 
 
-C       ---   2) Minimum proper motion cut 
+C       ---  4) Minimum proper motion cut  --- 
         if (properMotion(i).lt.minimumProperMotion) then   
           eleminatedByProperMotion=eleminatedByProperMotion+1
           go to 5  
         end if
 
-C       --- Reduced proper motion ---
+C       ---  5) Reduced proper motion  ---
         hrm=go(i)+5.0*dlog10(properMotion(i))+5.0
         gz=gr(i)+rz(i)
         if(gz.lt.-0.33) then
@@ -215,35 +200,28 @@ C       --- Reduced proper motion ---
           endif
         endif
  453    write (160,*) 2.5*luminosityOfWD(i)+4.75,rgac(i)  
-C       QUESTION: what does it mean? 
 
-C       ---   3) Restriction V (de momento lo hacemos con go)---
+C       QUESTION: what does it mean? 
+C       ---  6) Restriction V (de momento lo hacemos con go)  ---
         if(v(i).ge.19.0) then 
           eleminatedByApparentMagn=eleminatedByApparentMagn+1
           goto 5
         endif      
-C       QUESTION: is it really z-coordinate or maybe metallicity?        
-C       1         2   3 4    5    6   7   8   9   10             11         
-C       massOfWD -Lum Z Mbol Gap0 g-i g-r u-r r-z rightAscension declin. 
-C       12   13       14         15      16       17   18  19                   
-C       rgac parallax propMotion tangVel coolTime temp idb coord_Zcyl   
-C       20 21 22
-C       uu vv ww
+C       4    5    6   7   8   9            
+C       Mbol Gap0 g-i g-r u-r r-z  
 93212   write(156,*)  massOfWD(i),luminosityOfWD(i),metallicityOfWD(i),
      &    2.5*luminosityOfWD(i)+4.75,go(i),gi(i),gr(i),ur(i),rz(i),
      &    rightAscension(i),declination(i),rgac(i),parallax(i),
      &    properMotion(i),tangenVelo(i),coolingTime(i),effTempOfWD(i),
-     &    idb(i),coordinate_Zcylindr(i),uu(i),vv(i),ww(i)
-C       velocities output
-      write(1156,*)  uu(i),vv(i),ww(i)     
+     &    typeOfWD(i),coordinate_Zcylindr(i),uu(i),vv(i),ww(i)
       continue
-
 
 C     --- Making radial velocities zeroes  ---
 C     ------------------------------------------------------------------
 C      call vrado(uu,vv,ww)
 
 
+C     TODO: place this in separate subroutine
 C     ---  Making histogram of the mass---
 C     ------------------------------------------------------------------
       K=0
@@ -268,9 +246,10 @@ C     ---   Calculos de turno varios  ---
 
 C     ---   Calculating luminosity function of the WD's---
       if (mbol.le.mbolmin+mbolinc*dfloat(j).and.mbol.ge.mbolmin) then
+C         NOTE: useless - use numberOfWDsInBin instead          
           ndfa(j)=ndfa(j)+1
           numberOfWDsInBin(j)=numberOfWDsInBin(j)+1
-          mbin(j)=mbin(j)+massOfWD(i)
+          massInBin(j)=massInBin(j)+massOfWD(i)
 C         calculating sum of velocities of WD in bin Nºj (only from 
 C         restricted sample). We will need it for calculating average 
 C         velocities of WD for each bin (only from restricted sample)
@@ -340,10 +319,9 @@ C         TODO: place all this code for SD in subroutine
 50    continue
 
 
-
-C-------------------------------------------------------------------
 C     ---  Write data of the LF of the WD's
-C-------------------------------------------------------------------
+C-----------------------------------------------------------------------
+C     NOTE: this loop doesn't make any sense as ndfa cant be less than 0      
       do 6 i=1,numberOfBins
         if (ndfa(i).le.0.0) then
           ndfa(i)=10.0d-40
@@ -354,6 +332,7 @@ C     --- Volume of "North Hemisphere" in 40 pc ----
 C          V_NH(40 pc)=134041.29
 C     normalizing to the bins n=16+17+18, total 220 objects
 C       n=17 is lum=-3.8 Mbol=14.25 with 72 objetos       
+C     NOTE: better use numberOfWDsInBin here      
       fnor=(ndfa(16)+ndfa(17)+ndfa(18))/220.0
       fnora=(134041.29*fnor) 
       write (6,*) 'Factor de normalización:', fnor
@@ -383,6 +362,7 @@ C       QUESTION: Why is this line here?
         end if 
       
         xya=dlog10(ndfa(i))
+C       NOTE: errora was never properly initialized!        
         errsupa=dlog10(ndfa(i)+errora(i))-xya
         if (numberOfWDsInBin(i).eq.1) then
           errinfa=-25.0
@@ -391,7 +371,7 @@ C       QUESTION: Why is this line here?
         endif
 
         vvv=0.000
-        mbin(i)=mbin(i)/dfloat(numberOfWDsInBin(i))
+        massInBin(i)=massInBin(i)/dfloat(numberOfWDsInBin(i))
       
 C       NOTE vvv is always 0      
 9       write(155,200) vvv,xx,xya,errsupa,errinfa,numberOfWDsInBin(i),i,
@@ -400,12 +380,13 @@ C       NOTE vvv is always 0
      &                 averageWDVelocityInBin_w(i),
      &                 standardDeviation_u(i),standardDeviation_v(i),
      &                 standardDeviation_w(i)
-        write(161,*) xx,mbin(i),numberOfWDsInBin(i)
+        write(161,*) xx,massInBin(i),numberOfWDsInBin(i)
 
 7     continue     
 
-C-----------------------------------------------------------------------
+
 C     --- Writing data of histogram of masses ---
+C-----------------------------------------------------------------------
       ntotmass=0
       do 80 i=1,26
         ntotmass=ntotmass+nbinmass(i)
@@ -416,13 +397,12 @@ C     --- Writing data of histogram of masses ---
         write(162 ,*) xmasi+xmasinc*(dfloat(iii)-0.5),nbinmass(iii)/xxb
  8    continue
 
-C-----------------------------------------------------------------------
 C     ---  Reading the LF teoretical/observational for performing chi² 
 C          test ---
+C-----------------------------------------------------------------------
 C     LF global bins i=1,19; k=i+3
 C     LF fit cutoff, 3 last bins
 C     LF hot, 11 bins hot ones
-
 C     LF global 
       do 10 i=1,19
         k=i+3
@@ -494,7 +474,6 @@ C     output for chi² of maximum-region vs galactic disk age - test
  444   format(3(f7.2,2x),f6.3)
 
 C-----------------------------------------------------------------------
-C     ----- Some results of the sample ----
              
       write(6,*) 'Initial number of WDs:               ',numberOfWDs
       write(6,*) 'Eliminated by parallax:              ',
@@ -518,4 +497,3 @@ C     ----- Some results of the sample ----
 
       return
       end
-C***********************************************************************
