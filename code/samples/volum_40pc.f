@@ -18,6 +18,7 @@ C=======================================================================
 
 C     NOTE:too many variables. whole subr needs to be splited
       integer i,j,iseed
+      logical eleminationFlag
       integer numberOfStars,numberOfWDs
       integer eleminatedByParallax,eleminatedByDeclination,
      &        eleminatedByProperMotion,eleminatedByApparentMagn,
@@ -138,6 +139,7 @@ C     make inputs equal 0
 C     ---  Eleminating WD's from the sample by restrictions  ---
 C-----------------------------------------------------------------------
       do 5 i=1,numberOfWDs
+        eleminationFlag=.FALSE.
         rg=rgac(i)*1000.0
         parallax(i)=1.0/rg
         tangenVelo(i)=4.74*properMotion(i)*rg
@@ -177,14 +179,11 @@ C       ---  5) Reduced proper motion  ---
           endif
         else 
           if(hrm.lt.(3.559*gz+15.17)) then
-            if(v(i).gt.12.0) then
-              xxx=ran(iseed)
-            endif
             go to 5
+C           NOTE: increment is after goto
             eleminatedByReducedPropM=eleminatedByReducedPropM+1
           endif
         endif
- 453    write (160,*) 2.5*luminosityOfWD(i)+4.75,rgac(i)  
 
 C       QUESTION: what does it mean? 
 C       ---  6) Restriction V (de momento lo hacemos con go)  ---
@@ -524,6 +523,89 @@ C-----------------------------------------------------------------------
       eleminatedByProperMotion=0
       eleminatedByApparentMagn=0
 
+
+      return
+      end
+
+
+      subroutine eleminateWD(i,eleminationFlag,eleminatedByParallax,
+     &  eleminatedByDeclination,eleminatedByProperMotion,
+     &  eleminatedByReducedPropM,eleminatedByApparentMagn)
+      implicit double precision (a-h,m,o-z)
+      integer i,numberOfStars,eleminatedByParallax,
+     &  eleminatedByDeclination,eleminatedByProperMotion,
+     &  eleminatedByReducedPropM,eleminatedByApparentMagn
+      logical eleminationFlag
+      double precision minimumParallax,declinationLimit,
+     &  minimumProperMotion
+      integer numberOfWDs
+C     TODO:pass parameters in common block? pass commons as I/O vars      
+      parameter (numberOfStars=6000000)
+      parameter (minimumParallax=0.025)
+      parameter (declinationLimit=0.0)
+      parameter (minimumProperMotion=0.04)
+      double precision flagOfWD(numberOfStars)
+      double precision properMotion(numberOfStars),
+     &                 rightAscension(numberOfStars),
+     &                 declination(numberOfStars)
+      double precision rg,rgac(numberOfStars)
+      double precision parallax,tangenVelo
+      double precision uu(numberOfStars), vv(numberOfStars), 
+     &                 ww(numberOfStars)
+      double precision hrm
+      double precision go(numberOfStars),gr(numberOfStars),
+     &                 gi(numberOfStars),ur(numberOfStars),
+     &                 rz(numberOfStars)
+      double precision v(numberOfStars)
+
+      common /index/ flagOfWD,numberOfWDs
+      common /mad/ properMotion,rightAscension,declination
+      common /paral/ rgac
+      common /photo/ go,gr,gi,ur,rz
+      common /johnson/ V      
+      common /vel/ uu,vv,ww
+
+
+      rg=rgac(i)*1000.0
+      parallax=1.0/rg
+      tangenVelo=4.74*properMotion(i)*rg
+      hrm=go(i)+5.0*dlog10(properMotion(i))+5.0
+      gz=gr(i)+rz(i)
+
+C     TODO: make signals warning about skipping steps
+C      go to 93212
+C     ---  1) Eliminate WDs with parallax<minimumParallax 
+      if (parallax.lt.minimumParallax) then   
+        eleminatedByParallax=eleminatedByParallax+1
+        eleminationFlag=.TRUE.
+C     ---  2) Eliminate by declination  ---   
+      else if (declination(i).lt.declinationLimit) then    
+        eleminatedByDeclination=eleminatedByDeclination+1
+        eleminationFlag=.TRUE.
+C     ---  3) Eleminating too fast WD's  ---
+C      TODO: add eleminatedByVelocity
+C      else if (sqrt(uu(i)**2+vv(i)**2+ww(i)**2) .ge. 500.0) then
+C        eleminationFlag=.TRUE.
+C      goto 93212
+C     ---  4) Minimum proper motion cut  --- 
+      else if(properMotion(i).lt.minimumProperMotion) then   
+        eleminatedByProperMotion=eleminatedByProperMotion+1
+        eleminationFlag=.TRUE.
+C     ---  5) Reduced proper motion  ---
+      else if(gz.lt.-0.33) then
+        if(hrm.lt.14.0) then 
+          eleminatedByReducedPropM=eleminatedByReducedPropM+1
+          eleminationFlag=.TRUE.
+        endif
+      else if(hrm.lt.(3.559*gz+15.17)) then
+        eleminatedByReducedPropM=eleminatedByReducedPropM+1
+        eleminationFlag=.TRUE.
+C     ---  6) Restriction V (de momento lo hacemos con go)  ---
+      else if(v(i).ge.19.0) then 
+        eleminatedByApparentMagn=eleminatedByApparentMagn+1
+        eleminationFlag=.TRUE.
+      endif      
       
+
       return
       end

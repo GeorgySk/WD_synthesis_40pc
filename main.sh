@@ -174,7 +174,6 @@ do
    ln -s $output_data/fl_velocidades_u.out  fort.400
    ln -s $output_data/fl_velocidades_v.out  fort.401
    ln -s $output_data/fl_velocidades_w.out  fort.402
-   ln -s $output_data/mboldis_complete.out fort.160
    ln -s $output_data/flmass$currentNumberOfExecution.out fort.161
    ln -s $output_data/mass_dis.out fort.162
    ln -s $output_data/mimf.out fort.667
