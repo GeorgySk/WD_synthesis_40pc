@@ -43,13 +43,14 @@ C--------------------------------------------------------------------
      &                 coordinate_Zcylindr(numberOfStars)
       double precision heightPattern(numberOfStars)
       double precision flagOfWD(numberOfStars)
+      integer disk_belonging(numberOfStars)
       double precision zz(numberOfStars),zh(numberOfStars)
       
 C     ---  Commons  ---
       common /vel/ uu,vv,ww
       common /patron/ heightPattern
       common /coorcil/ coordinate_R,coordinate_Theta,coordinate_Zcylindr
-      common /index/ flagOfWD,numberOfWDs
+      common /index/ flagOfWD,numberOfWDs,disk_belonging
 
 C     ---  Peculiar solar velocities  ---
 C     ---  old values  ---
@@ -84,13 +85,22 @@ C       ---  Calculating the dispersions  ---
 C       ----------------------------------------------------------------      
 C       ---  THIN DISK  ---
 C       ---  model of sigmas depending on h variable
-C      sigma(3)=dsqrt(heightPattern(i)/(6.25d-4))          
-C      sigma(1)=(dsqrt(2.0d0))*sigma(3)
-C      sigma(2)=(dsqrt(0.32+(1.67d-5)*sigma(1)*sigma(1)))*sigma(1)
+C         sigma(3)=dsqrt(heightPattern(i)/(6.25d-4))          
+C         sigma(1)=(dsqrt(2.0d0))*sigma(3)
+C         sigma(2)=(dsqrt(0.32+(1.67d-5)*sigma(1)*sigma(1)))*sigma(1)
 C       ---  model of constant sigmas
-         sigma(1)=32.4
-         sigma(2)=23.0
-         sigma(3)=18.1 
+        if (disk_belonging(i) == 1) then
+            sigma(1)=32.4
+            sigma(2)=23.0
+            sigma(3)=18.1 
+        else if (disk_belonging(i) == 2) then
+            sigma(1)=50.0
+            sigma(2)=56.0
+            sigma(3)=34.0
+        else
+            write(6, *) "Error in velh"
+        end if
+        
 C       ---   Calling to the function of gaussian distribution  ---
         yy=gasdev(iseed)
         uop=uom(coordinate_R(i),coordinate_Theta(i),a,b,

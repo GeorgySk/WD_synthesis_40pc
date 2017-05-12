@@ -42,8 +42,8 @@ do
 
    echo "Current execution: " $currentNumberOfExecution "from total of" $totalNumberOfExecutions
    echo "Simulation Nº" $currentIndexForOutput
-
-   gfortran main.f -o main.e
+# -Wall -Wextra -Wconversion -fbounds-check
+   gfortran main.f -o main.e 
 
    
    #Parameters of the simulations 

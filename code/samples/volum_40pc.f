@@ -36,7 +36,8 @@ C     (Only northern hemisphere)
 C     Minimum parallax below which we discard results (0.025<=>40 pc)
       parameter (minimumParallax=0.025)
 C     Binning of Luminosity Function 
-      parameter (mbolmin=5.75,mbolmax=20.75,mbolinc=0.5)
+C       parameter (mbolmin=5.75,mbolmax=20.75,mbolinc=0.5)
+      parameter (mbolmin=6.0,mbolmax=21.0,mbolinc=0.5)
 C     Minimum proper motion
       parameter (minimumProperMotion=0.04)
 C     Parameters of mass histograms
@@ -52,6 +53,7 @@ C     Parameters of mass histograms
      &                 metallicityOfWD(numberOfStars),
      &                 effTempOfWD(numberOfStars)
       double precision flagOfWD(numberOfStars)
+      integer disk_belonging(numberOfStars)
 C     rgac - galactocentric distance to WD TODO: give a better name
       double precision rgac(numberOfStars)
       double precision coolingTime(numberOfStars)
@@ -110,7 +112,7 @@ C     same as for arrayOfVelocitiesForSD_u/v/w. (For cloud)
 C     TODO: make a WD-class with these args
       common /enanas/ luminosityOfWD,massOfWD,metallicityOfWD,
      &                effTempOfWD
-      common /index/ flagOfWD,numberOfWDs      
+      common /index/ flagOfWD,numberOfWDs,disk_belonging
       common /mad/ properMotion,rightAscension,declination
       common /paral/ rgac
       common /coorcil/ coordinate_R,coordinate_Theta,coordinate_Zcylindr
@@ -155,7 +157,7 @@ C         Mbol Gap0 g-i g-r u-r r-z
 
 C         --- Making radial velocities zeroes  ---
 C         --------------------------------------------------------------
-C         call vrado(uu,vv,ww)
+C           call vrado(uu,vv,ww)
 
 C         ---  Making histogram of the mass---
 C         --------------------------------------------------------------
@@ -259,6 +261,7 @@ C     normalizing to the bins n=16+17+18, total 220 objects
 C       n=17 is lum=-3.8 Mbol=14.25 with 72 objetos       
 C     NOTE: better use numberOfWDsInBin here      
       fnor=(ndfa(16)+ndfa(17)+ndfa(18))/220.0
+C       fnor = 13.11
       fnora=(134041.29*fnor) 
       write (6,*) 'Factor de normalización:', fnor
 
@@ -272,10 +275,10 @@ C     ojo factor norma
       do 7 i=1,numberOfBins
 C       ---   Calculating error bars final touches  ---
 C       old definition of binning
-        x=mbolmin+(mbolinc)*dfloat(i)
+C         x=mbolmin+(mbolinc)*dfloat(i)
 C       new definition of binning -- when changing, go to BINNING WDLF 
 C       and check the values
-C        x=mbolmin+(mbolinc)*dfloat(i)-mbolinc/2.0
+        x=mbolmin+(mbolinc)*dfloat(i)-mbolinc/2.0
 C       QUESTION: Why is this line here?
         xx=(x-4.75)/2.5
       
@@ -512,6 +515,7 @@ C     TODO:pass parameters in common block? pass commons as I/O vars
       parameter (declinationLimit=0.0)
       parameter (minimumProperMotion=0.04)
       double precision flagOfWD(numberOfStars)
+      integer disk_belonging(numberOfStars)
       double precision properMotion(numberOfStars),
      &                 rightAscension(numberOfStars),
      &                 declination(numberOfStars)
@@ -525,7 +529,7 @@ C     TODO:pass parameters in common block? pass commons as I/O vars
      &                 rz(numberOfStars)
       double precision v(numberOfStars)
 
-      common /index/ flagOfWD,numberOfWDs
+      common /index/ flagOfWD,numberOfWDs,disk_belonging
       common /mad/ properMotion,rightAscension,declination
       common /paral/ rgac
       common /photo/ go,gr,gi,ur,rz
@@ -551,8 +555,8 @@ C     ---  2) Eliminate by declination  ---
         eleminationFlag=.TRUE.
 C     ---  3) Eleminating too fast WD's  ---
 C      TODO: add eleminatedByVelocity
-C      else if (sqrt(uu(i)**2+vv(i)**2+ww(i)**2) .ge. 500.0) then
-C        eleminationFlag=.TRUE.
+      else if (sqrt(uu(i)**2+vv(i)**2+ww(i)**2) .ge. 500.0) then
+        eleminationFlag=.TRUE.
 C      goto 93212
 C     ---  4) Minimum proper motion cut  --- 
       else if(properMotion(i).lt.minimumProperMotion) then   

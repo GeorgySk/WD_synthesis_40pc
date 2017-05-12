@@ -20,13 +20,14 @@ C     ---   Dimensiones   ---
       double precision rgac(numberOfStars),lgac(numberOfStars),
      &                 bgac(numberOfStars)
       double precision flagOfWD(numberOfStars)
+      integer disk_belonging(numberOfStars)
       double precision u(numberOfWDs),v(numberOfWDs),w(numberOfWDs)
 
 C    ---   Commons  ---
       common /lb/ lgac,bgac
       common /paral/ rgac
       common /mopro/ mpb,mpl,vr
-      common /index/ flagOfWD,numberOfWDs
+      common /index/ flagOfWD,numberOfWDs,disk_belonging
 
 C     ---  Calculating the heliocentric velocity  
 C          making zero the radial velocity ---

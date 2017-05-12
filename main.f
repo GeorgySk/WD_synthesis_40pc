@@ -77,10 +77,10 @@ C ======================================================================
 C     Overwriting parameters
 C     NOTE: this is not good
       fractionOfDB=0.20 
-      galacticDiskAge=8.9
+      galacticDiskAge=9.2
       parameterIMF=-2.35
       parameterIFMR=1.0
-      timeOfBurst=0.6     
+      timeOfBurst=0.6
 
       write(6,*) '=========================================='
       write(6,*) ' '
