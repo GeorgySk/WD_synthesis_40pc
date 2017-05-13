@@ -107,7 +107,7 @@ C     NOTE: this k counter variable is used in GOTO-loop, which is bad
 C     ---  Reduction factor of the mass to be distributed ---
 C     massReductionFactor=0.1 for 'fat' sample
 C     massReductionFactor=3.0 individual samples
-      massReductionFactor=0.30
+      massReductionFactor=3.7
 
       write(6,*) '      Factor of mass reduction=',massReductionFactor
 
@@ -155,26 +155,31 @@ C         ---  Ya tenemos la masa  ---
 C         --- Birth time from SFR constant  --- 
 C         --- Choosing with what model we generate stars ---
 C         --- disk_belonging = 1 (thin disk), = 2 (thick disk)
-          if (sfr_model == 1) then
+          if (sfr_model == 2) then
+              if (ran(iseed) .le. 0.08) then
+                  disk_belonging(k) = 2
+                  tmax = tmdisk * dexp(-tmdisk/tau)
+ 33               ttry = ttdisk * ran(iseed)
+                  ft = ttry * dexp(-ttry/tau)
+                  fz = tmax * ran(iseed)
+                  if (fz .le. ft) then
+                      starBirthTime(k) = ttry
+                  else
+                      goto 33
+                  end if
+              else
+                  disk_belonging(k) = 1
+                  xseed = deltat * ran(iseed)      
+                  t = to + dfloat(i - 1)*deltat + xseed 
+                  starBirthTime(k) = t
+              end if
+          else if (sfr_model == 1) then 
+C             running ran once more to get same results as for model2 
+              xseed = deltat * ran(iseed)
               xseed = deltat * ran(iseed)      
               t = to + dfloat(i - 1)*deltat + xseed 
               starBirthTime(k) = t
               disk_belonging(k) = 1
-          else if (sfr_model == 2) then
-              tmax = tmdisk * dexp(-tmdisk/tau)
- 33           ttry = ttdisk * ran(iseed)
-              ft = ttry * dexp(-ttry/tau)
-              fz = tmax * ran(iseed)
-              if (fz .le. ft) then
-                  starBirthTime(k) = ttry
-              else
-                  goto 33
-              end if
-              if (ran(iseed) .le. 0.08) then
-                  disk_belonging(k) = 2
-              else
-                  disk_belonging(k) = 1
-              end if
           else
               write(6,*) 'ERROR: wrong SFR model'
           end if
