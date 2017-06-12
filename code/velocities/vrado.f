@@ -1,6 +1,6 @@
 C***********************************************************************
 C     TODO:rewrite      
-      subroutine vrado(u,v,w)
+      subroutine vrado(u,v,w,i)
 C***********************************************************************
 C     This subroutine calculates the heliocentric velocities, starting
 C     from the proper motions in galactic coordinates, making zero
@@ -31,7 +31,7 @@ C    ---   Commons  ---
 
 C     ---  Calculating the heliocentric velocity  
 C          making zero the radial velocity ---
-      do 1 i=1,numberOfWDs
+C       do 1 i=1,numberOfWDs
         xcb=cos(bgac(i))
         xsb=sin(bgac(i))
         xcl=cos(lgac(i))
@@ -40,15 +40,15 @@ C          making zero the radial velocity ---
         a1=-k*xcb*xsl
         b1=-k*xsb*xcl
         c1=0.0
-        u(i)=a1*mpl(i)*r+b1*mpb(i)*r+c1*vr(i)
+        u = a1*mpl(i)*r+b1*mpb(i)*r+c1*vr(i)
         a2=k*xcb*xcl
         b2=-k*xsb*xsl
         c2=0.0
-        v(i)=a2*mpl(i)*r+b2*mpb(i)*r+c2*vr(i)
+        v = a2*mpl(i)*r+b2*mpb(i)*r+c2*vr(i)
         b3=k*xcb
         c3=0.0
-        w(i)=b3*mpb(i)*r+c3*vr(i)
-1     continue
+        w = b3*mpb(i)*r+c3*vr(i)
+C 1     continue
          
       return
       end

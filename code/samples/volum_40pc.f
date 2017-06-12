@@ -157,7 +157,7 @@ C         Mbol Gap0 g-i g-r u-r r-z
 
 C         --- Making radial velocities zeroes  ---
 C         --------------------------------------------------------------
-C           call vrado(uu,vv,ww)
+          call vrado(uu(i),vv(i),ww(i),i)
 
 C         ---  Making histogram of the mass---
 C         --------------------------------------------------------------
@@ -261,7 +261,7 @@ C     normalizing to the bins n=16+17+18, total 220 objects
 C       n=17 is lum=-3.8 Mbol=14.25 with 72 objetos       
 C     NOTE: better use numberOfWDsInBin here      
       fnor=(ndfa(16)+ndfa(17)+ndfa(18))/220.0
-C       fnor = 13.11
+C       fnor = 12.78
       fnora=(134041.29*fnor) 
       write (6,*) 'Factor de normalización:', fnor
 
